@@ -3,17 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Dice5, Trophy, Swords, Users, Heart, Shield, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
+import Tavern from "@/assets/Tavern.png"
+import Warhammer from "@/assets/Warhammer.png"
+import BoardGames from "@/assets/BoardGames.png"
 
-const PLACEHOLDER_IMAGE = "/icons.svg";
-const VENUE_IMG = PLACEHOLDER_IMAGE;
-const COMMUNITY_IMG = PLACEHOLDER_IMAGE;
-const RPG_IMG = PLACEHOLDER_IMAGE;
+const VENUE_IMG = Tavern;
+const COMMUNITY_IMG = Warhammer;
+const RPG_IMG = BoardGames;
 
 const stats = [
   { icon: Dice5, value: "100+", label: "Gier planszowych" },
   { icon: Trophy, value: "50+", label: "Turniejów rocznie" },
-  { icon: Swords, value: "1", label: "Pokój RPG" },
-  { icon: Users, value: "500+", label: "Członków społeczności" },
+  { icon: Users, value: "3000+", label: "Członków społeczności" },
 ];
 
 const reasons = [
@@ -67,16 +68,14 @@ export default function About() {
             className="relative"
           >
             <img src={VENUE_IMG} alt="Wnętrze Hej Mistrzu" className="rounded-2xl shadow-2xl shadow-primary/5 w-full" loading="lazy" />
-            <div className="absolute -bottom-5 -left-5 w-32 h-32 bg-primary/[0.03] rounded-2xl border border-primary/5 -z-10" />
-            <div className="absolute -top-5 -right-5 w-24 h-24 bg-secondary/[0.03] rounded-2xl border border-secondary/5 -z-10" />
           </motion.div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-card/30 relative overflow-hidden">
+      <section className="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-card/30 relative overflow-hidden w-full flex justify-center">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/[0.02] via-transparent to-transparent pointer-events-none" />
-        <div className="max-w-5xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 relative z-10">
+        <div className="w-full flex justify-evenly gap-4 sm:gap-6 relative z-10">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -84,7 +83,7 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="glass glass-hover rounded-2xl p-6 text-center transition-all duration-300 hover:-translate-y-1"
+              className="glass glass-hover rounded-2xl p-6 text-center transition-all duration-300 hover:-translate-y-1 w-[20%]"
             >
               <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto mb-3 group-hover:bg-primary/15 transition-colors">
                 <stat.icon className="w-5 h-5 text-primary" />

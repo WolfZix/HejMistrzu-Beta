@@ -7,12 +7,7 @@ import type { ProductCardProps } from "@/types/store";
 
 export function ProductCard({ product, isWishlisted, isNotified, onQuickView, onToggleWishlist, onAddToCart }: ProductCardProps) {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.25 }}
+    <div
       className="group glass rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-primary/20 border border-transparent flex flex-col relative h-full"
     >
       <div className="aspect-square overflow-hidden relative shrink-0 cursor-pointer" onClick={() => onQuickView(product)}>
@@ -83,6 +78,6 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

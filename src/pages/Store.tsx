@@ -1,14 +1,13 @@
 import { useMemo, useState, type MouseEvent } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Search, ShieldCheck, Truck } from "lucide-react";
 import SectionHeader from "@/components/shared/SectionHeader";
 import { ProductCard } from "@/components/store/ProductCard";
 import { ProductQuickView } from "@/components/store/ProductQuickView";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
-import { badgeStyles, storeCategories, storeProducts } from "@/data/store";
+import { storeCategories, storeProducts } from "@/data/store";
 import type { StoreProduct } from "@/types/store";
+import { normalizeText } from "@/utils/index";
 
 export default function Store() {
   const [search, setSearch] = useState("");
@@ -21,7 +20,7 @@ export default function Store() {
   const filtered = useMemo(() => {
     return storeProducts.filter((product) => {
       const matchesCategory = category === "Wszystkie" || product.category === category;
-      const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = normalizeText(product.name).includes(normalizeText(search));
       return matchesCategory && matchesSearch;
     });
   }, [category, search]);
@@ -87,7 +86,7 @@ export default function Store() {
                   className="pl-10 bg-card border-border focus:border-primary/50 h-11 rounded-xl"
                 />
               </div>
-              <div className="flex gap-2 lg:hidden">
+              <div className="flex flex-wrap justify-center gap-2 lg:hidden">
                 {storeCategories.map((entry) => (
                   <button
                     key={entry}
@@ -102,8 +101,7 @@ export default function Store() {
               </div>
             </div>
 
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-              <AnimatePresence mode="popLayout">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 {filtered.map((product) => (
                   <ProductCard
                     key={product.id}
@@ -115,8 +113,7 @@ export default function Store() {
                     onAddToCart={handleAddToCart}
                   />
                 ))}
-              </AnimatePresence>
-            </motion.div>
+            </div>
 
             {filtered.length === 0 && (
               <div className="text-center py-20 text-muted-foreground">

@@ -1,28 +1,30 @@
-import React from "react";
 import { Dice5, Swords, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
+import BoardGames from "@/assets/BoardGames.png"
+import Tavern from "@/assets/Tavern.png"
+import Pokemon from "@/assets/Pokemon.png"
 
 const features = [
   {
     icon: Dice5,
     title: "Planszówki",
     description: "Ponad 100 gier planszowych do dyspozycji — od klasyków po nowości. Przyjdź i zagraj!",
-    image: "/icons.svg",
+    image: `${Tavern}`,
     aspect: "aspect-[4/3]",
   },
   {
     icon: Swords,
     title: "Sesje RPG",
     description: "Prywatny pokój RPG z atmosferą, Game Master na życzenie. Przeżyj przygodę życia.",
-    image: "/icons.svg",
+    image: `${BoardGames}`,
     aspect: "aspect-[4/3]",
   },
   {
     icon: Trophy,
     title: "Społeczność TCG",
     description: "Pokémon, Riftbound i turnieje karciane. Dołącz do rosnącej społeczności graczy.",
-    image: "/icons.svg",
+    image: `${Pokemon}`,
     aspect: "aspect-[4/3]",
   },
 ];

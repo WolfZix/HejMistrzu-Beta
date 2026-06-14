@@ -25,11 +25,6 @@
     --border: 217 19% 22%;
     --input: 217 19% 22%;
     --ring: 43 78% 46%;
-    --chart-1: 43 78% 46%;
-    --chart-2: 37 91% 55%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
     --radius: 0.75rem;
     --font-heading: 'Cinzel', serif;
     --font-body: 'Inter', sans-serif;
@@ -132,4 +127,15 @@
 
 .glow-gold-strong {
   box-shadow: 0 0 40px rgba(212, 160, 23, 0.25);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: brightness(0)
+    saturate(100%)
+    invert(68%)
+    sepia(84%)
+    saturate(1464%)
+    hue-rotate(359deg)
+    brightness(99%)
+    contrast(95%);
 }

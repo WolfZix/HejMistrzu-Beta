@@ -3,9 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { MapPin, Mail, Clock, Car, Instagram, Facebook, MessageCircle, Send, CheckCircle2, Phone } from "lucide-react";
+import { MapPin, Mail, Clock, Car, Send, CheckCircle2, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
+import Facebook from "@/assets/facebook.png";
+import Instagram from "@/assets/instagram.png";
+import Discord from "@/assets/discord.png";
 
 const contactItems = [
   { icon: MapPin, label: "Adres", value: "Jana III Sobieskiego 93\n84-230 Rumia, Polska" },
@@ -18,7 +21,7 @@ const contactItems = [
 const socials = [
   { icon: Instagram, name: "Instagram", href: "https://instagram.com/hejmistrzu", color: "text-pink-400", bg: "hover:bg-pink-500/10" },
   { icon: Facebook, name: "Facebook", href: "https://facebook.com/hejmistrzu", color: "text-blue-400", bg: "hover:bg-blue-500/10" },
-  { icon: MessageCircle, name: "Discord", href: "https://discord.com", color: "text-indigo-400", bg: "hover:bg-indigo-500/10" },
+  { icon: Discord, name: "Discord", href: "https://discord.com", color: "text-indigo-400", bg: "hover:bg-indigo-500/10" },
 ];
 
 const fadeItem = {
@@ -87,7 +90,7 @@ export default function Contact() {
                     rel="noopener noreferrer"
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-lg bg-card border border-border hover:border-primary/30 transition-all hover:-translate-y-0.5 ${social.bg} group`}
                   >
-                    <social.icon className={`w-4 h-4 ${social.color}`} />
+                    <img src={social.icon} className="w-5 h-5" />
                     <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors hidden sm:inline">{social.name}</span>
                   </a>
                 ))}
@@ -152,13 +155,13 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="rounded-2xl overflow-hidden border border-border h-[400px] shadow-xl shadow-primary/5"
+          className="rounded-2xl overflow-hidden border border-border h-[400px] max-w-6xl mx-auto shadow-xl shadow-primary/5"
         >
           <iframe
             title="Lokalizacja Hej Mistrzu"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=18.38%2C54.57%2C18.42%2C54.60&layer=mapnik&marker=54.585%2C18.40"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2313.6960381160798!2d18.406671476666542!3d54.5564835726649!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46fda5276f33d17b%3A0x862eb7e8d67e6c7b!2sHej%20Mistrzu!5e0!3m2!1spl!2spl!4v1781460947857!5m2!1spl!2spl"
             className="w-full h-full"
-            style={{ border: 0, filter: "invert(90%) hue-rotate(180deg) brightness(1.1)" }}
+            style={{ border: 0, filter: "invert(92%) hue-rotate(180deg) brightness(0.75)" }}
             loading="lazy"
           />
         </motion.div>

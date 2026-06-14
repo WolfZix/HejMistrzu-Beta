@@ -82,8 +82,7 @@ export default function PlayArea() {
           </TabsList>
 
           <TabsContent value="board">
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              <AnimatePresence mode="popLayout">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {boardGames
                   .filter((g) => g.name.toLowerCase().includes(search.toLowerCase()))
                   .map((game) => (
@@ -123,8 +122,7 @@ export default function PlayArea() {
                       </div>
                     </motion.div>
                   ))}
-              </AnimatePresence>
-            </motion.div>
+            </div>
           </TabsContent>
 
           <TabsContent value="rpg">

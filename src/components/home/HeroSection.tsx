@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown, ArrowRight } from "lucide-react";
+import HeroBackground from "@/assets/HeroBackground.png";
+import HeroBackgroundAnimation from "@/assets/HeroBackgroundAnimation.mp4";
 
 export default function HeroSection() {
   const { scrollY } = useScroll();
@@ -16,7 +18,7 @@ export default function HeroSection() {
         <div
           className="w-full h-[120%] bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('/icons.svg')`,
+            backgroundImage: `url(${HeroBackground})`,
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/30 to-background" />
@@ -25,8 +27,8 @@ export default function HeroSection() {
 
       {/* Ambient glow orbs */}
       <div className="absolute inset-0 z-[1] overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 -left-20 w-[30rem] h-[30rem] rounded-full bg-primary/[0.03] blur-[100px]" />
-        <div className="absolute bottom-1/4 -right-20 w-[25rem] h-[25rem] rounded-full bg-secondary/[0.03] blur-[100px]" />
+        <div className="absolute top-1/2 -left-20 w-[30rem] h-[30rem] rounded-full bg-primary/[0.03] blur-[100px]" />
+        <div className="absolute bottom-1/2 -right-20 w-[25rem] h-[25rem] rounded-full bg-secondary/[0.03] blur-[100px]" />
       </div>
 
       {/* Content */}
@@ -71,17 +73,17 @@ export default function HeroSection() {
           <Link to="/rezerwacje">
             <Button
               size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider px-8 py-6 text-base glow-gold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 group"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading font-semibold tracking-wider px-8 py-6 text-base glow-gold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 group"
             >
               Zarezerwuj stolik
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
             </Button>
           </Link>
           <Link to="/wydarzenia">
             <Button
               size="lg"
               variant="outline"
-              className="border-primary/30 text-foreground hover:bg-primary/10 hover:border-primary/50 font-heading tracking-wider px-8 py-6 text-base backdrop-blur-sm transition-all duration-300"
+              className="border-primary/30 text-foreground hover:text-foreground hover:bg-primary/10 hover:border-primary/50 font-heading tracking-wider px-8 py-6 text-base backdrop-blur-sm transition-all duration-300"
             >
               Zobacz wydarzenia
             </Button>

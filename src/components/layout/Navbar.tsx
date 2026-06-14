@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Instagram, Facebook, MessageCircle, ShoppingCart } from "lucide-react";
+import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
+import Instagram from "@/assets/instagram.png";
+import Facebook from "@/assets/facebook.png";
+import Discord from "@/assets/discord.png";
+import Logo from "@/assets/Logo.png";
 
 const navLinks = [
   { name: "Strona główna", path: "/" },
@@ -42,9 +46,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center group-hover:bg-primary/20 group-hover:border-primary/50 transition-all duration-300">
-              <span className="font-heading text-primary font-bold text-lg">H</span>
-            </div>
+            <img src={Logo} className="w-16 h-16" />
             <span className="font-heading text-lg tracking-wider text-foreground hidden sm:block">
               Hej <span className="text-primary">Mistrzu</span>
             </span>
@@ -67,9 +69,10 @@ export default function Navbar() {
                   {link.name}
                   {active && (
                     <motion.div
-                      layoutId="navbar-indicator"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.15 }}
                       className="absolute bottom-0 left-3 right-3 h-0.5 bg-primary rounded-full"
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     />
                   )}
                 </Link>
@@ -86,7 +89,7 @@ export default function Navbar() {
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
               >
-                <Instagram className="w-4 h-4" />
+                <img src={Instagram} className="w-6 h-6" />
               </a>
               <a
                 href="https://facebook.com"
@@ -94,7 +97,7 @@ export default function Navbar() {
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
               >
-                <Facebook className="w-4 h-4" />
+                <img src={Facebook} className="w-6 h-6" />
               </a>
               <a
                 href="https://discord.com"
@@ -102,7 +105,7 @@ export default function Navbar() {
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
               >
-                <MessageCircle className="w-4 h-4" />
+                <img src={Discord} className="w-6 h-6" />
               </a>
             </div>
 
@@ -111,7 +114,7 @@ export default function Navbar() {
               onClick={() => setCartOpen(true)}
               className="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/30"
             >
-              <ShoppingCart className="w-5 h-5" />
+              <ShoppingCart className="w-6 h-6" />
               {totalItems > 0 && (
                 <motion.span
                   key={totalItems}

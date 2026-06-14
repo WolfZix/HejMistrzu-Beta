@@ -1,6 +1,9 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { MapPin, Clock, Mail, Instagram, Facebook, MessageCircle, ArrowUpRight, Heart } from "lucide-react";
+import { MapPin, Clock, Mail, ArrowUpRight, Heart } from "lucide-react";
+import Logo from "@/assets/Logo.png";
+import Instagram from "@/assets/instagram.png";
+import Facebook from "@/assets/facebook.png";
+import Discord from "@/assets/discord.png";
 
 const footerLinks = [
   { name: "Wydarzenia", path: "/wydarzenia" },
@@ -21,9 +24,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="inline-flex items-center gap-3 mb-5 group">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center group-hover:bg-primary/20 group-hover:border-primary/50 transition-all duration-300">
-                <span className="font-heading text-primary font-bold text-lg">H</span>
-              </div>
+              <img src={Logo} className="w-16 h-16" />
               <span className="font-heading text-lg tracking-wider">
                 Hej <span className="text-primary">Mistrzu</span>
               </span>
@@ -35,17 +36,17 @@ export default function Footer() {
               {[
                 { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
                 { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
-                { icon: MessageCircle, href: "https://discord.com", label: "Discord" },
+                { icon: Discord, href: "https://discord.com", label: "Discord" },
               ].map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-lg bg-muted/30 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all border border-transparent hover:border-primary/20"
+                  className="p-1 rounded-lg bg-transparent hover:bg-primary/10 transition-all border border-transparent hover:border-primary/20"
                   aria-label={social.label}
                 >
-                  <social.icon className="w-4 h-4" />
+                  <img src={social.icon} className="object-cover w-12 h-12" />
                 </a>
               ))}
             </div>
@@ -59,7 +60,7 @@ export default function Footer() {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="block text-sm text-muted-foreground hover:text-foreground transition-colors hover:translate-x-0.5 inline-flex items-center gap-1 group"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors hover:translate-x-0.5 inline-flex items-center gap-1 group"
                 >
                   <span className="w-0 group-hover:w-2 transition-all duration-300 h-px bg-primary/50" />
                   {link.name}

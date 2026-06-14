@@ -1,4 +1,13 @@
 import type { StoreProduct } from "@/types/store";
+import BoardGames from "@/assets/BoardGames.png";
+import Pokemon from "@/assets/Pokemon.png";
+import PokemonBooster1 from "@/assets/PokemonBooster1.png";
+import PokemonEliteBox from "@/assets/PokemonEliteBox.png";
+import RiftboundShadowRealm from "@/assets/RiftboundShadowRealm.png";
+import WarhammerMarinesStarter from "@/assets/WarhammerMarinesStarter.png";
+import DragonShields from "@/assets/DragonShield.png";
+import RiftboundBooster from "@/assets/RiftboundBooster.png";
+import DeckBox from "@/assets/DeckBox.png";
 
 export const storeProducts: StoreProduct[] = [
   {
@@ -7,7 +16,7 @@ export const storeProducts: StoreProduct[] = [
     price: 549.99,
     originalPrice: 629.99,
     category: "Pokémon TCG",
-    image: "/icons.svg",
+    image: PokemonBooster1,
     badge: "Promocja",
     inStock: true,
     rating: 4.8,
@@ -18,8 +27,8 @@ export const storeProducts: StoreProduct[] = [
     name: "Pokémon TCG: Elite Trainer Box",
     price: 249.99,
     category: "Pokémon TCG",
-    image: "/icons.svg",
-    inStock: true,
+    image: PokemonEliteBox,
+    inStock: false,
     rating: 4.9,
     description: "8 boosterów, karty energii, damage dice, status markers — wszystko czego potrzebujesz.",
   },
@@ -28,7 +37,7 @@ export const storeProducts: StoreProduct[] = [
     name: "Riftbound: Starter Deck — Shadow Realm",
     price: 89.99,
     category: "Riftbound",
-    image: "/icons.svg",
+    image: RiftboundShadowRealm,
     inStock: true,
     rating: 4.7,
     description: "Gotowy do gry deck Riftbound z unikalną mechaniką cienia i 60 kartami.",
@@ -38,7 +47,7 @@ export const storeProducts: StoreProduct[] = [
     name: "Warhammer 40K: Space Marines Starter Set",
     price: 399.99,
     category: "Warhammer 40K",
-    image: "/icons.svg",
+    image: WarhammerMarinesStarter,
     badge: "Bestseller",
     inStock: true,
     rating: 4.9,
@@ -49,7 +58,7 @@ export const storeProducts: StoreProduct[] = [
     name: "Dragon Shield: Matte Sleeves (100 szt.)",
     price: 39.99,
     category: "Akcesoria",
-    image: "/icons.svg",
+    image: DragonShields,
     inStock: true,
     rating: 4.6,
     description: "Najwyższej jakości koszulki ochronne. Matowe wykończenie, idealny shuffle.",
@@ -59,7 +68,7 @@ export const storeProducts: StoreProduct[] = [
     name: "Ultra Pro: Premium Deck Box",
     price: 69.99,
     category: "Akcesoria",
-    image: "/icons.svg",
+    image: DeckBox,
     inStock: true,
     rating: 4.5,
     description: "Elegancki deck box mieszczący do 100 kart w podwójnych koszulkach.",
@@ -69,7 +78,7 @@ export const storeProducts: StoreProduct[] = [
     name: "Riftbound: Booster Pack Display",
     price: 459.99,
     category: "Riftbound",
-    image: "/icons.svg",
+    image: RiftboundBooster,
     badge: "Preorder",
     inStock: false,
     rating: null,
@@ -80,7 +89,7 @@ export const storeProducts: StoreProduct[] = [
     name: "Pokémon TCG: Premium Collection",
     price: 329.99,
     category: "Pokémon TCG",
-    image: "/icons.svg",
+    image: Pokemon,
     inStock: true,
     rating: 4.8,
     description: "Ekskluzywna kolekcja z promocyjnymi kartami i akcesoriami.",

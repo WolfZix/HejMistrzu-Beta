@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, MapPin, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
+import Warhammer from "@/assets/Warhammer.png"
+import Riftbound from "@/assets/Riftbound.png"
+import Pokemon from "@/assets/Pokemon.png"
 
 const events = [
   {
@@ -15,7 +18,7 @@ const events = [
     location: "Hej Mistrzu, Rumia",
     description: "Cotygodniowy turniej Pokémon TCG. Przyjdź z własnym deckiem i walcz o nagrody!",
     category: "Pokémon TCG",
-    image: "/icons.svg",
+    image: Pokemon,
   },
   {
     id: 2,
@@ -25,7 +28,7 @@ const events = [
     location: "Hej Mistrzu, Rumia",
     description: "Dzień otwarty Warhammer 40K — rozgrywki, malowanie figurek i porady dla nowych graczy.",
     category: "Warhammer 40K",
-    image: "/icons.svg",
+    image: Warhammer,
   },
   {
     id: 3,
@@ -35,7 +38,7 @@ const events = [
     location: "Hej Mistrzu, Rumia",
     description: "Specjalny weekend draftowy Riftbound z nagrodami dla najlepszych graczy.",
     category: "Riftbound",
-    image: "/icons.svg",
+    image: Riftbound,
   },
 ];
 

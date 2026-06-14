@@ -10,6 +10,7 @@ import Pricing from '@/pages/Pricing';
 import Reservations from '@/pages/Reservations';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
+import ScrollToTop from '@/components/ScrollToTop';
 
 function App() {
   const isGitHubPages = window.location.hostname.includes("github.io");
@@ -18,6 +19,7 @@ function App() {
     <>
       <CartProvider>
         <Router basename={basename}>
+          <ScrollToTop />
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />

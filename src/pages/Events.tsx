@@ -1,51 +1,56 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, ArrowRight, Search, Filter } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Calendar, Clock, MapPin, ArrowRight, Search } from "lucide-react";
+import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import { Input } from "@/components/ui/input";
+import Warhammer from "@/assets/Warhammer.png";
+import Pokemon from "@/assets/Pokemon.png";
+import Tavern from "@/assets/Tavern.png";
+import RiftboundDraft from "@/assets/RiftboundDraft.png";
+import WarhammerOpenBattle from "@/assets/WarhammerOpenBattle.png";
 
 const allEvents = [
   {
     id: 1, title: "Pokémon TCG League Night", date: "2025-02-15", time: "17:00",
     description: "Cotygodniowy turniej Pokémon TCG. Przyjdź z własnym deckiem i walcz o nagrody!",
-    category: "Pokémon TCG", image: "/icons.svg", location: "Hej Mistrzu, Rumia",
+    category: "Pokémon TCG", image: Pokemon, location: "Hej Mistrzu, Rumia",
   },
   {
     id: 2, title: "Warhammer 40K: Open Battle", date: "2025-02-22", time: "12:00",
     description: "Dzień otwarty Warhammer 40K — rozgrywki, malowanie figurek i porady dla nowych graczy.",
-    category: "Warhammer 40K", image: "/icons.svg", location: "Hej Mistrzu, Rumia",
+    category: "Warhammer 40K", image: WarhammerOpenBattle, location: "Hej Mistrzu, Rumia",
   },
   {
     id: 3, title: "Riftbound: Draft Weekend", date: "2025-03-01", time: "14:00",
     description: "Specjalny weekend draftowy Riftbound z nagrodami dla najlepszych graczy.",
-    category: "Riftbound", image: "/icons.svg", location: "Hej Mistrzu, Rumia",
+    category: "Riftbound", image: RiftboundDraft, location: "Hej Mistrzu, Rumia",
   },
   {
     id: 4, title: "Pokémon TCG: Puchar Hej Mistrzu", date: "2025-03-08", time: "10:00",
     description: "Wielki turniej Pokémon TCG z nagrodami i atmosferą rywalizacji na najwyższym poziomie.",
-    category: "Pokémon TCG", image: "/icons.svg", location: "Hej Mistrzu, Rumia",
+    category: "Pokémon TCG", image: Pokemon, location: "Hej Mistrzu, Rumia",
   },
   {
     id: 5, title: "Noc Planszówek", date: "2025-03-15", time: "18:00",
     description: "Maratońska noc planszówek — graj do rana! Specjalne promocje na napoje i przekąski.",
-    category: "Planszówki", image: "/icons.svg", location: "Hej Mistrzu, Rumia",
+    category: "Planszówki", image: Tavern, location: "Hej Mistrzu, Rumia",
   },
   {
     id: 6, title: "Warhammer 40K: Painting Workshop", date: "2025-03-22", time: "14:00",
     description: "Warsztaty malowania figurek dla początkujących i zaawansowanych. Materiały w cenie!",
-    category: "Warhammer 40K", image: "/icons.svg", location: "Hej Mistrzu, Rumia",
+    category: "Warhammer 40K", image: Warhammer, location: "Hej Mistrzu, Rumia",
   },
 ];
 
 const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Planszówki"];
 
 const categoryStyles = {
-  "Pokémon TCG": "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-  "Riftbound": "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  "Warhammer 40K": "bg-red-500/10 text-red-400 border-red-500/20",
-  "Planszówki": "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  "Pokémon TCG": "bg-yellow-950/80 text-yellow-200 border-yellow-500/50 shadow-yellow-500/30",
+  "Riftbound": "bg-purple-950/80 text-purple-200 border-purple-500/50 shadow-purple-500/30",
+  "Warhammer 40K": "bg-red-950/80 text-red-200 border-red-500/50 shadow-red-500/30",
+  "Planszówki": "bg-blue-950/80 text-blue-200 border-blue-500/50 shadow-blue-500/30",
 };
 
 export default function Events() {
@@ -96,11 +101,9 @@ export default function Events() {
           ))}
         </div>
 
-        <motion.div
-          layout
+        <div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          <AnimatePresence mode="popLayout">
             {filtered.map((event) => (
               <motion.div
                 key={event.id}
@@ -142,8 +145,7 @@ export default function Events() {
                 </div>
               </motion.div>
             ))}
-          </AnimatePresence>
-        </motion.div>
+        </div>
 
         {filtered.length === 0 && (
           <div className="text-center py-20 text-muted-foreground">
