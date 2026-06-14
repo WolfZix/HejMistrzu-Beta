@@ -12,10 +12,12 @@ import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 
 function App() {
+  const isGitHubPages = window.location.hostname.includes("github.io");
+  const basename = isGitHubPages ? "/HejMistrzu-Beta" : "/";
   return (
     <>
       <CartProvider>
-        <Router>
+        <Router basename={basename}>
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
