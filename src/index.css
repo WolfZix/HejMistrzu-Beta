@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 26% 8%;
+    --foreground: 210 20% 98%;
+    --card: 217 19% 15%;
+    --card-foreground: 210 20% 98%;
+    --popover: 217 19% 15%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 43 78% 46%;
+    --primary-foreground: 220 26% 8%;
+    --secondary: 37 91% 55%;
+    --secondary-foreground: 220 26% 8%;
+    --muted: 217 19% 20%;
+    --muted-foreground: 216 5% 64%;
+    --accent: 43 78% 46%;
+    --accent-foreground: 220 26% 8%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 19% 22%;
+    --input: 217 19% 22%;
+    --ring: 43 78% 46%;
+    --chart-1: 43 78% 46%;
+    --chart-2: 37 91% 55%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.75rem;
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-display: 'Playfair Display', serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sidebar-background: 220 26% 8%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 43 78% 46%;
+    --sidebar-primary-foreground: 220 26% 8%;
+    --sidebar-accent: 217 19% 15%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 217 19% 22%;
+    --sidebar-ring: 43 78% 46%;
+  }
+
+  .dark {
+    --background: 220 26% 8%;
+    --foreground: 210 20% 98%;
+    --card: 217 19% 15%;
+    --card-foreground: 210 20% 98%;
+    --popover: 217 19% 15%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 43 78% 46%;
+    --primary-foreground: 220 26% 8%;
+    --secondary: 37 91% 55%;
+    --secondary-foreground: 220 26% 8%;
+    --muted: 217 19% 20%;
+    --muted-foreground: 216 5% 64%;
+    --accent: 43 78% 46%;
+    --accent-foreground: 220 26% 8%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 19% 22%;
+    --input: 217 19% 22%;
+    --ring: 43 78% 46%;
+    --chart-1: 43 78% 46%;
+    --chart-2: 37 91% 55%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 220 26% 8%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 43 78% 46%;
+    --sidebar-primary-foreground: 220 26% 8%;
+    --sidebar-accent: 217 19% 15%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 217 19% 22%;
+    --sidebar-ring: 43 78% 46%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-body;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(220 26% 8%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(217 19% 22%);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(43 78% 46%);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(31, 41, 55, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 160, 23, 0.1);
+}
+
+.glass-hover:hover {
+  background: rgba(31, 41, 55, 0.8);
+  border-color: rgba(212, 160, 23, 0.3);
+}
+
+/* Gold gradient text */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #D4A017, #F59E0B, #D4A017);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Ambient glow */
+.glow-gold {
+  box-shadow: 0 0 30px rgba(212, 160, 23, 0.15);
+}
+
+.glow-gold-strong {
+  box-shadow: 0 0 40px rgba(212, 160, 23, 0.25);
+}
