@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { MapPin, Clock, Mail, ArrowUpRight, Heart } from "lucide-react";
-import Logo from "@/assets/Logo.png";
+import Logo from "@/assets/LogoPrzerobka.png";
 import Instagram from "@/assets/instagram.png";
 import Facebook from "@/assets/facebook.png";
 import Discord from "@/assets/discord.png";
+import Phone from "@/assets/phone.png";
 
 const footerLinks = [
   { name: "Wydarzenia", path: "/wydarzenia" },
@@ -34,6 +35,7 @@ export default function Footer() {
             </p>
             <div className="flex gap-2">
               {[
+                { icon: Phone, href: "tel:+48508302733", label: "+48 508 302 733"},
                 { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
                 { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
                 { icon: Discord, href: "https://discord.com", label: "Discord" },

@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingCart, Trash2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -71,6 +70,7 @@ export default function CartDrawer() {
                 </div>
               ) : (
                 <div className="space-y-4">
+                  <AnimatePresence>
                   {items.map((item) => (
                     <motion.div
                       key={item.id}
@@ -118,6 +118,7 @@ export default function CartDrawer() {
                       </div>
                     </motion.div>
                   ))}
+                  </AnimatePresence>
                 </div>
               )}
             </div>

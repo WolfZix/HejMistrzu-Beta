@@ -39,17 +39,17 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed flex justify-center w-screen top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
           ? "bg-background/90 backdrop-blur-2xl border-b border-primary/10 shadow-lg shadow-primary/5"
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group shrink-0">
-            <img src={Logo} className="w-16 h-16" />
+          <Link to="/" className="flex items-center gap-4 mr-4 group shrink-0">
+            <img src={Logo} className="w-8 h-8" />
             <span className="font-heading text-lg tracking-wider text-foreground hidden sm:block">
               Hej <span className="text-primary">Mistrzu</span>
             </span>

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogClose, DialogTitle } from "@/components/ui/dialog";
 import { Phone, X } from "lucide-react";
 
 interface PhoneDialogProps {
@@ -13,6 +13,9 @@ export default function PhoneDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
                 <DialogContent className="max-w-md bg-card border-border rounded-2xl p-8">
+                  <DialogTitle className="hidden">
+                    Numer Telefonu
+                  </DialogTitle>
                   <DialogClose className="absolute top-3 right-3 z-10 p-2 rounded-full bg-background/80 backdrop-blur border border-border hover:bg-background transition-colors">
                     <X className="w-4 h-4" />
                   </DialogClose>
