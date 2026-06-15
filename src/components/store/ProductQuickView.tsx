@@ -24,7 +24,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl p-0 gap-0 bg-card border-border rounded-2xl overflow-hidden">
-        <DialogClose className="absolute top-4 right-4 z-10 p-2 rounded-full bg-background/80 backdrop-blur border border-border hover:bg-background transition-colors">
+        <DialogClose className="absolute top-2 right-2 z-10 p-2 rounded-full bg-background/80 backdrop-blur border border-border hover:bg-background transition-colors">
           <X className="w-4 h-4" />
         </DialogClose>
         <div className="grid grid-cols-1 md:grid-cols-2">

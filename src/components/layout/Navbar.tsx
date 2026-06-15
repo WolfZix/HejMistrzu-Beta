@@ -8,6 +8,8 @@ import Instagram from "@/assets/instagram.png";
 import Facebook from "@/assets/facebook.png";
 import Discord from "@/assets/discord.png";
 import Logo from "@/assets/Logo.png";
+import Phone from "@/assets/phone.png";
+import PhoneDialog from "@/components/shared/PhoneDialog";
 
 const navLinks = [
   { name: "Strona główna", path: "/" },
@@ -23,6 +25,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
   const location = useLocation();
   const { totalItems, setIsOpen: setCartOpen } = useCart();
 
@@ -42,7 +45,7 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group shrink-0">
@@ -83,8 +86,15 @@ export default function Navbar() {
           {/* Right section */}
           <div className="flex items-center gap-2 shrink-0">
             <div className="hidden md:flex items-center gap-1">
+              <button
+              onClick={() => setIsPhoneDialogOpen(true)}
+              className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
+              >
+                <img src={Phone} className="w-6 h-6"/>
+              </button>
+              <PhoneDialog isOpen={isPhoneDialogOpen} onOpenChange={setIsPhoneDialogOpen} />
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/hej_mistrzu/profilecard/?igsh=cG9yNXgwbmI0cDM1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
@@ -92,7 +102,7 @@ export default function Navbar() {
                 <img src={Instagram} className="w-6 h-6" />
               </a>
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/p/hej-mistrzu-centrum-gier-rpg-61567368993724/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
@@ -100,7 +110,7 @@ export default function Navbar() {
                 <img src={Facebook} className="w-6 h-6" />
               </a>
               <a
-                href="https://discord.com"
+                href="https://discord.com/invite/KYB8Auuyu3"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
