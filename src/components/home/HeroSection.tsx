@@ -38,10 +38,6 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium tracking-[0.15em] uppercase bg-primary/10 text-primary border border-primary/20 mb-8 backdrop-blur-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            Kawiarnia planszówkowa w Rumi
-          </span>
         </motion.div>
 
         <motion.h1
