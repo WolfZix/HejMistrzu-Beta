@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import HeroBackground from "@/assets/HeroBackground.png";
-import HeroBackgroundAnimation from "@/assets/HeroBackgroundAnimation.mp4";
 
 export default function HeroSection() {
   const { scrollY } = useScroll();

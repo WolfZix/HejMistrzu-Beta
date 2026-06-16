@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, MapPin, ArrowRight, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
@@ -47,10 +46,10 @@ const allEvents = [
 const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Planszówki"];
 
 const categoryStyles = {
-  "Pokémon TCG": "bg-yellow-950/80 text-yellow-200 border-yellow-500/50 shadow-yellow-500/30",
-  "Riftbound": "bg-purple-950/80 text-purple-200 border-purple-500/50 shadow-purple-500/30",
-  "Warhammer 40K": "bg-red-950/80 text-red-200 border-red-500/50 shadow-red-500/30",
-  "Planszówki": "bg-blue-950/80 text-blue-200 border-blue-500/50 shadow-blue-500/30",
+  "Pokémon TCG": "bg-yellow-950/80 text-yellow-200 border-yellow-500/50 shadow-yellow-500/30 hover:bg-yellow-800/30 hover:text-yellow-300",
+  "Riftbound": "bg-purple-950/80 text-purple-200 border-purple-500/50 shadow-purple-500/30 hover:bg-purple-800/30 hover:text-purple-300",
+  "Warhammer 40K": "bg-red-950/80 text-red-200 border-red-500/50 shadow-red-500/30 hover:bg-red-800/30 hover:text-red-300",
+  "Planszówki": "bg-blue-950/80 text-blue-200 border-blue-500/50 shadow-blue-500/30 hover:bg-blue-800/30 hover:text-blue-300",
 };
 
 export default function Events() {
@@ -117,9 +116,9 @@ export default function Events() {
                 <div className="aspect-[16/9] overflow-hidden relative shrink-0">
                   <img src={event.image} alt={event.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
-                  <Badge className={`absolute top-4 left-4 ${categoryStyles[event.category as keyof typeof categoryStyles]} border text-xs font-medium`}>
+                  <div className={`absolute top-4 left-4 px-2 py-0.5 rounded-full ${categoryStyles[event.category as keyof typeof categoryStyles]} border text-xs font-medium`}>
                     {event.category}
-                  </Badge>
+                  </div>
                 </div>
                 <div className="p-6 flex flex-col flex-1">
                   <h3 className="font-heading text-lg font-semibold tracking-wide mb-3 group-hover:text-primary transition-colors">{event.title}</h3>

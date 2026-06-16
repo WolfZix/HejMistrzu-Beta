@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Check, Minus, Package, Plus, ShieldCheck, ShoppingCart, Tag, Truck, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart } from "@/context/CartContext";
 import { badgeStyles } from "@/data/store";
 import type { ProductQuickViewProps } from "@/types/store";
@@ -31,15 +30,15 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
           <div className="aspect-square bg-muted/30 relative">
             <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
             {product.badge && (
-              <Badge className={`absolute top-4 left-4 ${badgeStyles[product.badge]} border text-xs`}>
+              <div className={`absolute top-4 left-4 px-2 py-0.5 rounded-full flex items-center ${badgeStyles[product.badge]} border text-xs`}>
                 {product.badge === "Promocja" && <Tag className="w-3 h-3 mr-1" />}
                 {product.badge}
-              </Badge>
+              </div>
             )}
           </div>
           <div className="p-6 sm:p-8 flex flex-col">
             <p className="text-xs text-muted-foreground mb-2">{product.category}</p>
-            <h2 className="font-heading text-xl font-bold tracking-wide mb-3">{product.name}</h2>
+            <DialogTitle className="font-heading text-xl font-bold tracking-wide mb-3">{product.name}</DialogTitle>
             {product.rating && (
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex items-center gap-0.5">
@@ -52,11 +51,11 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                 <span className="text-sm text-muted-foreground">({product.rating})</span>
               </div>
             )}
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6">{product.description}</p>
+            <DialogDescription className="text-muted-foreground text-sm leading-relaxed mb-6">{product.description}</DialogDescription>
             <div className="flex items-baseline gap-2 mb-4">
               <span className="font-heading text-2xl font-bold text-gold-gradient">{product.price} zł</span>
               {product.originalPrice && (
-                <span className="text-sm text-muted-foreground line-through">{product.originalPrice} zł</span>
+                <span className="text-muted-foreground line-through">{product.originalPrice} zł</span>
               )}
             </div>
             {product.inStock ? (

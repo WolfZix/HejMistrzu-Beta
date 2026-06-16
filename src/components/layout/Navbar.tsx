@@ -19,13 +19,14 @@ const navLinks = [
   { name: "Cennik", path: "/cennik" },
   { name: "Rezerwacje", path: "/rezerwacje" },
   { name: "O nas", path: "/o-nas" },
-  { name: "Kontakt", path: "/kontakt" },
+  { name: "kontakt", path: "/kontakt" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
   const location = useLocation();
   const { totalItems, setIsOpen: setCartOpen } = useCart();
 
@@ -38,32 +39,33 @@ export default function Navbar() {
   useEffect(() => setMobileOpen(false), [location]);
 
   return (
+    <>
     <nav
-      className={`fixed flex justify-center w-screen top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
           ? "bg-background/90 backdrop-blur-2xl border-b border-primary/10 shadow-lg shadow-primary/5"
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-1 h-16 lg:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-4 mr-4 group shrink-0">
+          <Link to="/" className="flex items-center gap-1 group shrink-0">
             <img src={Logo} className="w-8 h-8" />
-            <span className="font-heading text-lg tracking-wider text-foreground hidden sm:block">
+            <span className="font-heading lg:text-lg tracking-wider text-foreground hidden sm:block">
               Hej <span className="text-primary">Mistrzu</span>
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-0.5">
+          <div className="hidden xl:flex items-center gap-0.5">
             {navLinks.map((link) => {
               const active = location.pathname === link.path;
               return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`relative px-3 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+                  className={`relative text-nowrap px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
                     active
                       ? "text-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
@@ -84,20 +86,19 @@ export default function Navbar() {
           </div>
 
           {/* Right section */}
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="hidden md:flex items-center gap-1">
+          <div className="flex items-center shrink-0">
               <button
-              onClick={() => setIsPhoneDialogOpen(true)}
-              className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
-              >
-                <img src={Phone} className="w-6 h-6"/>
-              </button>
-              <PhoneDialog isOpen={isPhoneDialogOpen} onOpenChange={setIsPhoneDialogOpen} />
+                      onClick={() => setIsPhoneDialogOpen(true)}
+                      className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"
+                      >
+                        <img src={Phone} className="w-6 h-6"/>
+                      </button>
+                        <PhoneDialog isOpen={isPhoneDialogOpen} onOpenChange={setIsPhoneDialogOpen} />
               <a
                 href="https://www.instagram.com/hej_mistrzu/profilecard/?igsh=cG9yNXgwbmI0cDM1"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
+                className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"
               >
                 <img src={Instagram} className="w-6 h-6" />
               </a>
@@ -105,7 +106,7 @@ export default function Navbar() {
                 href="https://www.facebook.com/p/hej-mistrzu-centrum-gier-rpg-61567368993724/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
+                className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"
               >
                 <img src={Facebook} className="w-6 h-6" />
               </a>
@@ -113,12 +114,10 @@ export default function Navbar() {
                 href="https://discord.com/invite/KYB8Auuyu3"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30"
+                className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"
               >
                 <img src={Discord} className="w-6 h-6" />
               </a>
-            </div>
-
             {/* Cart */}
             <button
               onClick={() => setCartOpen(true)}
@@ -148,15 +147,16 @@ export default function Navbar() {
 
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 text-foreground rounded-lg hover:bg-muted/30 transition-colors"
+              className="xl:hidden p-2 text-foreground rounded-lg hover:bg-muted/30 transition-colors"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </div>
-
-      {/* Mobile menu */}
+    </nav>
+    
+    {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -164,7 +164,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="lg:hidden bg-background/95 backdrop-blur-2xl border-b border-border overflow-hidden"
+            className="xl:hidden fixed z-40 pt-16 top-0 bottom-0 right-0 w-full h-full lg:w-[50%] bg-background/95 backdrop-blur-2xl border border-border overflow-hidden"
           >
             <div className="px-4 py-4 space-y-1">
               {navLinks.map((link) => (
@@ -189,6 +189,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+      </>
   );
 }

@@ -1,7 +1,6 @@
 import { Eye, Heart, ShoppingCart, Check, Tag, Star } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { badgeStyles } from "@/data/store";
 import type { ProductCardProps } from "@/types/store";
 
@@ -18,10 +17,10 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
           </Button>
         </div>
         {product.badge && (
-          <Badge className={`absolute top-3 left-3 ${badgeStyles[product.badge]} border text-xs font-medium`}>
+          <div className={`absolute top-3 left-3 px-2 py-0.5 rounded-full flex items-center ${badgeStyles[product.badge]} border text-xs font-medium`}>
             {product.badge === "Promocja" && <Tag className="w-3 h-3 mr-1" />}
             {product.badge}
-          </Badge>
+          </div>
         )}
         <button
           onClick={(event) => { event.stopPropagation(); onToggleWishlist(product.id); }}
@@ -52,9 +51,9 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
         </div>
         <div className="mt-auto flex items-end justify-between">
           <div className="flex items-baseline gap-2">
-            <span className="font-heading text-lg font-bold text-gold-gradient">{product.price} zł</span>
+            <span className="font-heading text-xl font-bold text-gold-gradient">{product.price} zł</span>
             {product.originalPrice && (
-              <span className="text-xs text-muted-foreground line-through">{product.originalPrice} zł</span>
+              <span className="text-muted-foreground line-through">{product.originalPrice} zł</span>
             )}
           </div>
           {product.inStock ? (

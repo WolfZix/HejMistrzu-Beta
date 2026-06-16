@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Users, Clock, Baby, Dice5, Swords, BookOpen, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -99,12 +98,12 @@ export default function PlayArea() {
                         <h3 className="font-heading text-base font-semibold tracking-wide group-hover:text-primary transition-colors leading-snug">
                           {game.name}
                         </h3>
-                        <Badge className={`
+                        <div className={`
                           ${categoryColors[game.category as keyof typeof categoryColors] || "bg-muted text-muted-foreground"}
-                          border text-[10px] shrink-0`
+                          border text-[10px] shrink-0 px-2 py-0.5 rounded-full flex items-center`
                           }>
                         {game.category}
-                      </Badge>
+                      </div>
                       </div>
                       <div className="grid grid-cols-3 gap-1.5 pt-1 border-t border-border/50">
                         <div className="flex items-center gap-1 text-muted-foreground text-xs">

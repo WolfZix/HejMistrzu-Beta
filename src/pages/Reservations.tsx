@@ -8,8 +8,9 @@ import {
   CalendarDays, Instagram, Facebook, Send, MessageSquare,
   CheckCircle2, ArrowRight
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
+import Calendar from "@/components/ui/callendar";
 
 const bookingMethods = [
   {
@@ -23,31 +24,70 @@ const bookingMethods = [
     iconColor: "text-blue-400", iconBg: "bg-blue-500/10",
   },
   {
-    icon: MessageSquare, name: "Formularz", description: "Wypełnij formularz — odezwiemy się w ciągu 24h.",
-    cta: "Przejdź do formularza", href: "#form", color: "from-primary/10 to-secondary/10 border-primary/20",
+    icon: MessageSquare, name: "Discord", description: "Wejdź na nasz serwer Discord i napisz do nas przez czat lub wiadomość prywatną!",
+    cta: "Otwórz Discord", href: "#form", color: "from-primary/10 to-secondary/10 border-primary/20",
     iconColor: "text-primary", iconBg: "bg-primary/10",
   },
 ];
 
 export default function Reservations() {
   const [submitted, setSubmitted] = useState(false);
+  const [month, setMonth] = useState(1);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
   };
 
+  function handleCallendarOpen() {
+  setMonth(new Date().getMonth() + 1)
+  setIsOpen(!isOpen);
+}
+
   return (
-    <div className="pt-20 pb-24">
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div className="pt-20 overflow-x-hidden">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center gap-5">
         <SectionHeader
           badge="Rezerwacje"
           title="Zarezerwuj swoją przygodę"
           subtitle="Wybierz wygodną metodę rezerwacji i zabookuj miejsce dla siebie i przyjaciół."
         />
-
+        <button
+        onClick={handleCallendarOpen}
+        className="bg-primary px-5 py-2 rounded-full w-fit text-black font-heading font-medium mb-14">
+          Sprawdź dostępne terminy
+        </button>
+        <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+            initial={{ opacity: 0, y: -20}}
+            animate={{ opacity: 1, y: 0}}
+            exit={{ opacity: 0, y: -20}}
+            transition={{ duration: 0.2}}
+            className="flex justify-between gap-5 w-[90%]"
+            >
+              <Calendar month={month} setMonth={setMonth}/>
+              <div className="w-[30rem] bg-primary/5 p-5 rounded-lg border-4 border-primary">
+                <h1 className="text-primary">Notatki co tu zrobić</h1>
+                <p>1. Wywalić jak będzie wyglądać źle</p>
+                <p>2. Zadanie: pokazać najblizsze wydarzenie lub wydarzenia z wybranego dnia</p>
+                <p>3. Layout:</p>
+                <p>grafika</p>
+                <p>Dodatkowe info</p>
+                <p>Jakies jeszcze info</p>
+                <p>Moze jakis przycisk albo dwa</p><br/>
+                <h1 className="text-primary text-xl">! WAŻNE !</h1>
+                <p>jeszcze większość nie działa ale mniej więcej tak to bedzie wyglądać</p>
+              </div>
+            </motion.div>
+            </>
+        )}
+        </AnimatePresence>
+        
         {/* Booking Methods */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-20">
+        <div className="grid items-center grid-cols-1 md:grid-cols-3 gap-6 mx-auto mt-[5rem]">
           {bookingMethods.map((method, i) => (
             <motion.a
               key={method.name}
@@ -58,7 +98,7 @@ export default function Reservations() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
-              className={`glass rounded-2xl p-6 text-center transition-all duration-500 hover:-translate-y-1.5 border bg-gradient-to-br ${method.color} group flex flex-col`}
+              className={`glass w-full rounded-2xl p-4 text-center transition-all duration-500 hover:-translate-y-1.5 border bg-gradient-to-br ${method.color} group flex flex-col`}
             >
               <div className={`p-3.5 rounded-xl ${method.iconBg} w-fit mx-auto mb-4 border border-white/5`}>
                 <method.icon className={`w-6 h-6 ${method.iconColor}`} />
@@ -80,7 +120,7 @@ export default function Reservations() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="glass rounded-2xl p-8 sm:p-10 max-w-2xl mx-auto border-primary/10"
+          className="glass rounded-2xl p-8 sm:p-10 max-w-2xl mt-[5rem] mx-auto border-primary/10"
         >
           <div className="text-center mb-8">
             <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto mb-4">

@@ -1,23 +1,22 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Check, Star, CalendarDays, Crown, Swords, Users, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 
 const gamingPlans = [
   {
-    name: "Starter", duration: "2 godziny", price: "20", unit: "zł/os.",
+    id: 1, name: "Standard", duration: "2 godziny", price: "20", unit: "zł/os.",
     features: ["Dostęp do strefy gier", "Ponad 100 planszówek", "Kawa lub herbata w cenie"],
     popular: false, icon: Users,
   },
   {
-    name: "Adventure", duration: "4 godziny", price: "28", unit: "zł/os.",
+    id: 2, name: "Adventure", duration: "4 godziny", price: "28", unit: "zł/os.",
     features: ["Dostęp do strefy gier", "Ponad 100 planszówek", "Kawa lub herbata w cenie", "Zniżka 10% w sklepie"],
     popular: true, icon: Users,
   },
   {
-    name: "Epic", duration: "Bez limitu", price: "40", unit: "zł/os.",
+    id: 3, name: "Epic", duration: "Bez limitu", price: "40", unit: "zł/os.",
     features: ["Dostęp do strefy gier", "Ponad 100 planszówek", "Kawa lub herbata w cenie", "Zniżka 15% w sklepie", "Priorytetowa rezerwacja"],
     popular: false, icon: Users,
   },
@@ -25,23 +24,24 @@ const gamingPlans = [
 
 const rpgPlans = [
   {
-    name: "Sesja Krótka", duration: "3 godziny", price: "120", unit: "zł/pokój",
+    id: 1, name: "Standard", duration: "3 godziny", price: "120", unit: "zł/pokój",
     features: ["Prywatny pokój RPG", "Atmosfera fantasy", "Mapy i figurki", "Napoje w cenie"],
     popular: false, icon: Swords,
   },
   {
-    name: "Sesja Standardowa", duration: "5 godzin", price: "130", unit: "zł/pokój",
+    id: 2, name: "Adventure", duration: "5 godzin", price: "130", unit: "zł/pokój",
     features: ["Prywatny pokój RPG", "Atmosfera fantasy", "Mapy i figurki", "Napoje w cenie", "Przedłużenie za dopłatą"],
     popular: true, icon: Swords,
   },
   {
-    name: "Sesja Epicka", duration: "Bez limitu", price: "200", unit: "zł/pokój",
+    id: 3, name: "Epic", duration: "Bez limitu", price: "200", unit: "zł/pokój",
     features: ["Prywatny pokój RPG", "Atmosfera fantasy", "Mapy i figurki", "Napoje w cenie", "Catering na życzenie"],
     popular: false, icon: Swords,
   },
 ];
 
 interface PricingPlan {
+  id: number;
   name: string;
   duration: string;
   price: string;
@@ -66,9 +66,9 @@ function PricingCard({ plan, isPopular }: PricingCardProps) {
       }`}
     >
       {isPopular && (
-        <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground border-0 font-heading tracking-wider text-xs px-4 py-1 shadow-lg shadow-primary/20 z-20">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground border-0 font-heading tracking-wider text-xs px-4 py-1 shadow-lg shadow-primary/20 z-20 flex gap-1 rounded-lg">
           <Star className="w-3 h-3 mr-1 fill-current" />Popularne
-        </Badge>
+        </div>
       )}
       <div className="flex items-center gap-3 mb-5">
         <div className={`p-2.5 rounded-xl shrink-0 ${isPopular ? "bg-primary/20" : "bg-primary/10"} border border-primary/20 transition-colors duration-300`}>
@@ -140,12 +140,12 @@ export default function Pricing() {
           >
             <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full glass border border-border/50">
               <Users className="w-5 h-5 text-primary" />
-              <h3 className="font-heading text-lg font-semibold tracking-wide">Strefa gier</h3>
+              <h3 className="font-heading text-lg font-semibold tracking-wide">Gralnia</h3>
             </div>
           </motion.div>
-          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto items-center">
+          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto items-center">
             {gamingPlans.map((plan) => (
-              <motion.div key={plan.name} variants={cardItem} className="h-full"><PricingCard plan={plan} isPopular={plan.popular} /></motion.div>
+              <motion.div key={plan.id} variants={cardItem} className="h-full"><PricingCard plan={plan} isPopular={plan.popular} /></motion.div>
             ))}
           </motion.div>
         </div>
@@ -163,9 +163,9 @@ export default function Pricing() {
               <h3 className="font-heading text-lg font-semibold tracking-wide">Pokój RPG</h3>
             </div>
           </motion.div>
-          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto items-center">
+          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto items-center">
             {rpgPlans.map((plan) => (
-              <motion.div key={plan.name} variants={cardItem} className="h-full"><PricingCard plan={plan} isPopular={plan.popular} /></motion.div>
+              <motion.div key={plan.id} variants={cardItem} className="h-full"><PricingCard plan={plan} isPopular={plan.popular} /></motion.div>
             ))}
           </motion.div>
         </div>
@@ -183,7 +183,8 @@ export default function Pricing() {
             <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto mb-5">
               <Crown className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="font-heading text-xl font-bold tracking-wide mb-3">Sesje z Game Masterem</h3>
+            <h3 className="font-heading text-xl font-bold tracking-wide">Sesje z Game Masterem</h3>
+            <p className="text-muted-foreground text-sm opacity-50 mb-3">(max 8 os.)</p>
             <p className="text-muted-foreground text-sm leading-relaxed mb-8 max-w-md mx-auto">
               Chcesz przeżyć sesję RPG z doświadczonym Game Masterem? Skontaktuj się z nami, a przygotujemy dla Ciebie indywidualną wycenę.
             </p>

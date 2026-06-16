@@ -1,5 +1,4 @@
 import type { StoreProduct } from "@/types/store";
-import BoardGames from "@/assets/BoardGames.png";
 import Pokemon from "@/assets/Pokemon.png";
 import PokemonBooster1 from "@/assets/PokemonBooster1.png";
 import PokemonEliteBox from "@/assets/PokemonEliteBox.png";
@@ -99,7 +98,13 @@ export const storeProducts: StoreProduct[] = [
 export const storeCategories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Akcesoria"] as const;
 
 export const badgeStyles: Record<NonNullable<StoreProduct["badge"]>, string> = {
-  Promocja: "bg-red-500/10 text-red-400 border-red-500/20",
+  Promocja: "bg-red-500/20 text-red-200 border-red-200/50 hover:bg-red-800/30 hover:text-white",
   Bestseller: "bg-primary/10 text-primary border-primary/20",
   Preorder: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+};
+
+const categoryStyles: Record<string, string> = {
+  "Pokémon TCG": "bg-yellow-950/80 text-yellow-200 border-yellow-500/50 shadow-yellow-500/30 hover:bg-yellow-800/30 hover:text-yellow-300",
+  "Riftbound": "bg-purple-950/80 text-purple-200 border-purple-200/50 hover:bg-purple-800/30 hover:text-purple-300",
+  "Warhammer 40K": "bg-red-950/80 text-red-200 border-red-200/50 hover:bg-red-800/30 hover:text-red-300",
 };
