@@ -1,25 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useState } from "react";
-
-const events = [
-  {
-    id: 1,
-    title: "Pokémon League Challenge",
-    day: 5,
-    month: 6,
-    totalSlots: 20,
-    bookedSlots: 12,
-  },
-  {
-    id: 2,
-    title: "Pokémon Cup",
-    day: 17,
-    month: 6,
-    totalSlots: 20,
-    bookedSlots: 20,
-  },
-];
+import type { Event } from "@/types/event";
 
 const MONTHS = {
         1: {name: 'Styczeń', days: 31},
@@ -39,9 +19,20 @@ const MONTHS = {
 type CalendarProps = {
     month: number;
     setMonth: React.Dispatch<React.SetStateAction<number>>;
+    events: Event[];
+    setSelectedDay: React.Dispatch<React.SetStateAction<number | null>>;
+    selectedDay: number | null;
+    getEventForDay: (day: number) => {
+      id: number;
+      title: string;
+      day: number;
+      month: number;
+      totalSlots: number;
+      bookedSlots: number;
+    } | undefined;
 }
 
-export default function Calendar({ month, setMonth }: CalendarProps) {
+export default function Calendar({ getEventForDay, month, setMonth, setSelectedDay, selectedDay }: CalendarProps) {
   const currentYear = new Date().getFullYear();
 
   const currentMonth = MONTHS[month as keyof typeof MONTHS];
@@ -51,7 +42,6 @@ export default function Calendar({ month, setMonth }: CalendarProps) {
   const days = currentMonth.days;
   const firstDay = new Date(currentYear, month - 1, 1);
   const startDay = firstDay.getDay();
-  const [selectedDay, setSelectedDay] = useState<number | null>(null);
   
   const startOffset = startDay === 0 ? 6 : startDay - 1;
   
@@ -72,20 +62,9 @@ export default function Calendar({ month, setMonth }: CalendarProps) {
   "Nd.",
 ];
 
-  const getEventForDay = (day: number) => {
-    return events.find(
-      (event) => event.day === day && event.month === month
-    );
-  };
-
-  const selectedEvent =
-  selectedDay !== null
-    ? getEventForDay(selectedDay)
-    : null;
-
   return (
-    <div className="mb-10">
-    <div className="flex gap-2 items-center mb-3">
+    <div className="mb-10 h-[24rem] md:h-[32rem]">
+    <div className="flex gap-2 items-center justify-center lg:justify-start mb-3 select-none">
         <button
             onClick={() => {
                 setMonth(prev => prev === 1 ? 12 : prev - 1);
@@ -108,7 +87,7 @@ export default function Calendar({ month, setMonth }: CalendarProps) {
             <ArrowRight size={18} />
         </button>
     </div>
-    <div className="flex gap-3 mb-5">
+    <div className="flex w-fit mx-auto lg:mx-0 gap-3 mb-5">
         <div className="flex gap-1 items-center">
             <div className="w-3 h-3 bg-muted-foreground/10 border border-muted-foreground rounded-full"></div>
             <p className="text-muted-foreground text-sm">Puste</p>
@@ -122,7 +101,7 @@ export default function Calendar({ month, setMonth }: CalendarProps) {
             <p className="text-muted-foreground text-sm">Zajęte</p>
         </div>
     </div>
-    <div className="relative grid grid-cols-7 gap-1.5 md:gap-2 mb-2">
+    <div className="relative grid grid-cols-7 w-fit mx-auto gap-1 md:gap-2 mb-2">
         {WEEK_DAYS.map((day) => (
             <div
             key={day}
@@ -139,9 +118,10 @@ export default function Calendar({ month, setMonth }: CalendarProps) {
                 rounded-sm
                 border
                 p-1
-                h-10 w-10 sm:h-16 md:w-16
-                text-xs md:text-lg text-muted-foreground/50
+                h-12 w-12 sm:h-16 md:w-16
+                text-sm md:text-lg text-muted-foreground/50
                 select-none
+                cursor-not-allowed
               `}
     >
       {previousMonthDays - startOffset + i + 1}
@@ -151,10 +131,10 @@ export default function Calendar({ month, setMonth }: CalendarProps) {
         const day = i + 1;
         const event = getEventForDay(day);
         const dayClass = !event 
-          ? "bg-background text-foreground"
+          ? "bg-background text-foreground hover:bg-primary/5"
           : event?.bookedSlots < event?.totalSlots
-            ? "bg-primary/80 text-foreground"
-            : "bg-primary/30 text-muted-foreground";
+            ? "bg-primary/50 text-foreground"
+            : "bg-primary/20 text-foreground"
         return (
         <button
           onClick={() => {
@@ -166,12 +146,11 @@ export default function Calendar({ month, setMonth }: CalendarProps) {
           rounded-sm
           border
           p-1
-          h-10 w-10 md:h-16 md:w-16
-          text-xs md:text-lg
-          hover:bg-primary/20
+          h-12 w-12 md:h-16 md:w-16
+          text-sm md:text-lg
           ${dayClass}
-          ${selectedDay === i + 1
-            ? "ring-2 ring-primary bg-primary/20"
+          ${selectedDay === day
+            ? "bg-primary/20 text-foreground ring-2 ring-foreground"
             : ""
           }
           `}
@@ -188,46 +167,15 @@ export default function Calendar({ month, setMonth }: CalendarProps) {
       rounded-sm
       border
       p-1
-      h-10 w-10 sm:h-16 md:w-16
-      text-xs md:text-lg text-muted-foreground/50
+      h-12 w-12 sm:h-16 md:w-16
+      text-sm md:text-lg text-muted-foreground/50
       select-none
+      cursor-not-allowed
       `}
     >
       {day}
     </div>
   ))}
-    <AnimatePresence>
-    {selectedDay && (
-  <motion.div
-    initial={{opacity: 0, y: -20}}
-    animate={{opacity: 1, y: 0}}
-    exit={{opacity: 0, y: -20}}
-    transition={{duration: 0.2}}
-    className="absolute -bottom-28 flex flex-col gap-1">
-    {selectedEvent ? (
-      <>
-        <h2 className="font-semibold">
-          {selectedEvent.title}
-        </h2>
-
-        <p className="text-primary">
-          Miejsca:
-          {" "}
-          {selectedEvent.bookedSlots}
-          /
-          {selectedEvent.totalSlots}
-        </p>
-
-        <button className="bg-primary w-44 text-black font-display font-medium px-4 py-2 rounded-md">
-          Zarezerwuj miejsce
-        </button>
-      </>
-    ) : (
-      <p>Brak wydarzenia w tym dniu.</p>
-    )}
-  </motion.div>
-)}
-    </AnimatePresence>
     </div>
     </div>
   );

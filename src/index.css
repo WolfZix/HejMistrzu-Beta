@@ -91,13 +91,11 @@
 }
 ::-webkit-scrollbar-track {
   background: hsl(220 26% 8%);
+  border-radius: 12px;
 }
 ::-webkit-scrollbar-thumb {
   background: hsl(217 19% 22%);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(43 78% 46%);
+  border-radius: 24px;
 }
 
 /* Glassmorphism utility */
