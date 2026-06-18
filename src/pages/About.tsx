@@ -75,7 +75,7 @@ export default function About() {
       {/* Stats */}
       <section className="py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-card/30 relative overflow-hidden w-full flex justify-center">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/[0.02] via-transparent to-transparent pointer-events-none" />
-        <div className="w-full flex justify-evenly gap-4 sm:gap-6 relative z-10">
+        <div className="w-full flex flex-col md:flex-row justify-evenly gap-4 sm:gap-6 relative z-10">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -83,7 +83,7 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
-              className="glass glass-hover rounded-2xl p-6 text-center transition-all duration-300 hover:-translate-y-1 w-[20%]"
+              className="glass glass-hover rounded-2xl p-2 w-full lg:max-w-[25%] text-center transition-all duration-300 hover:-translate-y-1"
             >
               <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto mb-3 group-hover:bg-primary/15 transition-colors">
                 <stat.icon className="w-5 h-5 text-primary" />

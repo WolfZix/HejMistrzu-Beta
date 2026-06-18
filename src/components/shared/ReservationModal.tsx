@@ -67,7 +67,7 @@ export default function ReservationModal({ event, onClose, months }: Reservation
       <img
       src={event.image}
       className="
-      absolute inset-0
+      absolute top-0 bottom-0 left-0 right-0
       w-full h-full
       object-cover
       opacity-20

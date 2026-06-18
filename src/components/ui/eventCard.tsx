@@ -79,15 +79,15 @@ export default function EventCard({event, months, setSelectedEvent}: EventCardPr
         </span>
       </p>
       <p className="ml-2"><span className="text-sm text-foreground/70">{event.description}</span></p>
-      <div className="flex justify-between items-center mt-4">
-        <span className={`text-2xl font-semibold flex gap-1 items-center ${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`}>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4">
+        <span className={`text-2xl font-semibold flex gap-1 mb-4 md:mb-0 items-center ${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`}>
           <Tag size={24} />
-          {event.price}zł
+          <span className="text-foreground">{event.price}zł</span>
         </span>
       <button
         disabled={event.bookedSlots === event.totalSlots || isPastEvent}
         className={`
-          w-fit
+          w-full md:w-fit
           tracking-tighter
           font-heading font-semibold
           px-5 py-1
