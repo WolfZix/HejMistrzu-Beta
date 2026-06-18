@@ -1,7 +1,6 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { Event } from "@/types/event";
 import type { Months } from "@/pages/Reservations";
-import { useState } from "react";
 
 type CalendarProps = {
     month: number;
@@ -164,10 +163,14 @@ export default function Calendar({ getEventForDay, month, months, setMonth, year
           text-sm md:text-lg
           ${dayClass}
           ${shouldHighlight
-            ? "bg-primary/20 text-foreground ring-2 ring-primary shadow-lg shadow-primary/50 scale-105"
+            ? "text-foreground z-50 ring-2 ring-primary shadow-lg shadow-primary/50 scale-105"
             : ""
           }
-          ${isPast ? "opacity-30 cursor-not-allowed" : ""}
+          ${isPast 
+            ? event 
+              ? "bg-muted-foreground/30 opacity-30 cursor-not-allowed hover:bg-muted-foreground/30"
+              : " opacity-30 cursor-not-allowed hover:bg-transparent" : ""
+          }
           `}
         >
           {i + 1}

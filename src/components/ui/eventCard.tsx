@@ -1,6 +1,6 @@
 import type { Event } from "@/types/event";
 import type { Months } from "@/pages/Reservations";
-import { Calendar, Clock, MapPin, Tag } from "lucide-react";
+import { Calendar, Clock, MapPin, Tag, Users } from "lucide-react";
 
 type EventCardProps = {
   event: Event;
@@ -56,13 +56,10 @@ export default function EventCard({event, months, setSelectedEvent}: EventCardPr
         opacity-30
         [mask-image:linear-gradient(to_bottom_right,black_0%,transparent_60%,transparent_100%)]
       "/>
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-center">
         <h3 className="text-lg font-heading font-semibold mb-2 md:mb-1">
           {event.title}
         </h3>
-        <span className={`text-sm text-nowrap ${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`}>
-          {freeSlots} miejsc
-        </span>
       </div>
       <p className="mb-2 flex flex-col gap-1 text-xs">
         <span className=" text-foreground/90 flex gap-1 items-center">
@@ -72,6 +69,10 @@ export default function EventCard({event, months, setSelectedEvent}: EventCardPr
         <span className="text-foreground/70 flex gap-1 items-center">
           <Clock size={12} className={`${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`} />
           {event.startTime}
+        </span>
+        <span className="text-foreground/70 flex gap-1 items-center">
+          <Users size={12} className={`${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`} />
+          {freeSlots} miejsc
         </span>
         <span className="text-foreground/70 flex gap-1 items-center">
           <MapPin size={12} className={`${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`} />
