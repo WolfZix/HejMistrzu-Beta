@@ -136,10 +136,10 @@ export default function Calendar({ getEventForDay, month, months, setMonth, year
         const isPast = cellDate < today;
         const shouldHighlight = isSelected || (!selectedDate && isToday);
         const dayClass = !event 
-          ? "bg-background text-foreground hover:bg-primary/5"
+          ? "bg-background text-foreground hover:bg-transparent hover:ring hover:ring-primary"
           : event?.bookedSlots < event?.totalSlots
-              ? "bg-primary/70 text-foreground"
-              : "bg-primary/20 text-foreground"
+              ? "bg-primary/50 text-foreground hover:ring hover:ring-primary"
+              : "bg-primary/10 text-foreground hover:ring hover:ring-primary"
         return (
         <button
           disabled={isPast}
@@ -163,20 +163,20 @@ export default function Calendar({ getEventForDay, month, months, setMonth, year
           text-sm md:text-lg
           ${dayClass}
           ${shouldHighlight
-            ? "text-foreground z-50 ring-2 ring-primary shadow-lg shadow-primary/50 scale-105"
+            ? "text-foreground z-10 ring-2 ring-primary shadow-lg shadow-primary/50 scale-105"
             : ""
           }
           ${isPast 
             ? event 
-              ? "bg-muted-foreground/30 opacity-30 cursor-not-allowed hover:bg-muted-foreground/30"
-              : " opacity-30 cursor-not-allowed hover:bg-transparent" : ""
+              ? "bg-muted-foreground/30 opacity-30 cursor-not-allowed hover:bg-muted-foreground/30 hover:ring-0"
+              : " opacity-30 cursor-not-allowed hover:bg-transparent hover:ring-0" : ""
           }
           `}
         >
           {i + 1}
           {isToday 
             ? (
-              <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+              <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-primary border border-black animate-pulse"></div>
             ) : (
               ""
             )

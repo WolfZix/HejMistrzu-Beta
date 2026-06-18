@@ -18,13 +18,13 @@ export const events = [
     bookedSlots: 12, price: 35,
   },
   {
-    id: 3, title: "Riftbound: Draft Weekend", date: "2026-06-01", startTime: "14:00",
+    id: 3, title: "Riftbound: Draft Weekend", date: "2026-06-19", startTime: "14:00",
     description: "Specjalny weekend draftowy Riftbound z nagrodami dla najlepszych graczy.",
     category: "Riftbound", image: RiftboundDraft, location: "Hej Mistrzu, Rumia", totalSlots: 20,
-    bookedSlots: 12, price: 35,
+    bookedSlots: 20, price: 35,
   },
   {
-    id: 4, title: "Pokémon TCG: Puchar Hej Mistrzu", date: "2026-06-08", startTime: "10:00",
+    id: 4, title: "Pokémon TCG: Puchar Hej Mistrzu", date: "2026-06-18", startTime: "10:00",
     description: "Wielki turniej Pokémon TCG z nagrodami i atmosferą rywalizacji na najwyższym poziomie.",
     category: "Pokémon TCG", image: Pokemon, location: "Hej Mistrzu, Rumia", totalSlots: 20,
     bookedSlots: 12, price: 35,
@@ -36,7 +36,13 @@ export const events = [
     bookedSlots: 12, price: 35,
   },
   {
-    id: 6, title: "Warhammer 40K: Painting Workshop", date: "2026-05-22", startTime: "14:00",
+    id: 6, title: "Warhammer 40K: Painting Workshop", date: "2026-07-22", startTime: "14:00",
+    description: "Warsztaty malowania figurek dla początkujących i zaawansowanych. Materiały w cenie!",
+    category: "Warhammer 40K", image: Warhammer, location: "Hej Mistrzu, Rumia", totalSlots: 20,
+    bookedSlots: 12, price: 35,
+  },
+  {
+    id: 7, title: "Warhammer 40K: Painting Workshop", date: "2026-06-09", startTime: "14:00",
     description: "Warsztaty malowania figurek dla początkujących i zaawansowanych. Materiały w cenie!",
     category: "Warhammer 40K", image: Warhammer, location: "Hej Mistrzu, Rumia", totalSlots: 20,
     bookedSlots: 12, price: 35,

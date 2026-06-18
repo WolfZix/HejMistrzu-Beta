@@ -3,6 +3,7 @@ import Sad from "@/assets/sad.png";
 import type { Event } from "@/types/event";
 import EventCard from "@/components/ui/eventCard";
 import type { Months } from "@/pages/Reservations";
+import { padZero } from "@/utils/index";
 
 type callendarRightProps = {
   selectedDate: Date | null;
@@ -12,11 +13,6 @@ type callendarRightProps = {
 }
 
 export default function CallendarRight({events, selectedDate, months, setSelectedEvent}: callendarRightProps) {
-
-  function padZero(number: number | null) {
-  if (number === null) return;
-  return String(number).padStart(2, "0");
-  }
 
   const dateToShow = selectedDate ?? new Date();
 

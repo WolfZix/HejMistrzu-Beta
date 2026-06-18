@@ -4,49 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
-import Warhammer from "@/assets/Warhammer.png"
-import Riftbound from "@/assets/Riftbound.png"
-import Pokemon from "@/assets/Pokemon.png"
+import ReservationModal from "../shared/ReservationModal";
+import { events } from "@/data/events";
+import type { Event } from "@/types/event";
 
-const events = [
-  {
-    id: 1,
-    title: "Pokémon TCG League Night",
-    date: "2025-02-15",
-    time: "17:00",
-    location: "Hej Mistrzu, Rumia",
-    description: "Cotygodniowy turniej Pokémon TCG. Przyjdź z własnym deckiem i walcz o nagrody!",
-    category: "Pokémon TCG",
-    image: Pokemon,
-  },
-  {
-    id: 2,
-    title: "Warhammer 40K: Open Battle",
-    date: "2025-02-22",
-    time: "12:00",
-    location: "Hej Mistrzu, Rumia",
-    description: "Dzień otwarty Warhammer 40K — rozgrywki, malowanie figurek i porady dla nowych graczy.",
-    category: "Warhammer 40K",
-    image: Warhammer,
-  },
-  {
-    id: 3,
-    title: "Riftbound: Draft Weekend",
-    date: "2025-03-01",
-    time: "14:00",
-    location: "Hej Mistrzu, Rumia",
-    description: "Specjalny weekend draftowy Riftbound z nagrodami dla najlepszych graczy.",
-    category: "Riftbound",
-    image: Riftbound,
-  },
-];
+const MONTHS = {
+        1: {name: 'Styczeń', days: 31},
+        2: {name: 'Luty', days: 28},
+        3: {name: 'Marzec', days: 31},
+        4: {name: 'Kwiecień', days: 30},
+        5: {name: 'Maj', days: 31},
+        6: {name: 'Czerwiec', days: 30},
+        7: {name: 'Lipiec', days: 31},
+        8: {name: 'Sierpień', days: 31},
+        9: {name: 'Wrzesień', days: 30},
+        10: {name: 'Październik', days: 31},
+        11: {name: 'Listopad', days: 30},
+        12: {name: 'Grudzień', days: 31},
+};
 
-const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K"];
+const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Planszówki"];
 
 const categoryStyles: Record<string, string> = {
   "Pokémon TCG": "bg-yellow-950/80 text-yellow-200 border-yellow-500/50 shadow-yellow-500/30 hover:bg-yellow-800/30 hover:text-yellow-300",
   "Riftbound": "bg-purple-950/80 text-purple-200 border-purple-200/50 hover:bg-purple-800/30 hover:text-purple-300",
   "Warhammer 40K": "bg-red-950/80 text-red-200 border-red-200/50 hover:bg-red-800/30 hover:text-red-300",
+  "Planszówki": "bg-blue-950/80 text-blue-200 border-blue-200/50 hover:bg-blue-800/30 hover:text-blue-300",
 };
 
 const container = {
@@ -64,11 +47,22 @@ const cardItem = {
 
 export default function UpcomingEvents() {
   const [activeCategory, setActiveCategory] = useState("Wszystkie");
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const filtered =
     activeCategory === "Wszystkie"
       ? events
       : events.filter((e) => e.category === activeCategory);
+    
+  const upcomingEvents = filtered
+  .filter((event) => new Date(event.date) >= today)
+  .sort(
+    (a, b) =>
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+  )
+  .slice(0, 3);
 
   return (
     <section className="py-24 lg:py-32 px-4 sm:px-6 lg:px-8 bg-card/30 relative overflow-hidden">
@@ -105,23 +99,44 @@ export default function UpcomingEvents() {
           animate="show"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {filtered.map((event) => (
-            <motion.div
+          {upcomingEvents.map((event) => {
+            const eventDateTime = new Date(`${event.date}T${event.startTime}`)
+              const isPastEvent = eventDateTime < new Date();
+              const categoryStyles = {
+              "Pokémon TCG": 
+              `${isPastEvent 
+                ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground" 
+                : "bg-yellow-950/80 text-yellow-200 border-yellow-500/50 shadow-yellow-500/30 hover:bg-yellow-800/30 hover:text-yellow-300"}`,
+              "Riftbound": 
+              `${isPastEvent 
+                ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
+                : "bg-purple-950/80 text-purple-200 border-purple-500/50 shadow-purple-500/30 hover:bg-purple-800/30 hover:text-purple-300"}`,
+              "Warhammer 40K": 
+              `${isPastEvent 
+                ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
+                : "bg-red-950/80 text-red-200 border-red-500/50 shadow-red-500/30 hover:bg-red-800/30 hover:text-red-300"}`,
+              "Planszówki":
+              `${isPastEvent 
+                ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
+                : "bg-blue-950/80 text-blue-200 border-blue-500/50 shadow-blue-500/30 hover:bg-blue-800/30 hover:text-blue-300"}`,
+            };
+              return (
+              <motion.div
               key={event.id}
               variants={cardItem}
               layout
-              className="group glass glass-hover rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1 flex flex-col h-full"
+              className={`group glass rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1 flex flex-col h-full ${!isPastEvent ? "glass-hover" : "text-muted-foreground"}`}
             >
               <div className="aspect-[16/9] overflow-hidden relative shrink-0">
                 <img
                   src={event.image}
                   alt={event.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className={`w-full h-full object-cover transition-transform duration-700 ${isPastEvent ? "group-hover:scale-100 saturate-0" : "group-hover:scale-105 saturate-100"}`}
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
                 <div
-                  className={`absolute top-4 left-4 px-2 py-0.5 rounded-full ${categoryStyles[event.category]} border text-xs font-medium`}
+                  className={`absolute top-4 left-4 px-2 py-0.5 rounded-full ${categoryStyles[event.category as keyof typeof categoryStyles]} border text-xs font-medium`}
                 >
                   {event.category}
                 </div>
@@ -129,7 +144,7 @@ export default function UpcomingEvents() {
               <div className="p-5 sm:p-6 flex flex-col flex-1">
                 <div className="space-y-1.5 mb-3">
                   <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                    <Calendar className="w-3.5 h-3.5 text-primary/70 shrink-0" />
+                    <Calendar className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
                     <span>
                       {new Date(event.date).toLocaleDateString("pl-PL", {
                         day: "numeric",
@@ -139,33 +154,40 @@ export default function UpcomingEvents() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                    <Clock className="w-3.5 h-3.5 text-primary/70 shrink-0" />
-                    <span>{event.time}</span>
+                    <Clock className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
+                    <span>{event.startTime}</span>
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                    <MapPin className="w-3.5 h-3.5 text-primary/70 shrink-0" />
+                    <MapPin className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
                     <span>{event.location}</span>
                   </div>
                 </div>
-                <h3 className="font-heading text-base font-semibold tracking-wide mb-2 group-hover:text-primary transition-colors">
+                <h3 className={`font-heading text-base font-semibold tracking-wide mb-2 transition-colors ${isPastEvent ? "group-hover:text-muted-foreground" : "group-hover:text-primary"}`}>
                   {event.title}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1">
                   {event.description}
                 </p>
-                <Link to="/wydarzenia">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full border-primary/20 text-primary hover:text-primary hover:bg-primary/10 hover:border-primary/40 font-heading tracking-wider text-xs group/btn transition-all duration-300"
-                  >
-                    Szczegóły
-                    <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover/btn:translate-x-0.5 transition-transform" />
-                  </Button>
-                </Link>
+                  <button
+                  disabled={isPastEvent}
+                  onClick={() => setSelectedEvent(event)}
+                  className={`w-full border py-2.5 flex justify-center rounded-lg font-heading tracking-wider text-xs transition-all duration-300
+                    ${isPastEvent  
+                    ? "bg-muted-foreground/30 text-muted-foreground hover:bg-muted-foreground/30 border border-foreground/20 cursor-not-allowed" 
+                    : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 cursor-pointer"}`}>
+                    {!isPastEvent ? "Zapisz się" : "Wydarzenie dobiegło końca"}
+                    {!isPastEvent && ( <ArrowRight className="w-3.5 h-3.5 ml-1.5" />)}
+                  </button>
               </div>
             </motion.div>
-          ))}
+          )})}
+          {selectedEvent && (
+            <ReservationModal
+              months={MONTHS}
+              event={selectedEvent}
+              onClose={() => setSelectedEvent(null)}
+            />
+          )}
         </motion.div>
 
         <div className="text-center mt-12">

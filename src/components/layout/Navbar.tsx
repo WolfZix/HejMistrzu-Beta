@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ShoppingCart } from "lucide-react";
+import { Menu, X, ShoppingCart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
@@ -47,8 +47,8 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-1 h-16 lg:h-20">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-center gap-1 h-16 lg:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1 group shrink-0">
             <img src={Logo} className="w-8 h-8" />
@@ -58,7 +58,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden xl:flex items-center gap-0.5">
+          <div className="hidden xl:flex items-center gap-1 ml-auto">
             {navLinks.map((link) => {
               const active = location.pathname === link.path;
               return (
@@ -86,7 +86,7 @@ export default function Navbar() {
           </div>
 
           {/* Right section */}
-          <div className="flex items-center shrink-0">
+          <div className="flex items-center gap-1 shrink-0 mr-auto">
               <button
                       onClick={() => setIsPhoneDialogOpen(true)}
                       className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"
@@ -135,11 +135,18 @@ export default function Navbar() {
                 </motion.span>
               )}
             </button>
+            <button
+              onClick={() => setCartOpen(true)}
+              className="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/30"
+            >
+              <User className="w-6 h-6" />
+            </button>
+            </div>
 
             <Link to="/rezerwacje">
               <Button
                 size="sm"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wide text-xs hidden sm:flex transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wide text-sm hidden sm:flex transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
               >
                 Zarezerwuj
               </Button>
@@ -151,7 +158,6 @@ export default function Navbar() {
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
-          </div>
         </div>
       </div>
     </nav>

@@ -9,11 +9,6 @@ type EventCardProps = {
   setSelectedEvent: React.Dispatch<React.SetStateAction<Event | null>>;
 }
 
-function padZero(number: number | null) {
-  if (number === null) return;
-  return String(number).padStart(2, "0");
-  }
-
 export default function EventCard({event, months, setSelectedEvent}: EventCardProps) {
 
   const freeSlots = event.totalSlots - event.bookedSlots
