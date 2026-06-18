@@ -59,6 +59,24 @@ export default function HeroSection() {
           Planszówki, RPG, Pokémon TCG, Riftbound i Warhammer pod jednym dachem.
         </motion.p>
 
+        <button
+        onClick={async () => {
+          const response = await fetch("http://localhost:3000/register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: "Patryk",
+              age: 20,
+            }),
+          });
+          const data = await response.json();
+        }}
+        >
+          test backendu
+        </button>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
