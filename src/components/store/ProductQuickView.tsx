@@ -23,11 +23,11 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl p-0 gap-0 bg-card border-border rounded-2xl overflow-hidden">
-        <DialogClose className="absolute top-2 right-2 z-10 p-2 rounded-full bg-background/80 backdrop-blur border border-border hover:bg-background transition-colors">
+        <DialogClose className="absolute top-4 right-2 z-10 p-2 rounded-full bg-background/80 backdrop-blur border border-border hover:bg-background transition-colors">
           <X className="w-4 h-4" />
         </DialogClose>
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="aspect-square bg-muted/30 relative">
+          <div className="bg-muted/30 relative">
             <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
             {product.badge && (
               <div className={`absolute top-4 left-4 px-2 py-0.5 rounded-full flex items-center ${badgeStyles[product.badge]} border text-xs`}>
@@ -36,7 +36,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
               </div>
             )}
           </div>
-          <div className="p-6 sm:p-8 flex flex-col">
+          <div className="p-6 flex flex-col">
             <p className="text-xs text-muted-foreground mb-2">{product.category}</p>
             <DialogTitle className="font-heading text-xl font-bold tracking-wide mb-3">{product.name}</DialogTitle>
             {product.rating && (
