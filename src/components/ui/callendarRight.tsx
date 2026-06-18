@@ -32,11 +32,11 @@ export default function CallendarRight({events, selectedDate, months, setSelecte
       rounded-lg
       border-2 border-primary/40
       ">
-        <h1 className="text-primary font-heading text-center">
+        <h1 className="text-primary font-heading text-center text-lg">
           {`${padZero(dateToShow.getDate())}.${padZero(dateToShow.getMonth() + 1)}.${dateToShow.getFullYear()}`}
         </h1>
         <p className="text-center text-muted-foreground text-sm mb-4">
-          {events.length} wydarzenia
+          wydarzenia: {events.length}
         </p>
         {events.length === 0 ? (
           <div className="py-5 text-center">
