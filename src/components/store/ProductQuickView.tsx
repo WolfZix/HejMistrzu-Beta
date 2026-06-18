@@ -75,7 +75,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                     </button>
                   </div>
                   <Button className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider text-xs" onClick={handleAddToCart}>
-                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    <ShoppingCart aria-label="Koszyk" className="w-4 h-4 mr-2" />
                     Dodaj do koszyka
                   </Button>
                 </div>

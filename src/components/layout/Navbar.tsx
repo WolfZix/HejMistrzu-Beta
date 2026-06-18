@@ -4,11 +4,11 @@ import { Menu, X, ShoppingCart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
-import Instagram from "@/assets/instagram.png";
-import Facebook from "@/assets/facebook.png";
-import Discord from "@/assets/DiscordRound.png";
-import Logo from "@/assets/Logo.png";
-import Phone from "@/assets/phone.png";
+import Instagram from "@/assets/instagram.webp";
+import Facebook from "@/assets/facebook.webp";
+import Discord from "@/assets/DiscordRound.webp";
+import Logo from "@/assets/Logo.webp";
+import Phone from "@/assets/phone.webp";
 import PhoneDialog from "@/components/shared/PhoneDialog";
 
 const navLinks = [
@@ -26,7 +26,6 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
-  const [isContactOpen, setIsContactOpen] = useState(false);
   const location = useLocation();
   const { totalItems, setIsOpen: setCartOpen } = useCart();
 
@@ -51,7 +50,7 @@ export default function Navbar() {
         <div className="flex items-center justify-center gap-1 h-16 lg:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1 group shrink-0">
-            <img src={Logo} className="w-8 h-8" />
+            <img src={Logo} alt="Logo" className="w-8 h-8" />
             <span className="font-heading lg:text-lg tracking-wider text-foreground hidden sm:block">
               Hej <span className="text-primary">Mistrzu</span>
             </span>
@@ -91,36 +90,40 @@ export default function Navbar() {
                       onClick={() => setIsPhoneDialogOpen(true)}
                       className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"
                       >
-                        <img src={Phone} className="w-6 h-6"/>
+                        <img src={Phone} alt="Phone" className="w-6 h-6"/>
                       </button>
                         <PhoneDialog isOpen={isPhoneDialogOpen} onOpenChange={setIsPhoneDialogOpen} />
               <a
                 href="https://www.instagram.com/hej_mistrzu/profilecard/?igsh=cG9yNXgwbmI0cDM1"
+                aria-label="Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"
               >
-                <img src={Instagram} className="w-6 h-6" />
+                <img src={Instagram} alt="Instagram" className="w-6 h-6" />
               </a>
               <a
                 href="https://www.facebook.com/p/hej-mistrzu-centrum-gier-rpg-61567368993724/"
+                aria-label="Facebook"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"
               >
-                <img src={Facebook} className="w-6 h-6" />
+                <img src={Facebook} alt="Facebook" className="w-6 h-6" />
               </a>
               <a
                 href="https://discord.com/invite/KYB8Auuyu3"
+                aria-label="Discord"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"
               >
-                <img src={Discord} className="w-6 h-6" />
+                <img src={Discord} alt="Discord" className="w-6 h-6" />
               </a>
             {/* Cart */}
             <button
               onClick={() => setCartOpen(true)}
+              aria-label="Koszyk"
               className="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/30"
             >
               <ShoppingCart className="w-6 h-6" />
@@ -135,15 +138,16 @@ export default function Navbar() {
                 </motion.span>
               )}
             </button>
-            <button
-              onClick={() => setCartOpen(true)}
+            <Link
+              to="/profile/Admin"
+              aria-label="User profile"
               className="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/30"
             >
               <User className="w-6 h-6" />
-            </button>
+            </Link>
             </div>
 
-            <Link to="/rezerwacje">
+            <Link aria-label="Rezerwacje" to="/rezerwacje">
               <Button
                 size="sm"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wide text-sm hidden sm:flex transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
@@ -153,6 +157,7 @@ export default function Navbar() {
             </Link>
 
             <button
+              aria-label="Mobile menu"
               onClick={() => setMobileOpen(!mobileOpen)}
               className="xl:hidden p-2 text-foreground rounded-lg hover:bg-muted/30 transition-colors"
             >
@@ -175,6 +180,7 @@ export default function Navbar() {
             <div className="px-4 py-4 space-y-1">
               {navLinks.map((link) => (
                 <Link
+                  aria-label={link.name}
                   key={link.path}
                   to={link.path}
                   className={`block px-4 py-3 rounded-lg text-sm font-medium transition-all ${

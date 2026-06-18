@@ -1,12 +1,12 @@
 import type { StoreProduct } from "@/types/store";
-import Pokemon from "@/assets/Pokemon.png";
-import PokemonBooster1 from "@/assets/PokemonBooster1.png";
-import PokemonEliteBox from "@/assets/PokemonEliteBox.png";
-import RiftboundShadowRealm from "@/assets/RiftboundShadowRealm.png";
-import WarhammerMarinesStarter from "@/assets/WarhammerMarinesStarter.png";
-import DragonShields from "@/assets/DragonShield.png";
-import RiftboundBooster from "@/assets/RiftboundBooster.png";
-import DeckBox from "@/assets/DeckBox.png";
+import Pokemon from "@/assets/Pokemon.webp";
+import PokemonBooster1 from "@/assets/PokemonBooster1.webp";
+import PokemonEliteBox from "@/assets/PokemonEliteBox.webp";
+import RiftboundShadowRealm from "@/assets/RiftboundShadowRealm.webp";
+import WarhammerMarinesStarter from "@/assets/WarhammerMarinesStarter.webp";
+import DragonShields from "@/assets/DragonShield.webp";
+import RiftboundBooster from "@/assets/RiftboundBooster.webp";
+import DeckBox from "@/assets/DeckBox.webp";
 
 export const storeProducts: StoreProduct[] = [
   {

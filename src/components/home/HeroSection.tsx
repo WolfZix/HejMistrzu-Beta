@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown, ArrowRight } from "lucide-react";
-import HeroBackground from "@/assets/HeroBackground.png";
+import HeroBackground from "@/assets/HeroBackground.webp";
 
 export default function HeroSection() {
   const { scrollY } = useScroll();

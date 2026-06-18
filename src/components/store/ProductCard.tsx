@@ -65,7 +65,7 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
                   </motion.div>
                 ) : (
                   <motion.div key="cart" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                    <ShoppingCart className="w-4 h-4" />
+                    <ShoppingCart aria-label="Koszyk" className="w-4 h-4" />
                   </motion.div>
                 )}
               </AnimatePresence>

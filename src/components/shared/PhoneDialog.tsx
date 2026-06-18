@@ -33,6 +33,7 @@ export default function PhoneDialog({
                     </div>
                     <a
                       href="tel:+48508302733"
+                      aria-label="+48 508 302 733"
                       className="text-2xl font-bold text-primary hover:opacity-80 transition-opacity"
                     >
                       +48 508 302 733

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, ArrowRight, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
-import Tavern from "@/assets/Tavern.png"
+import Tavern from "@/assets/Tavern.webp"
 
 export default function CTASection() {
   return (

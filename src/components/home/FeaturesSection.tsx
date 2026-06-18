@@ -1,9 +1,9 @@
 import { Dice5, Swords, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
-import BoardGames from "@/assets/BoardGames.png"
-import Warhammer from "@/assets/WarhammerOpenBattle.png";
-import Pokemon from "@/assets/Pokemon.png"
+import BoardGames from "@/assets/BoardGames.webp"
+import Warhammer from "@/assets/WarhammerOpenBattle.webp";
+import Pokemon from "@/assets/Pokemon.webp"
 
 const features = [
   {

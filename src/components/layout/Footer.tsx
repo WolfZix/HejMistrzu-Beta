@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { MapPin, Clock, Mail, ArrowUpRight, Heart } from "lucide-react";
-import Logo from "@/assets/Logo.png";
-import Instagram from "@/assets/instagram.png";
-import Facebook from "@/assets/facebook.png";
-import Discord from "@/assets/DiscordRound.png";
-import Phone from "@/assets/phone.png";
+import Logo from "@/assets/Logo.webp";
+import Instagram from "@/assets/instagram.webp";
+import Facebook from "@/assets/facebook.webp";
+import Discord from "@/assets/DiscordRound.webp";
+import Phone from "@/assets/phone.webp";
 
 const footerLinks = [
   { name: "Wydarzenia", path: "/wydarzenia" },
@@ -25,7 +25,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="inline-flex items-center gap-3 mb-5 group">
-              <img src={Logo} className="w-16 h-16" />
+              <img src={Logo} alt="Logo" className="w-14 h-14 aspect-square" />
               <span className="font-heading text-lg tracking-wider">
                 Hej <span className="text-primary">Mistrzu</span>
               </span>
@@ -48,7 +48,7 @@ export default function Footer() {
                   className="p-1 rounded-lg bg-transparent hover:bg-primary/10 transition-all border border-transparent hover:border-primary/20"
                   aria-label={social.label}
                 >
-                  <img src={social.icon} className="object-cover w-12 h-12" />
+                  <img src={social.icon} alt={social.label} className="object-cover w-12 h-12" />
                 </a>
               ))}
             </div>
@@ -56,7 +56,7 @@ export default function Footer() {
 
           {/* Nav */}
           <div>
-            <h4 className="font-heading text-sm tracking-wider text-primary mb-5">Nawigacja</h4>
+            <h2 className="font-heading text-sm tracking-wider text-primary mb-5">Nawigacja</h2>
             <div className="space-y-2.5">
               {footerLinks.map((link) => (
                 <Link
@@ -73,7 +73,7 @@ export default function Footer() {
 
           {/* Hours */}
           <div>
-            <h4 className="font-heading text-sm tracking-wider text-primary mb-5">Godziny otwarcia</h4>
+            <h3 className="font-heading text-sm tracking-wider text-primary mb-5">Godziny otwarcia</h3>
             <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-start gap-3">
                 <Clock className="w-4 h-4 text-primary/70 shrink-0 mt-0.5" />

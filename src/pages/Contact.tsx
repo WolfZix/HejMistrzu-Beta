@@ -6,9 +6,9 @@ import { Label } from "@/components/ui/label";
 import { MapPin, Mail, Clock, Car, Send, CheckCircle2, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
-import Facebook from "@/assets/facebook.png";
-import Instagram from "@/assets/instagram.png";
-import Discord from "@/assets/DiscordRound.png";
+import Facebook from "@/assets/facebook.webp";
+import Instagram from "@/assets/instagram.webp";
+import Discord from "@/assets/DiscordRound.webp";
 
 const contactItems = [
   { icon: MapPin, label: "Adres", value: "Jana III Sobieskiego 93\n84-230 Rumia, Polska" },
@@ -80,7 +80,7 @@ export default function Contact() {
               viewport={{ once: true }}
               className="glass rounded-xl p-5"
             >
-              <h4 className="font-heading text-sm font-semibold tracking-wide mb-4">Social media</h4>
+              <h3 className="font-heading text-sm font-semibold tracking-wide mb-4">Social media</h3>
               <div className="flex gap-3">
                 {socials.map((social) => (
                   <a
@@ -106,7 +106,7 @@ export default function Contact() {
             transition={{ duration: 0.5 }}
             className="glass rounded-2xl p-8 border-primary/10 sticky top-28 self-start"
           >
-            <h3 className="font-heading text-lg font-bold tracking-wide mb-6">Napisz do nas</h3>
+            <h4 className="font-heading text-lg font-bold tracking-wide mb-6">Napisz do nas</h4>
 
             {submitted ? (
               <motion.div
@@ -117,7 +117,7 @@ export default function Contact() {
                 <div className="p-4 rounded-full bg-green-500/10 w-fit mx-auto mb-5 border border-green-500/20">
                   <CheckCircle2 className="w-10 h-10 text-green-400" />
                 </div>
-                <h3 className="font-heading text-xl font-semibold mb-2">Wiadomość wysłana!</h3>
+                <h5 className="font-heading text-xl font-semibold mb-2">Wiadomość wysłana!</h5>
                 <p className="text-muted-foreground text-sm max-w-xs mx-auto">Odpowiemy najszybciej jak to możliwe.</p>
               </motion.div>
             ) : (

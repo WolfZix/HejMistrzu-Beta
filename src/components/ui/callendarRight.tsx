@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import Sad from "@/assets/sad.png";
+import Sad from "@/assets/sad.webp";
 import type { Event } from "@/types/event";
 import EventCard from "@/components/ui/eventCard";
 import type { Months } from "@/pages/Reservations";

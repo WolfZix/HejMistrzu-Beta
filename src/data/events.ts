@@ -1,8 +1,8 @@
-import Warhammer from "@/assets/Warhammer.png";
-import Pokemon from "@/assets/Pokemon.png";
-import BoardGames from "@/assets/BoardGames.png";
-import RiftboundDraft from "@/assets/RiftboundDraft.png";
-import WarhammerOpenBattle from "@/assets/WarhammerOpenBattle.png";
+import Warhammer from "@/assets/Warhammer.webp";
+import Pokemon from "@/assets/Pokemon.webp";
+import BoardGames from "@/assets/BoardGames.webp";
+import RiftboundDraft from "@/assets/RiftboundDraft.webp";
+import WarhammerOpenBattle from "@/assets/WarhammerOpenBattle.webp";
 
 export const events = [
   {

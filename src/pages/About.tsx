@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Dice5, Trophy, Users, Heart, Shield, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
-import Tavern from "@/assets/Tavern.png"
-import Warhammer from "@/assets/Warhammer.png"
-import BoardGames from "@/assets/BoardGames.png"
+import Tavern from "@/assets/Tavern.webp"
+import Warhammer from "@/assets/Warhammer.webp"
+import BoardGames from "@/assets/BoardGames.webp"
 
 const VENUE_IMG = Tavern;
 const COMMUNITY_IMG = Warhammer;
