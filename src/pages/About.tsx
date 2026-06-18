@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Dice5, Trophy, Swords, Users, Heart, Shield, Sparkles, ArrowRight } from "lucide-react";
+import { Dice5, Trophy, Users, Heart, Shield, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import Tavern from "@/assets/Tavern.png"
@@ -45,7 +45,7 @@ export default function About() {
               W Rumi, na obrzeżach Gdyni, powstało wyjątkowe miejsce dla fanów gier RPG, planszowych i karcianych.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              <strong className="text-foreground font-semibold">Hej Mistrzu</strong> to więcej niż kawiarnia planszówkowa — to przystań dla każdego, kto kocha świat fantastyki. Od Pokémon TCG po Warhammer 40K, od sesji D&D po rodzinne wieczory z Catanem.
+              <strong className="text-foreground font-semibold">Hej Mistrzu</strong> to więcej niż sklep z planszówkami — to przystań dla każdego, kto kocha świat fantastyki. Od Pokémon TCG po Warhammer 40K, od sesji D&D po rodzinne wieczory z Catanem.
             </p>
             <p className="text-muted-foreground leading-relaxed">
               Nasz prywatny pokój RPG z unikalną atmosferą przenosi Cię w sam środek przygody, a rosnąca kolekcja ponad 100 gier sprawia, że zawsze znajdziesz coś nowego do odkrycia.

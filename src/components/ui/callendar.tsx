@@ -1,52 +1,46 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { Event } from "@/types/event";
-
-const MONTHS = {
-        1: {name: 'Styczeń', days: 31},
-        2: {name: 'Luty', days: 28},
-        3: {name: 'Marzec', days: 31},
-        4: {name: 'Kwiecień', days: 30},
-        5: {name: 'Maj', days: 31},
-        6: {name: 'Czerwiec', days: 30},
-        7: {name: 'Lipiec', days: 31},
-        8: {name: 'Sierpień', days: 31},
-        9: {name: 'Wrzesień', days: 30},
-        10: {name: 'Październik', days: 31},
-        11: {name: 'Listopad', days: 30},
-        12: {name: 'Grudzień', days: 31},
-};
+import type { Months } from "@/pages/Reservations";
+import { useState } from "react";
 
 type CalendarProps = {
     month: number;
+    months: Months;
     setMonth: React.Dispatch<React.SetStateAction<number>>;
+    year: number;
+    setYear: React.Dispatch<React.SetStateAction<number>>;
     events: Event[];
-    setSelectedDay: React.Dispatch<React.SetStateAction<number | null>>;
-    selectedDay: number | null;
+    setSelectedDate: React.Dispatch<React.SetStateAction<Date | null>>;
+    selectedDate: Date | null;
     getEventForDay: (day: number) => {
       id: number;
       title: string;
-      day: number;
-      month: number;
+      description: string;
+      date: string;
+      startTime: string
       totalSlots: number;
       bookedSlots: number;
+      image: string;
     } | undefined;
 }
 
-export default function Calendar({ getEventForDay, month, setMonth, setSelectedDay, selectedDay }: CalendarProps) {
-  const currentYear = new Date().getFullYear();
+export default function Calendar({ getEventForDay, month, months, setMonth, year, setYear, setSelectedDate, selectedDate }: CalendarProps) {
+  const currentMonth = months[month as keyof typeof months];
 
-  const currentMonth = MONTHS[month as keyof typeof MONTHS];
   const previousMonth = month === 1 ? 12 : month - 1;
-  const previousMonthDays = MONTHS[previousMonth as keyof typeof MONTHS].days;
+  const previousMonthDays = months[previousMonth as keyof typeof months].days;
 
   const days = currentMonth.days;
-  const firstDay = new Date(currentYear, month - 1, 1);
+  const firstDay = new Date(year, month - 1, 1);
   const startDay = firstDay.getDay();
   
   const startOffset = startDay === 0 ? 6 : startDay - 1;
   
   const totalCells = startOffset + days;
   const missingDays = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
 
   const nextMonthDays = Array.from(
     { length: missingDays },
@@ -60,29 +54,35 @@ export default function Calendar({ getEventForDay, month, setMonth, setSelectedD
   "Pt.",
   "Sb.",
   "Nd.",
-];
+  ];
 
   return (
     <div className="mb-10 h-[24rem] md:h-[32rem]">
     <div className="flex gap-2 items-center justify-center lg:justify-start mb-3 select-none">
         <button
             onClick={() => {
-                setMonth(prev => prev === 1 ? 12 : prev - 1);
-                setSelectedDay(null);
-                }
-            }
+              if (month === 1) {
+                setMonth(12);
+                setYear(prev => prev - 1);
+              } else {
+                setMonth(prev => prev - 1);
+              }
+            }}
             className="text-primary bg-transparent hover:bg-primary/10 p-2 hover:-translate-x-0.5 transition-all duration-200 rounded-sm">
             <ArrowLeft size={18} />
         </button>
-            <h1 className="font-heading text-2xl md:text-3xl text-primary text-center w-48">
-                {currentMonth.name}
+            <h1 className="font-heading text-2xl md:text-3xl text-primary text-center w-72">
+                {currentMonth.name} {year}
             </h1>
         <button
             onClick={() => {
-                setMonth(prev => prev === 12 ? 1 : prev + 1);
-                setSelectedDay(null);
-                }
-            }
+              if (month === 12) {
+                setMonth(1);
+                setYear(prev => prev + 1);
+              } else {
+                setMonth(prev => prev + 1);
+              }
+            }}
             className="text-primary bg-transparent hover:bg-primary/10 p-2 hover:translate-x-0.5 transition-all duration-200 rounded-sm">
             <ArrowRight size={18} />
         </button>
@@ -118,7 +118,7 @@ export default function Calendar({ getEventForDay, month, setMonth, setSelectedD
                 rounded-sm
                 border
                 p-1
-                h-12 w-12 sm:h-16 md:w-16
+                h-12 w-12 sm:h-16 md:w-16 xl:h-20 xl:w-20
                 text-sm md:text-lg text-muted-foreground/50
                 select-none
                 cursor-not-allowed
@@ -130,32 +130,54 @@ export default function Calendar({ getEventForDay, month, setMonth, setSelectedD
       {Array.from({ length: days }, (_, i) => {
         const day = i + 1;
         const event = getEventForDay(day);
+        const isSelected = selectedDate && selectedDate.getDate() === day && selectedDate.getMonth() === month - 1;
+        const isToday = day === today.getDate() && month === today.getMonth() + 1 && year === today.getFullYear();
+        const cellDate = new Date(year,month-1,day);
+        cellDate.setHours(0,0,0,0);
+        const isPast = cellDate < today;
+        const shouldHighlight = isSelected || (!selectedDate && isToday);
         const dayClass = !event 
           ? "bg-background text-foreground hover:bg-primary/5"
           : event?.bookedSlots < event?.totalSlots
-            ? "bg-primary/50 text-foreground"
-            : "bg-primary/20 text-foreground"
+              ? "bg-primary/70 text-foreground"
+              : "bg-primary/20 text-foreground"
         return (
         <button
+          disabled={isPast}
           onClick={() => {
-            setSelectedDay(prev => prev === day ? null : day); 
-        }}
+                const clickedDate = new Date(year, month-1, day);
+                setSelectedDate(prev => {
+                  if (
+                    prev && prev.getDate() === day && prev.getMonth() === month - 1 && !isToday
+                  ) return null;
+                  return clickedDate;
+                });
+              }}
           key={i}
           className={`
           flex items-end justify-end
+          relative
           rounded-sm
           border
           p-1
-          h-12 w-12 md:h-16 md:w-16
+          h-12 w-12 md:h-16 md:w-16 xl:h-20 xl:w-20
           text-sm md:text-lg
           ${dayClass}
-          ${selectedDay === day
-            ? "bg-primary/20 text-foreground ring-2 ring-foreground"
+          ${shouldHighlight
+            ? "bg-primary/20 text-foreground ring-2 ring-primary shadow-lg shadow-primary/50 scale-105"
             : ""
           }
+          ${isPast ? "opacity-30 cursor-not-allowed" : ""}
           `}
         >
           {i + 1}
+          {isToday 
+            ? (
+              <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+            ) : (
+              ""
+            )
+          }
         </button>
         );
         })}
@@ -167,7 +189,7 @@ export default function Calendar({ getEventForDay, month, setMonth, setSelectedD
       rounded-sm
       border
       p-1
-      h-12 w-12 sm:h-16 md:w-16
+      h-12 w-12 sm:h-16 md:w-16 xl:h-20 xl:w-20
       text-sm md:text-lg text-muted-foreground/50
       select-none
       cursor-not-allowed

@@ -157,7 +157,7 @@ export default function UpcomingEvents() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full border-primary/20 text-primary hover:bg-primary/10 hover:border-primary/40 font-heading tracking-wider text-xs group/btn transition-all duration-300"
+                    className="w-full border-primary/20 text-primary hover:text-primary hover:bg-primary/10 hover:border-primary/40 font-heading tracking-wider text-xs group/btn transition-all duration-300"
                   >
                     Szczegóły
                     <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover/btn:translate-x-0.5 transition-transform" />
@@ -173,7 +173,7 @@ export default function UpcomingEvents() {
             <Button
               variant="outline"
               size="lg"
-              className="border-primary/20 text-foreground hover:bg-primary/10 hover:border-primary/40 font-heading tracking-wider transition-all duration-300 group"
+              className="border-primary/20 text-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/40 font-heading tracking-wider transition-all duration-300 group"
             >
               Wszystkie wydarzenia
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />

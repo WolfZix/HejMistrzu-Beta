@@ -3,7 +3,7 @@ import { MapPin, Clock, Mail, ArrowUpRight, Heart } from "lucide-react";
 import Logo from "@/assets/Logo.png";
 import Instagram from "@/assets/instagram.png";
 import Facebook from "@/assets/facebook.png";
-import Discord from "@/assets/discord.png";
+import Discord from "@/assets/DiscordRound.png";
 import Phone from "@/assets/phone.png";
 
 const footerLinks = [
@@ -35,10 +35,10 @@ export default function Footer() {
             </p>
             <div className="flex gap-2">
               {[
-                { icon: Phone, href: "tel:+48508302733", label: "+48 508 302 733"},
-                { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-                { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
-                { icon: Discord, href: "https://discord.com", label: "Discord" },
+                { icon: Phone, href: "tel:+48572423020", label: "+48 572 423 020"},
+                { icon: Instagram, href: "https://www.instagram.com/hej_mistrzu/profilecard/?igsh=cG9yNXgwbmI0cDM1", label: "Instagram" },
+                { icon: Facebook, href: "https://www.facebook.com/p/hej-mistrzu-centrum-gier-rpg-61567368993724/", label: "Facebook" },
+                { icon: Discord, href: "https://discord.gg/KYB8Auuyu3", label: "Discord" },
               ].map((social) => (
                 <a
                   key={social.label}
@@ -78,22 +78,22 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <Clock className="w-4 h-4 text-primary/70 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-foreground/80 font-medium">Poniedziałek – Piątek</p>
-                  <p>14:00 – 22:00</p>
+                  <p className="text-foreground/80 font-medium">Poniedziałek - Wtorek</p>
+                  <p>09:00 – 15:00</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Clock className="w-4 h-4 text-primary/70 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-foreground/80 font-medium">Czwartek - Piątek</p>
+                  <p>09:00 – 15:00</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <Clock className="w-4 h-4 text-primary/70 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-foreground/80 font-medium">Sobota</p>
-                  <p>10:00 – 22:00</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Clock className="w-4 h-4 text-primary/70 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-foreground/80 font-medium">Niedziela</p>
-                  <p>10:00 – 20:00</p>
+                  <p>12:00 – 19:00</p>
                 </div>
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary/70 shrink-0" />
-                <span>kontakt@hejmistrzu.pl</span>
+                <span>biuro.hejmistrzu@gmail.com</span>
               </div>
               <Link to="/rezerwacje" className="inline-flex items-center gap-1.5 text-primary hover:text-primary/80 font-medium transition-colors mt-2 group">
                 Zarezerwuj stolik

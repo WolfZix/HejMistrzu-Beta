@@ -4,46 +4,26 @@ import { Calendar, Clock, MapPin, ArrowRight, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import { Input } from "@/components/ui/input";
-import Warhammer from "@/assets/Warhammer.png";
-import Pokemon from "@/assets/Pokemon.png";
-import Tavern from "@/assets/Tavern.png";
-import RiftboundDraft from "@/assets/RiftboundDraft.png";
-import WarhammerOpenBattle from "@/assets/WarhammerOpenBattle.png";
-
-const allEvents = [
-  {
-    id: 1, title: "Pokémon TCG League Night", date: "2025-02-15", time: "17:00",
-    description: "Cotygodniowy turniej Pokémon TCG. Przyjdź z własnym deckiem i walcz o nagrody!",
-    category: "Pokémon TCG", image: Pokemon, location: "Hej Mistrzu, Rumia",
-  },
-  {
-    id: 2, title: "Warhammer 40K: Open Battle", date: "2025-02-22", time: "12:00",
-    description: "Dzień otwarty Warhammer 40K — rozgrywki, malowanie figurek i porady dla nowych graczy.",
-    category: "Warhammer 40K", image: WarhammerOpenBattle, location: "Hej Mistrzu, Rumia",
-  },
-  {
-    id: 3, title: "Riftbound: Draft Weekend", date: "2025-03-01", time: "14:00",
-    description: "Specjalny weekend draftowy Riftbound z nagrodami dla najlepszych graczy.",
-    category: "Riftbound", image: RiftboundDraft, location: "Hej Mistrzu, Rumia",
-  },
-  {
-    id: 4, title: "Pokémon TCG: Puchar Hej Mistrzu", date: "2025-03-08", time: "10:00",
-    description: "Wielki turniej Pokémon TCG z nagrodami i atmosferą rywalizacji na najwyższym poziomie.",
-    category: "Pokémon TCG", image: Pokemon, location: "Hej Mistrzu, Rumia",
-  },
-  {
-    id: 5, title: "Noc Planszówek", date: "2025-03-15", time: "18:00",
-    description: "Maratońska noc planszówek — graj do rana! Specjalne promocje na napoje i przekąski.",
-    category: "Planszówki", image: Tavern, location: "Hej Mistrzu, Rumia",
-  },
-  {
-    id: 6, title: "Warhammer 40K: Painting Workshop", date: "2025-03-22", time: "14:00",
-    description: "Warsztaty malowania figurek dla początkujących i zaawansowanych. Materiały w cenie!",
-    category: "Warhammer 40K", image: Warhammer, location: "Hej Mistrzu, Rumia",
-  },
-];
+import ReservationModal from "@/components/shared/ReservationModal";
+import { events } from "@/data/events";
+import { Event } from "@/types/event";
 
 const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Planszówki"];
+
+const MONTHS = {
+        1: {name: 'Styczeń', days: 31},
+        2: {name: 'Luty', days: 28},
+        3: {name: 'Marzec', days: 31},
+        4: {name: 'Kwiecień', days: 30},
+        5: {name: 'Maj', days: 31},
+        6: {name: 'Czerwiec', days: 30},
+        7: {name: 'Lipiec', days: 31},
+        8: {name: 'Sierpień', days: 31},
+        9: {name: 'Wrzesień', days: 30},
+        10: {name: 'Październik', days: 31},
+        11: {name: 'Listopad', days: 30},
+        12: {name: 'Grudzień', days: 31},
+};
 
 const categoryStyles = {
   "Pokémon TCG": "bg-yellow-950/80 text-yellow-200 border-yellow-500/50 shadow-yellow-500/30 hover:bg-yellow-800/30 hover:text-yellow-300",
@@ -55,8 +35,9 @@ const categoryStyles = {
 export default function Events() {
   const [activeCategory, setActiveCategory] = useState("Wszystkie");
   const [search, setSearch] = useState("");
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  const filtered = allEvents.filter((e) => {
+  const filtered = events.filter((e) => {
     const matchCat = activeCategory === "Wszystkie" || e.category === activeCategory;
     const matchSearch = e.title.toLowerCase().includes(search.toLowerCase()) ||
       e.description.toLowerCase().includes(search.toLowerCase());
@@ -129,7 +110,7 @@ export default function Events() {
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground text-xs">
                       <Clock className="w-3.5 h-3.5 text-primary/70 shrink-0" />
-                      <span>{event.time}</span>
+                      <span>{event.startTime}</span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground text-xs">
                       <MapPin className="w-3.5 h-3.5 text-primary/70 shrink-0" />
@@ -137,7 +118,9 @@ export default function Events() {
                     </div>
                   </div>
                   <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-1">{event.description}</p>
-                  <Button className="w-full bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 font-heading tracking-wider text-xs transition-all duration-300">
+                  <Button
+                  onClick={() => setSelectedEvent(event)}
+                  className="w-full bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 font-heading tracking-wider text-xs transition-all duration-300">
                     Zapisz się
                     <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
                   </Button>
@@ -152,6 +135,13 @@ export default function Events() {
             <p className="text-sm">Spróbuj zmienić kryteria wyszukiwania.</p>
           </div>
         )}
+        {selectedEvent && (
+              <ReservationModal
+                months={MONTHS}
+                event={selectedEvent}
+                onClose={() => setSelectedEvent(null)}
+              />
+            )}
       </section>
     </div>
   );

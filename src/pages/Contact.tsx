@@ -8,20 +8,20 @@ import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import Facebook from "@/assets/facebook.png";
 import Instagram from "@/assets/instagram.png";
-import Discord from "@/assets/discord.png";
+import Discord from "@/assets/DiscordRound.png";
 
 const contactItems = [
   { icon: MapPin, label: "Adres", value: "Jana III Sobieskiego 93\n84-230 Rumia, Polska" },
-  { icon: Mail, label: "Email", value: "kontakt@hejmistrzu.pl" },
-  { icon: Phone, label: "Telefon", value: "+48 123 456 789" },
-  { icon: Clock, label: "Godziny otwarcia", value: "Pon–Pt: 14:00–22:00\nSob: 10:00–22:00\nNiedz: 10:00–20:00" },
-  { icon: Car, label: "Parking", value: "Darmowy parking pod budynkiem. Dodatkowe miejsca na ulicy." },
+  { icon: Mail, label: "Email", value: "biuro.hejmistrzu@gmail.com" },
+  { icon: Phone, label: "Telefon", value: "+48 572 423 020" },
+  { icon: Clock, label: "Godziny otwarcia", value: "Pon–Wt: 09:00–15:00\nCzw-Pt: 09:00–15:00\nSob: 12:00–19:00" },
+  { icon: Car, label: "Parking", value: "Darmowy parking pod budynkiem." },
 ];
 
 const socials = [
-  { icon: Instagram, name: "Instagram", href: "https://instagram.com/hejmistrzu", color: "text-pink-400", bg: "hover:bg-pink-500/10" },
-  { icon: Facebook, name: "Facebook", href: "https://facebook.com/hejmistrzu", color: "text-blue-400", bg: "hover:bg-blue-500/10" },
-  { icon: Discord, name: "Discord", href: "https://discord.com", color: "text-indigo-400", bg: "hover:bg-indigo-500/10" },
+  { icon: Instagram, name: "Instagram", href: "https://www.instagram.com/hej_mistrzu/profilecard/?igsh=cG9yNXgwbmI0cDM1", color: "text-pink-400", bg: "hover:bg-pink-500/10" },
+  { icon: Facebook, name: "Facebook", href: "https://www.facebook.com/p/hej-mistrzu-centrum-gier-rpg-61567368993724/", color: "text-blue-400", bg: "hover:bg-blue-500/10" },
+  { icon: Discord, name: "Discord", href: "https://discord.gg/KYB8Auuyu3", color: "text-indigo-400", bg: "hover:bg-indigo-500/10" },
 ];
 
 const fadeItem = {
@@ -125,11 +125,11 @@ export default function Contact() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Imię</Label>
-                    <Input required placeholder="Jan" className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
+                    <Input required placeholder="Imię" className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
                   </div>
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Email</Label>
-                    <Input required type="email" placeholder="jan@email.com" className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
+                    <Input required type="email" placeholder="przykład@email.com" className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
                   </div>
                 </div>
                 <div className="space-y-2">

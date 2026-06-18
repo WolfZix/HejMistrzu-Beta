@@ -1,11 +1,13 @@
 export type Event = {
   id: number;
   title: string;
-  category: string;
+  date: string;
+  startTime: string;
   description: string;
-  day: number;
-  month: number;
+  category: string;
+  image: string;
+  location: string;
   totalSlots: number;
   bookedSlots: number;
-  background: string;
+  price: number;
 };

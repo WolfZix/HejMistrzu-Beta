@@ -2,28 +2,28 @@ import { Dice5, Swords, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import BoardGames from "@/assets/BoardGames.png"
-import Tavern from "@/assets/Tavern.png"
+import Warhammer from "@/assets/WarhammerOpenBattle.png";
 import Pokemon from "@/assets/Pokemon.png"
 
 const features = [
   {
     icon: Dice5,
-    title: "Planszówki",
-    description: "Ponad 100 gier planszowych do dyspozycji — od klasyków po nowości. Przyjdź i zagraj!",
-    image: `${Tavern}`,
+    title: "Rozrywka",
+    description: "Ponad 100 gier planszowych i karcianych oraz pokój RPG do dyspozycji. Przyjdź i zagraj!",
+    image: `${BoardGames}`,
     aspect: "aspect-[4/3]",
   },
   {
     icon: Swords,
-    title: "Sesje RPG",
-    description: "Prywatny pokój RPG z atmosferą, Game Master na życzenie. Przeżyj przygodę życia.",
-    image: `${BoardGames}`,
+    title: "Rywalizacja",
+    description: "Regularne turnieje, pojedynki 1vs1, nagrody i wiele innych. Zmierz się z innymi na żywo! ",
+    image: `${Warhammer}`,
     aspect: "aspect-[4/3]",
   },
   {
     icon: Trophy,
     title: "Społeczność TCG",
-    description: "Pokémon, Riftbound i turnieje karciane. Dołącz do rosnącej społeczności graczy.",
+    description: "Dołącz, wymieniaj się kartami lub zmierz się w pojedynku z innymi fanami Pokémon!",
     image: `${Pokemon}`,
     aspect: "aspect-[4/3]",
   },
@@ -62,7 +62,7 @@ export default function FeaturesSection() {
           <motion.div
             key={feature.title}
             variants={item}
-            className="group relative rounded-2xl overflow-hidden bg-card border border-border hover:border-primary/30 transition-all duration-500 hover:-translate-y-1.5 cursor-pointer"
+            className="group relative rounded-2xl overflow-hidden bg-card border border-border hover:border-primary/30 transition-all duration-500 hover:-translate-y-1.5"
           >
             <div className="aspect-[4/3] overflow-hidden">
               <img

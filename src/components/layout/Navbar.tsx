@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import Instagram from "@/assets/instagram.png";
 import Facebook from "@/assets/facebook.png";
-import Discord from "@/assets/discord.png";
+import Discord from "@/assets/DiscordRound.png";
 import Logo from "@/assets/Logo.png";
 import Phone from "@/assets/phone.png";
 import PhoneDialog from "@/components/shared/PhoneDialog";
