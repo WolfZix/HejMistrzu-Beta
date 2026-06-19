@@ -60,18 +60,25 @@ export default function HeroSection() {
         </motion.p>
 
         <button
+        className="opacity-0 hover:opacity-100 w-10 h-10"
         onClick={async () => {
-          const response = await fetch("http://localhost:3000/register", {
+          const response = await fetch("http://localhost:3000/rezerwacja", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              name: "Patryk",
-              age: 20,
+              fullName: "Patryk Domasze",
+              email: "Email@gmail.com",
+              phone: "782 445 776",
+              sessionValue: "Sala RPG",
+              timeValue: "5 godzin",
+              date: "2026-06-20",
+              notes: "",
             }),
           });
           const data = await response.json();
+          console.log("STATUS REACT:",response.status)
         }}
         >
           test backendu
