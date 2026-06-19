@@ -19,7 +19,7 @@ const navLinks = [
   { name: "Cennik", path: "/cennik" },
   { name: "Rezerwacje", path: "/rezerwacje" },
   { name: "O nas", path: "/o-nas" },
-  { name: "kontakt", path: "/kontakt" },
+  { name: "Kontakt", path: "/kontakt" },
 ];
 
 export default function Navbar() {
@@ -40,16 +40,16 @@ export default function Navbar() {
   return (
     <>
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed max-w-fit xl:mx-auto top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
           ? "bg-background/90 backdrop-blur-2xl border-b border-primary/10 shadow-lg shadow-primary/5"
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="xl:mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center gap-1 h-16 lg:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-1 group shrink-0">
+          <Link to="/" className="flex items-center gap-1 group shrink-0 xl:mr-10">
             <img src={Logo} alt="Logo" className="w-8 h-8" />
             <span className="font-heading lg:text-lg tracking-wider text-foreground hidden sm:block">
               Hej <span className="text-primary">Mistrzu</span>
@@ -57,7 +57,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden xl:flex items-center gap-1 ml-auto">
+          <div className="hidden xl:flex items-center gap-1">
             {navLinks.map((link) => {
               const active = location.pathname === link.path;
               return (
@@ -85,7 +85,7 @@ export default function Navbar() {
           </div>
 
           {/* Right section */}
-          <div className="flex items-center gap-1 shrink-0 mr-auto">
+          <div className="flex items-center gap-1 shrink-0 xl:mr-10">
               <button
                       onClick={() => setIsPhoneDialogOpen(true)}
                       className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-muted/30 flex gap-2"

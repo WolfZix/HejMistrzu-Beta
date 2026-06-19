@@ -101,14 +101,23 @@ export default function ReservationForm({event, freeSlots, onClose }: Reservatio
   setIsLoading(false);
   const reservationData = {
     eventId: event.id,
-    date: event.date,
-    userInfo: formData,
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    pokemonId: formData.pokemonId,
+    email: formData.email,
     slots,
-    totalPrice: event.price * slots,
   };
-  setSubmitStatus("success");
-  console.log(reservationData);
-}
+  const response = await fetch("http://localhost:3000/reservations", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(reservationData),
+  });
+  const data = await response.json();
+  console.log("STATUS REACT:",response.status)
+  console.log("Data:",data)
+  }
   return (
     <form onSubmit={handleReservation}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
