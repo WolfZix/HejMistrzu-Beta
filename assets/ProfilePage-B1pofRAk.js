@@ -1,1 +1,0 @@
-import{a0 as a,j as s}from"./index-C8536MzY.js";function o(){const{username:e}=a();return s.jsxs("div",{className:"min-h-[25vh] flex mt-24 px-10",children:["Witaj ",e,"! Profile page bedzie dostepny po zrobieniu bazy danych uzytkownikow"]})}export{o as default};
