@@ -8,14 +8,18 @@ export default function CartDrawer() {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice, totalItems } = useCart();
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+  if (isOpen) {
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+  } else {
+    document.body.style.position = "";
+    document.body.style.width = "";
+  }
+
+  return () => {
+    document.body.style.position = "";
+    document.body.style.width = "";
+  };
   }, [isOpen]);
 
   return (
@@ -33,7 +37,7 @@ export default function CartDrawer() {
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            transition={{ type: "spring", damping: 100, stiffness: 1500 }}
             className="fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-card border-l border-border z-[70] flex flex-col shadow-2xl"
           >
             <div className="p-5 border-b border-border flex items-center justify-between">

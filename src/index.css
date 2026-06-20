@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -135,4 +135,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     hue-rotate(359deg)
     brightness(99%)
     contrast(95%);
+}
+
+
+html {
+  scrollbar-gutter: stable;
+  background: hsl(217, 19%, 15%);
 }

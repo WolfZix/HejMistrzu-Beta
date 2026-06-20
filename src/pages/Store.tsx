@@ -5,25 +5,31 @@ import { ProductCard } from "@/components/store/ProductCard";
 import { ProductQuickView } from "@/components/store/ProductQuickView";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
-import { storeCategories, storeProducts } from "@/data/store";
 import type { StoreProduct } from "@/types/store";
 import { normalizeText } from "@/utils/index";
+import { useEffect } from "react";
 
 export default function Store() {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("Wszystkie");
   const [selectedProduct, setSelectedProduct] = useState<StoreProduct | null>(null);
   const [wishlist, setWishlist] = useState<number[]>([]);
   const [notified, setNotified] = useState<Record<number, boolean>>({});
   const { addItem } = useCart();
+  const [products, setProducts] = useState<StoreProduct[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [category, setCategory] = useState("Wszystkie");
 
   const filtered = useMemo(() => {
-    return storeProducts.filter((product) => {
-      const matchesCategory = category === "Wszystkie" || product.category === category;
-      const matchesSearch = normalizeText(product.name).includes(normalizeText(search));
-      return matchesCategory && matchesSearch;
-    });
-  }, [category, search]);
+  return products.filter((product) => {
+    const matchesCategory =
+      category === "Wszystkie" || product.category === category;
+
+    const matchesSearch =
+      normalizeText(product.name).includes(normalizeText(search));
+
+    return matchesCategory && matchesSearch;
+  });
+}, [products, category, search]);
 
   const toggleWishlist = (productId: number) => {
     setWishlist((prev) => (prev.includes(productId) ? prev.filter((entry) => entry !== productId) : [...prev, productId]));
@@ -35,6 +41,34 @@ export default function Store() {
     setNotified((prev) => ({ ...prev, [product.id]: true }));
     window.setTimeout(() => setNotified((prev) => ({ ...prev, [product.id]: false })), 1500);
   };
+
+  useEffect(() => {
+  async function fetchProducts() {
+    const response = await fetch("http://localhost:3000/products");
+    const data = await response.json();
+    setProducts(data);
+  }
+  fetchProducts();
+}, []);
+
+
+useEffect(() => {
+  async function fetchCategories() {
+    const response = await fetch("http://localhost:3000/categories");
+    type Category = {
+      id: number;
+      name: string;
+    };
+    const data: Category[] = await response.json();
+
+    const uniqueCategories = [
+      "Wszystkie", ...new Set(data.map((category) => category.name))
+    ];
+    setCategories(uniqueCategories);
+  }
+  
+  fetchCategories();
+}, []);
 
   return (
     <div className="pt-20 pb-24">
@@ -50,7 +84,7 @@ export default function Store() {
             <div className="glass rounded-xl p-5 sticky top-28">
               <h3 className="font-heading text-sm tracking-wider text-primary mb-4">Kategorie</h3>
               <div className="space-y-1">
-                {storeCategories.map((entry) => (
+                {categories.map((entry) => (
                   <button
                     key={entry}
                     onClick={() => setCategory(entry)}
@@ -87,9 +121,9 @@ export default function Store() {
                 />
               </div>
               <div className="flex flex-wrap justify-center gap-2 lg:hidden">
-                {storeCategories.map((entry) => (
+                {categories.map((entry, index) => (
                   <button
-                    key={entry}
+                    key={`${entry}-${index}`}
                     onClick={() => setCategory(entry)}
                     className={`px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                       category === entry ? "bg-primary/10 text-primary border border-primary/20" : "bg-card text-muted-foreground border border-border"
@@ -100,7 +134,6 @@ export default function Store() {
                 ))}
               </div>
             </div>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 {filtered.map((product) => (
                   <ProductCard

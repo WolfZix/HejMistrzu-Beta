@@ -3,13 +3,12 @@ import { Calendar, Clock, MapPin, ArrowRight, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import { Input } from "@/components/ui/input";
-import ReservationModal from "@/components/shared/ReservationModal";
 import { events } from "@/data/events";
 import { Event } from "@/types/event";
 import { normalizeText } from "@/utils/index";
+import ReservationModal from "@/components/shared/ReservationModal";
 
 const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Planszówki"];
-
 const MONTHS = {
         1: {name: 'Styczeń', days: 31},
         2: {name: 'Luty', days: 28},
@@ -55,6 +54,21 @@ export default function Events() {
     (a, b) =>
       new Date(a.date).getTime() - new Date(b.date).getTime()
   );
+
+  const handleEventClick = (event: Event) => {
+    if (event.category === "Pokémon TCG" || event.category === "Planszówki") {
+      setSelectedEvent(event);
+      return;
+    }
+    if (event.category === "Warhammer 40K") {
+      window.open("https://www.facebook.com/p/hej-mistrzu-centrum-gier-rpg-61567368993724/","_blank");
+      return;
+    }
+    if (event.category === "Riftbound") {
+      window.open(`${event.link}`, "_blank");
+      return;
+    }
+  }
 
   return (
     <div className="pt-20 pb-24">
@@ -159,7 +173,7 @@ export default function Events() {
                   <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-1">{event.description}</p>
                   <button
                   disabled={isPastEvent}
-                  onClick={() => setSelectedEvent(event)}
+                  onClick={() => handleEventClick(event)}
                   className={`w-full border py-2.5 flex justify-center rounded-lg font-heading tracking-wider text-xs transition-all duration-300
                     ${isPastEvent  
                     ? "bg-muted-foreground/30 text-muted-foreground hover:bg-muted-foreground/30 border border-foreground/20 cursor-not-allowed" 
@@ -169,7 +183,7 @@ export default function Events() {
                   </button>
                 </div>
               </motion.div>
-)})}
+            )})}
         </div>
 
         {filtered.length === 0 && (
@@ -179,12 +193,12 @@ export default function Events() {
           </div>
         )}
         {selectedEvent && (
-              <ReservationModal
-                months={MONTHS}
-                event={selectedEvent}
-                onClose={() => setSelectedEvent(null)}
-              />
-            )}
+          <ReservationModal
+          months={MONTHS}
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+          />
+        )}
       </section>
     </div>
   );

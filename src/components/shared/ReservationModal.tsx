@@ -17,8 +17,12 @@ export default function ReservationModal({ event, onClose, months }: Reservation
   const freeSlots = event.totalSlots - event.bookedSlots;
 
   return (
-  <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-    <div className="
+  <div
+  onClick={onClose}
+  className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+    <div
+    onClick={(e) => e.stopPropagation()}
+    className="
       bg-card
       w-[95vw] max-w-2xl
       max-h-[90vh]

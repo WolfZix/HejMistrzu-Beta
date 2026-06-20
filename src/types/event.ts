@@ -10,4 +10,5 @@ export type Event = {
   totalSlots: number;
   bookedSlots: number;
   price: number;
+  link: string;
 };

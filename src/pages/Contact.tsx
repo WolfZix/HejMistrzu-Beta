@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { MapPin, Mail, Clock, Car, Send, CheckCircle2, Phone } from "lucide-react";
+import { MapPin, Mail, Clock, Car, Send, CheckCircle2, Phone, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import Facebook from "@/assets/facebook.webp";
@@ -49,6 +49,39 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-6xl mx-auto mb-20">
           {/* Info Cards */}
           <div className="space-y-4">
+            {/* Social */}
+            <motion.div
+              custom={5}
+              variants={fadeItem}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="glass rounded-xl p-5"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-2.5 rounded-lg bg-primary/10 border border-primary/20 shrink-0 group-hover:bg-primary/15 transition-colors">
+                      <MessageSquare className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+              <h3 className="font-heading text-sm font-semibold tracking-wider text-nowrap">Socials</h3>
+              <div className="flex gap-2">
+              {socials.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-1.5 px-4 py-1.5 rounded-md bg-card border border-border hover:border-primary/30 transition-all hover:-translate-y-0.5 ${social.bg} group`}
+                  >
+                    <img src={social.icon} alt={social.name} className="w-5 h-5" />
+                    <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors hidden sm:inline">{social.name}</span>
+                  </a>
+                ))}
+              </div>
+                </div>
+              </div>
+              
+            </motion.div>
             {contactItems.map((item, i) => (
               <motion.div
                 key={item.label}
@@ -71,31 +104,7 @@ export default function Contact() {
               </motion.div>
             ))}
 
-            {/* Social */}
-            <motion.div
-              custom={5}
-              variants={fadeItem}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="glass rounded-xl p-5"
-            >
-              <h3 className="font-heading text-sm font-semibold tracking-wide mb-4">Social media</h3>
-              <div className="flex gap-3">
-                {socials.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-lg bg-card border border-border hover:border-primary/30 transition-all hover:-translate-y-0.5 ${social.bg} group`}
-                  >
-                    <img src={social.icon} className="w-5 h-5" />
-                    <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors hidden sm:inline">{social.name}</span>
-                  </a>
-                ))}
-              </div>
-            </motion.div>
+
           </div>
 
           {/* Contact Form */}

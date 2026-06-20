@@ -51,7 +51,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                 <span className="text-sm text-muted-foreground">({product.rating})</span>
               </div>
             )}
-            <DialogDescription className="text-muted-foreground text-sm leading-relaxed mb-6">{product.description}</DialogDescription>
+            <DialogDescription className="max-height-[250px] overflow-y-auto text-muted-foreground text-sm leading-relaxed mb-6">{product.description}</DialogDescription>
             <div className="flex items-baseline gap-2 mb-4">
               <span className="font-heading text-2xl font-bold text-gold-gradient">{product.price} zł</span>
               {product.originalPrice && (

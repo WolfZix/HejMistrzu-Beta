@@ -5,17 +5,28 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    console.log(process.env.WC_CONSUMER_KEY.slice(0,10));
-    console.log(process.env.WC_CONSUMER_SECRET.slice(0,10));
-    const response = await axios.get(`${process.env.WC_URL}/wp-json/wc/v3/products`,
-    {
-      params: {
-        consumer_key: process.env.WC_CONSUMER_KEY,
-        consumer_secret: process.env.WC_CONSUMER_SECRET,
-      },
-    }
-  );
-  res.json(response.data);
+    const response = await axios.get(
+      `${process.env.WC_URL}/wp-json/wc/v3/products`,
+      {
+        params: {
+          consumer_key: process.env.WC_CONSUMER_KEY,
+          consumer_secret: process.env.WC_CONSUMER_SECRET,
+        },
+      }
+    );
+
+    const products = response.data.map(product => ({
+      id: product.id,
+      name: product.name,
+      price: Number(product.price),
+      category: product.categories?.[0]?.name || "Inne",
+      image: product.images?.[0]?.src || "",
+      inStock: product.stock_status === "instock",
+      description: product.short_description || "",
+    }));
+
+    res.json(products);
+
   } catch (error) {
     console.error(error.response?.data);
     res.status(500).json({
@@ -23,13 +34,6 @@ router.get("/", async (req, res) => {
       message: "Nie udało się pobrać produktów",
     });
   }
-});
-
-router.get("/test", async (req, res) => {
-  res.json({
-    keyExist: !!process.env.WC_CONSUMER_KEY,
-    secretExist: !!process.env.WC_CONSUMER_SECRET,
-  });
 });
 
 module.exports = router;

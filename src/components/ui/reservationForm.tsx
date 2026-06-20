@@ -13,6 +13,7 @@ type FormErrors = {
   lastName: string;
   pokemonId: string;
   email: string;
+  nickname: string;
 };
 
 export default function ReservationForm({event, freeSlots, onClose }: ReservationFormProps) {
@@ -26,6 +27,7 @@ export default function ReservationForm({event, freeSlots, onClose }: Reservatio
     lastName: "",
     pokemonId: "",
     email: "",
+    nickname: "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({
@@ -33,6 +35,7 @@ export default function ReservationForm({event, freeSlots, onClose }: Reservatio
     lastName: '',
     pokemonId: '',
     email: '',
+    nickname: '',
   })
 
   const handleChange = (
@@ -56,6 +59,7 @@ export default function ReservationForm({event, freeSlots, onClose }: Reservatio
       lastName: "",
       pokemonId: "",
       email: "",
+      nickname: "",
     };
 
   const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(?:-[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+)?$/;
@@ -169,28 +173,6 @@ export default function ReservationForm({event, freeSlots, onClose }: Reservatio
             <input
               required
               type="text"
-              value={formData.pokemonId}
-              onChange={(e) => handleChange("pokemonId", e.target.value)}
-              placeholder="Pokémon ID"
-              className="
-                w-full md:w-fit
-                bg-background
-                border
-                rounded
-                p-2
-                outline-none
-                focus:border-primary
-                transition-all duration-300
-                text-primary
-            "/>
-            {errors.pokemonId && (
-              <p className="text-red-500 text-sm mt-1">{errors.pokemonId}</p>
-            )}
-          </div>
-          <div>
-            <input
-              required
-              type="text"
               value={formData.email}
               onChange={(e) => handleChange("email", e.target.value)}
               placeholder="Email"
@@ -209,6 +191,50 @@ export default function ReservationForm({event, freeSlots, onClose }: Reservatio
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
           </div>
+          {event.category === "Pokémon TCG" ? (
+            <div>
+            <input
+              required
+              type="text"
+              value={formData.pokemonId}
+              onChange={(e) => handleChange("pokemonId", e.target.value)}
+              placeholder="Pokémon ID"
+              className="
+                w-full md:w-fit
+                bg-background
+                border
+                rounded
+                p-2
+                outline-none
+                focus:border-primary
+                transition-all duration-300
+                text-primary
+            "/>
+            {errors.pokemonId && (
+              <p className="text-red-500 text-sm mt-1">{errors.pokemonId}</p>
+            )}
+          </div>
+          ) : (
+            <div>
+            <input
+              required
+              type="text"
+              value={formData.nickname}
+              onChange={(e) => handleChange("nickname", e.target.value)}
+              placeholder="Nickname (Opcjonalnie)"
+              className="
+                w-full md:w-fit
+                bg-background
+                border
+                rounded
+                p-2
+                outline-none
+                focus:border-primary
+                transition-all duration-300
+                text-primary
+            "/>
+          </div>
+          )}
         </div>
         <div className="flex flex-col md:flex-row gap-2 justify-between">
           <div className="rounded w-fit gap-3 text-lg flex items-center justify-center">

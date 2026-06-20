@@ -1,14 +1,16 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import HeroBackground from "@/assets/HeroBackground.webp";
+import LoginModal from "../auth/LoginModal";
 
 export default function HeroSection() {
   const { scrollY } = useScroll();
   const heroRef = useRef(null);
   const y = useTransform(scrollY, [0, 800], [0, 300]);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
     <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
@@ -59,31 +61,6 @@ export default function HeroSection() {
           Planszówki, RPG, Pokémon TCG, Riftbound i Warhammer pod jednym dachem.
         </motion.p>
 
-        <button
-        className="opacity-0 hover:opacity-100 w-10 h-10"
-        onClick={async () => {
-          const response = await fetch("http://localhost:3000/rezerwacja", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              fullName: "Patryk Domasze",
-              email: "Email@gmail.com",
-              phone: "782 445 776",
-              sessionValue: "Sala RPG",
-              timeValue: "5 godzin",
-              date: "2026-06-20",
-              notes: "",
-            }),
-          });
-          const data = await response.json();
-          console.log("STATUS REACT:",response.status)
-        }}
-        >
-          test backendu
-        </button>
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -125,6 +102,9 @@ export default function HeroSection() {
           <ChevronDown className="w-6 h-6 text-primary/40" />
         </motion.div>
       </motion.div>
+      {isLoginOpen && (
+        <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+      )}
     </section>
   );
 }
