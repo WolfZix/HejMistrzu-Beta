@@ -4,16 +4,10 @@ import { Menu, X, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/CartContext";
-
-import Instagram from "@/assets/instagram.webp";
-import Facebook from "@/assets/facebook.webp";
-import Discord from "@/assets/DiscordRound.webp";
 import Logo from "@/assets/Logo.webp";
-import Phone from "@/assets/phone.webp";
-
-import PhoneDialog from "@/components/shared/PhoneDialog";
 import UserDropdown from "@/components/auth/UserDropdown";
 import LoginModal from "@/components/auth/LoginModal";
+import RegisterModal from "@/components/auth/RegisterModal";
 
 const navLinks = [
   { name: "Strona główna", path: "/" },
@@ -30,6 +24,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
   const location = useLocation();
   const { totalItems, setIsOpen: setCartOpen } = useCart();
@@ -58,7 +53,7 @@ export default function Navbar() {
         }`}
       >
         <div className="px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl flex items-center mx-auto justify-between h-16 lg:h-20">
+          <div className="max-w-[85rem] flex items-center mx-auto justify-between h-16 lg:h-20">
 
             {/* LEFT */}
             <div className="flex items-center gap-12">
@@ -115,7 +110,7 @@ export default function Navbar() {
               <button
                 onClick={() => setCartOpen(true)}
                 aria-label="Koszyk"
-                className="relative p-2 rounded-lg hover:bg-muted/30 transition-colors"
+                className="relative p-2 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted/30 transition-colors"
               >
                 <ShoppingCart className="w-6 h-6" />
 
@@ -130,7 +125,7 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </button>
-              <UserDropdown onLoginClick={() => setIsLoginOpen(true)} />
+              <UserDropdown onLoginClick={() => setIsLoginOpen(true)} onRegisterClick={() => setIsRegisterOpen(true)} />
                 <Link
                 to="/rezerwacje"
                 aria-label="Rezerwacje"
@@ -171,7 +166,14 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+      <LoginModal
+      isLoginOpen={isLoginOpen} onLoginClose={() => setIsLoginOpen(false)}
+      setIsRegisterOpen={setIsRegisterOpen}
+      />
+      <RegisterModal
+      isRegisterOpen={isRegisterOpen} onRegisterClose={() => setIsRegisterOpen(false)}
+      setIsLoginOpen={setIsLoginOpen}
+      />
 
       <AnimatePresence>
         {mobileOpen && (

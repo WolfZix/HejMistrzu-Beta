@@ -4,6 +4,10 @@ import { CartProvider } from '@/context/CartContext';
 
 import Layout from '@/components/layout/Layout';
 import ScrollToTop from '@/components/ScrollToTop';
+import ProtectedRoute from "@/components/ProtectedRoute";
+
+import { AuthProvider } from "@/context/AuthContext";
+
 import PageLoader from "@/pages/PageLoader";
 const Home = lazy(() => import("@/pages/Home"));
 const Events = lazy(() => import("@/pages/Events"));
@@ -14,33 +18,46 @@ const Reservations = lazy(() => import("@/pages/Reservations"));
 const About = lazy(() => import("@/pages/About"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const HistoryPage = lazy(() => import("@/pages/HistoryPage"));
 
 function App() {
   const isGitHubPages = window.location.hostname.includes("github.io");
   const basename = isGitHubPages ? "/HejMistrzu-Beta" : "/";
   return (
     <>
-      <CartProvider>
-        <Router basename={basename}>
-          <ScrollToTop />
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/wydarzenia" element={<Events />} />
-                <Route path="/sklep" element={<Store />} />
-                <Route path="/strefa-gier" element={<PlayArea />} />
-                <Route path="/cennik" element={<Pricing />} />
-                <Route path="/rezerwacje" element={<Reservations />} />
-                <Route path="/o-nas" element={<About />} />
-                <Route path="/kontakt" element={<Contact />} />
-                <Route path="/profile/:username" element={<ProfilePage />} />
-              </Route>
-            </Routes>
-          </Suspense>
-        </Router>
-      </CartProvider>
-      </>
+      <AuthProvider>
+        <CartProvider>
+          <Router basename={basename}>
+            <ScrollToTop />
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/wydarzenia" element={<Events />} />
+                  <Route path="/sklep" element={<Store />} />
+                  <Route path="/strefa-gier" element={<PlayArea />} />
+                  <Route path="/cennik" element={<Pricing />} />
+                  <Route path="/rezerwacje" element={<Reservations />} />
+                  <Route path="/o-nas" element={<About />} />
+                  <Route path="/kontakt" element={<Contact />} />
+
+                  <Route path="/profil/:username" element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/profil/:username/historia" element={
+                    <ProtectedRoute>
+                      <HistoryPage />
+                    </ProtectedRoute>
+                  } />
+                </Route>
+              </Routes>
+            </Suspense>
+          </Router>
+        </CartProvider>
+      </AuthProvider>
+    </>
   )
 }
 

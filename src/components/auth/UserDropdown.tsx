@@ -1,26 +1,77 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { useRef, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { User, LogIn, UserPlus, History, Trophy, LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 type UserDropdownProps = {
   onLoginClick: () => void;
+  onRegisterClick: () => void;
 }
 
-export default function UserDropdown({ onLoginClick }: UserDropdownProps) {
+export default function UserDropdown({ onLoginClick, onRegisterClick }: UserDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
-  const isLoggedIn = false;
-  const username = "Patryk";
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname])
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  },[]);
+
+  const { user, logout } = useAuth();
+  const isLoggedIn = !!user;
+  const username = user?.username;
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
-      <div className="relative">
+      <div
+      ref={dropdownRef}
+      className="relative">
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/30">
-          <User size={22} />
-        </button>
-      <AnimatePresence>
+        onClick={() => setIsOpen(!isOpen)}
+        className="
+          flex
+          items-center
+          gap-1
+          relative
+          overflow-hidden
+          p-2
+          text-muted-foreground
+          hover:text-foreground
+          transition-colors
+          rounded-lg
+          hover:bg-muted/30
+        "
+      >
+        <User size={22} />
+        {username && (
+          <span
+          className="text-sm font-medium">
+            {username.length > 15
+            ? `${username.slice(0, 15)}...`
+            : username}
+          </span>
+        )}
+      </button>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -63,6 +114,10 @@ export default function UserDropdown({ onLoginClick }: UserDropdownProps) {
                 </button>
 
                 <button
+                  onClick={() => {
+                    onRegisterClick();
+                    setIsOpen(false)
+                  }}
                   className="
                     w-full
                     text-left
@@ -90,11 +145,15 @@ export default function UserDropdown({ onLoginClick }: UserDropdownProps) {
                     flex gap-1
                   "
                 >
-                  {username}
+                  {username && (
+                    username.length > 20
+                    ? `${username.slice(0, 20)}...`
+                    : username
+                  )}
                 </div>
 
                 <Link
-                to="/profil/:username"
+                  to={`/profil/${username}`}
                   className="
                     w-full
                     text-left
@@ -110,7 +169,7 @@ export default function UserDropdown({ onLoginClick }: UserDropdownProps) {
                 </Link>
 
                 <Link
-                to="/profil/:username/statystyki"
+                  to={`/profil/${username}/statystyki`}
                   className="
                     w-full
                     text-left
@@ -126,7 +185,7 @@ export default function UserDropdown({ onLoginClick }: UserDropdownProps) {
                 </Link>
 
                 <Link
-                to="/profil/:username/historia"
+                  to={`/profil/${username}/historia`}
                   className="
                     w-full
                     text-left
@@ -142,6 +201,10 @@ export default function UserDropdown({ onLoginClick }: UserDropdownProps) {
                 </Link>
 
                 <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    handleLogout()
+                  }}
                   className="
                     w-full
                     text-left
@@ -160,7 +223,6 @@ export default function UserDropdown({ onLoginClick }: UserDropdownProps) {
             )}
           </motion.div>
         )}
-      </AnimatePresence>
     </div>
   );
 }

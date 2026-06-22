@@ -1,19 +1,27 @@
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 type LoginModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
+  isLoginOpen: boolean;
+  onLoginClose: () => void;
+  setIsRegisterOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function LoginModal({
-  isOpen,
-  onClose,
+  isLoginOpen,
+  onLoginClose,
+  setIsRegisterOpen,
 }: LoginModalProps) {
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { setUser } = useAuth();
+
   useEffect(() => {
-    if (isOpen) {
+    if (isLoginOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -21,15 +29,49 @@ export default function LoginModal({
     return () => {
       document.body.style.overflow = "auto";
     }
-  }, [isOpen])
+  }, [isLoginOpen])
+
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
+  try {
+    const response = await fetch("http://localhost:3000/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      setError(data.message);
+      return;
+    }
+    localStorage.setItem("token", data.token);
+    setUser(data.user);
+    onLoginClose();
+  } catch (error) {
+    console.error(error);
+    setError("błąd połaczenia z serwerem");
+  }
+};
+
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isLoginOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onMouseDown={() => {
+              setEmail("");
+              setPassword("");
+              setError("");
+              onLoginClose();
+            }}
             className="
             fixed
             inset-0
@@ -48,6 +90,7 @@ export default function LoginModal({
               exit={{ opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
               className="
               w-full
               relative
@@ -64,25 +107,27 @@ export default function LoginModal({
             >
               <button
                 type="button"
-                onClick={onClose}
+                onClick={onLoginClose}
                 className="absolute top-3 right-3 p-2 rounded-lg hover:bg-muted/30"
               >
                 <X size={18} />
               </button>
-              <div className="flex flex-col items-center justify-center mb-6">
+              <div className="flex flex-col items-center justify-center mb-6 min-h-8 overflow-hidden">
                 <h2 className="font-heading text-center text-2xl font-semibold">
                   Logowanie
                 </h2>
-                <p className="text-center text-sm text-muted-foreground mt-2">
-                  Zaloguj się do swojego konta
-                </p>
               </div>
 
-              <form className="flex flex-col">
+              <form
+              onSubmit={handleLogin}
+              className="flex flex-col"
+              >
                 <label className="mb-1">Email</label>
                   <input
                     type="email"
                     placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="
                     w-full
                     bg-background/50
@@ -102,6 +147,8 @@ export default function LoginModal({
                 <input
                   type="password"
                   placeholder="Hasło"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="
                   w-full
                   bg-background/50
@@ -117,7 +164,11 @@ export default function LoginModal({
                   mb-4
                   "
                 />
-
+                {error && (
+                  <p className="text-red-500 text-sm mb-4">
+                    {error}
+                  </p>
+                )}
                 <button
                   type="submit"
                   className="
@@ -138,19 +189,17 @@ export default function LoginModal({
                 </button>
               </form>
 
-              <div className="mt-6 text-center">
-                <p className="text-sm text-muted-foreground">
+              <div className="mt-6 text-center overflow-hidden">
+                <p className="text-sm text-muted-foreground h-5 overflow-hidden">
                   Nie masz konta?
                 </p>
-
                 <button
-                  type="button"
-                  className="
-                  mt-2
-                  text-primary
-                  hover:underline
-                  "
-                >
+                onClick={() => {
+                  onLoginClose();
+                  setIsRegisterOpen(true);
+                }}
+                type="button"
+                className="mt-2 text-primary hover:underline">
                   Utwórz konto
                 </button>
               </div>
