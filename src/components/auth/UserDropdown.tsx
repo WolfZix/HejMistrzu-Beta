@@ -63,13 +63,15 @@ export default function UserDropdown({ onLoginClick, onRegisterClick }: UserDrop
         "
       >
         <User size={22} />
-        {username && (
+        {username ? (
           <span
           className="text-sm font-medium">
             {username.length > 15
             ? `${username.slice(0, 15)}...`
             : username}
           </span>
+        ) : (
+          <span className="text-sm font-medium">Guest</span>
         )}
       </button>
         {isOpen && (

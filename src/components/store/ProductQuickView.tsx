@@ -11,6 +11,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
   const [qty, setQty] = useState(1);
 
   if (!product) return null;
+  console.log(product.categories)
 
   const handleAddToCart = () => {
     for (let index = 0; index < qty; index += 1) {
@@ -22,7 +23,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl p-0 gap-0 bg-card border-border rounded-2xl overflow-hidden">
+      <DialogContent className="max-w-5xl p-0 gap-0 bg-card border-border rounded-2xl overflow-hidden">
         <DialogClose className="absolute top-4 right-2 z-10 p-2 rounded-full bg-background/80 backdrop-blur border border-border hover:bg-background transition-colors">
           <X className="w-4 h-4" />
         </DialogClose>
@@ -37,7 +38,16 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
             )}
           </div>
           <div className="p-6 flex flex-col">
-            <p className="text-xs text-muted-foreground mb-2">{product.category}</p>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {product.categories.map((category) => (
+                <span
+                  key={category.id}
+                  className="px-2 py-1 rounded-full text-xs border border-primary/20 bg-primary/10 text-primary"
+                >
+                  {category.name}
+                </span>
+              ))}
+            </div>
             <DialogTitle className="font-heading text-xl font-bold tracking-wide mb-3">{product.name}</DialogTitle>
             {product.rating && (
               <div className="flex items-center gap-2 mb-4">
@@ -51,7 +61,10 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                 <span className="text-sm text-muted-foreground">({product.rating})</span>
               </div>
             )}
-            <DialogDescription className="max-height-[250px] overflow-y-auto text-muted-foreground text-sm leading-relaxed mb-6">{product.description}</DialogDescription>
+            <DialogDescription
+            className="h-full max-h-[400px] overflow-y-auto text-muted-foreground text-sm leading-relaxed mb-6"
+            dangerouslySetInnerHTML={{__html: product.description,}}
+            />
             <div className="flex items-baseline gap-2 mb-4">
               <span className="font-heading text-2xl font-bold text-gold-gradient">{product.price} zł</span>
               {product.originalPrice && (
@@ -74,7 +87,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                       <Plus className="w-4 h-4" />
                     </button>
                   </div>
-                  <Button className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider text-xs" onClick={handleAddToCart}>
+                  <Button className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider text-xs font-semibold" onClick={handleAddToCart}>
                     <ShoppingCart aria-label="Koszyk" className="w-4 h-4 mr-2" />
                     Dodaj do koszyka
                   </Button>

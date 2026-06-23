@@ -19,6 +19,7 @@ router.get("/", async (req, res) => {
     const categories = response.data.map((category) => ({
       id: category.id,
       name: category.name,
+      parent: category.parent,
       count: category.count,
     }));
 

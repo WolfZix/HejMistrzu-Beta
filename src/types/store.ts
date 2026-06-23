@@ -7,7 +7,10 @@ export interface StoreProduct {
   name: string;
   price: number;
   originalPrice?: number;
-  category: string;
+  categories: {
+    id: number;
+    name: string;
+  }[];
   image: string;
   badge?: BadgeKind;
   inStock: boolean;

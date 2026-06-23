@@ -11,6 +11,7 @@ router.get("/", async (req, res) => {
         params: {
           consumer_key: process.env.WC_CONSUMER_KEY,
           consumer_secret: process.env.WC_CONSUMER_SECRET,
+          per_page: 100,
         },
       }
     );
@@ -19,12 +20,15 @@ router.get("/", async (req, res) => {
       id: product.id,
       name: product.name,
       price: Number(product.price),
-      category: product.categories?.[0]?.name || "Inne",
+      categories: product.categories.map(category => ({
+        id: category.id,
+        name: category.name,
+      })),
       image: product.images?.[0]?.src || "",
       inStock: product.stock_status === "instock",
       description: product.short_description || "",
     }));
-
+    
     res.json(products);
 
   } catch (error) {
