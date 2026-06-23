@@ -16,7 +16,9 @@ router.get("/", async (req, res) => {
       }
     );
 
-    const categories = response.data.map((category) => ({
+    const categories = response.data
+    .filter(category => category.id !== 34)
+    .map((category) => ({
       id: category.id,
       name: category.name,
       parent: category.parent,

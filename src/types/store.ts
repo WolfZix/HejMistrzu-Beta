@@ -6,7 +6,10 @@ export interface StoreProduct {
   id: number;
   name: string;
   price: number;
-  originalPrice?: number;
+  originalPrice: number;
+  regularPrice: number | null;
+  salePrice: number | null;
+  onSale: boolean;
   categories: {
     id: number;
     name: string;
@@ -38,3 +41,10 @@ export interface StoreSidebarProps {
   activeCategory: string;
   onCategoryChange: (category: string) => void;
 }
+
+export type Category = {
+  id: number;
+  name: string;
+  parent: number;
+  count: number;
+};

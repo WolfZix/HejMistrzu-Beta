@@ -5,21 +5,45 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const response = await axios.get(
+    const page1 = await axios.get(
       `${process.env.WC_URL}/wp-json/wc/v3/products`,
       {
         params: {
           consumer_key: process.env.WC_CONSUMER_KEY,
           consumer_secret: process.env.WC_CONSUMER_SECRET,
           per_page: 100,
+          page: 1,
+        },
+      }
+    );
+    const page2 = await axios.get(
+      `${process.env.WC_URL}/wp-json/wc/v3/products`,
+      {
+        params: {
+          consumer_key: process.env.WC_CONSUMER_KEY,
+          consumer_secret: process.env.WC_CONSUMER_SECRET,
+          per_page: 100,
+          page: 2,
         },
       }
     );
 
-    const products = response.data.map(product => ({
+    const allProducts = [
+      ...page1.data,
+      ...page2.data,
+    ];
+
+    const visibleProducts = allProducts.filter((product) => product.status === "publish");
+
+    const products = visibleProducts.filter(
+      product => !product.categories.some(category => category.id === 34)
+    ).map(product => ({
       id: product.id,
       name: product.name,
       price: Number(product.price),
+      regularPrice: Number(product.regular_price) || null,
+      salePrice: Number(product.sale_price) || null,
+      onSale: product.on_sale,
       categories: product.categories.map(category => ({
         id: category.id,
         name: category.name,
@@ -28,7 +52,6 @@ router.get("/", async (req, res) => {
       inStock: product.stock_status === "instock",
       description: product.short_description || "",
     }));
-    
     res.json(products);
 
   } catch (error) {

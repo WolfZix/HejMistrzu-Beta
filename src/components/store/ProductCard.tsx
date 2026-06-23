@@ -1,7 +1,6 @@
 import { Eye, Heart, ShoppingCart, Check, Tag, Star } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { badgeStyles } from "@/data/store";
 import type { ProductCardProps } from "@/types/store";
 
 export function ProductCard({ product, isWishlisted, isNotified, onQuickView, onToggleWishlist, onAddToCart }: ProductCardProps) {
@@ -16,10 +15,10 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
             <Eye className="w-3.5 h-3.5 mr-1.5" /> Szybki podgląd
           </Button>
         </div>
-        {product.badge && (
-          <div className={`absolute top-3 left-3 px-2 py-0.5 rounded-full flex items-center ${badgeStyles[product.badge]} border text-xs font-medium`}>
-            {product.badge === "Promocja" && <Tag className="w-3 h-3 mr-1" />}
-            {product.badge}
+        {product.onSale && (
+          <div className={`absolute top-3 left-3 px-2 py-0.5 rounded-full flex items-center border text-xs font-medium bg-red-600 text-white border-black`}>
+            {product.onSale && <Tag className="w-3 h-3 mr-1" />}
+            Promocja
           </div>
         )}
         <button
@@ -33,7 +32,9 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
       </div>
 
       <div className="p-5 flex flex-col flex-1">
-        <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5">{product.category}</p>
+        <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5">
+          {product.categories.at(-1)?.name}
+        </p>
         <h3 className="font-medium text-sm leading-snug mb-3 line-clamp-2 group-hover:text-primary transition-colors">{product.name}</h3>
         <div className="min-h-[20px] flex items-center gap-1.5 mb-3">
           {product.rating ? (
@@ -51,9 +52,11 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
         </div>
         <div className="mt-auto flex items-end justify-between">
           <div className="flex items-baseline gap-2">
-            <span className="font-heading text-xl font-bold text-gold-gradient">{product.price} zł</span>
-            {product.originalPrice && (
-              <span className="text-muted-foreground line-through">{product.originalPrice} zł</span>
+            <span className="font-heading text-xl font-bold text-gold-gradient">
+              {product.onSale ? product.salePrice : product.price} zł
+              </span>
+            {product.regularPrice && product.onSale && (
+              <span className="text-muted-foreground line-through">{product.regularPrice} zł</span>
             )}
           </div>
           {product.inStock ? (
@@ -72,7 +75,7 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
             </Button>
           ) : (
             <Button size="sm" disabled variant="outline" className="h-9 text-xs border-border text-muted-foreground">
-              Wkrótce
+              Premiera wkrótce
             </Button>
           )}
         </div>

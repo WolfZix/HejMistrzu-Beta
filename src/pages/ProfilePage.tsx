@@ -33,7 +33,6 @@ export default function ProfilePage() {
     );
     const data = await response.json();
     await fetchReservations();
-    console.log(data);
   }
   return (
     <div className="min-h-[25vh] flex mt-24 px-10 flex-col gap-5">

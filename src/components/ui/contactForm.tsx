@@ -72,7 +72,6 @@ export default function ContactForm() {
     if (!sessionValue || !timeValue) return;
 
     setSubmitted(true);
-    console.log(formData)
   };
 
   const handleChange = (

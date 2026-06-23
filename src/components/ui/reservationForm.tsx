@@ -119,8 +119,6 @@ export default function ReservationForm({event, freeSlots, onClose }: Reservatio
     body: JSON.stringify(reservationData),
   });
   const data = await response.json();
-  console.log("STATUS REACT:",response.status)
-  console.log("Data:",data)
   }
   return (
     <form onSubmit={handleReservation}>
