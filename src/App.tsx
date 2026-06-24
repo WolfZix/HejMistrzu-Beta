@@ -20,6 +20,14 @@ const Contact = lazy(() => import("@/pages/Contact"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const HistoryPage = lazy(() => import("@/pages/HistoryPage"));
 
+// Admin panel
+const AdminLayout = lazy(() => import("@/admin/components/AdminLayout"));
+const AdminDashboard = lazy(() => import("@/admin/pages/Dashboard"));
+const AdminReservations = lazy(() => import("@/admin/pages/Reservations"));
+const AdminUsers = lazy(() => import("@/admin/pages/Users"));
+const AdminProducts = lazy(() => import("@/admin/pages/Products"));
+const AdminEvents = lazy(() => import("@/admin/pages/Events"));
+
 function App() {
   const isGitHubPages = window.location.hostname.includes("github.io");
   const basename = isGitHubPages ? "/HejMistrzu-Beta" : "/";
@@ -51,6 +59,13 @@ function App() {
                       <HistoryPage />
                     </ProtectedRoute>
                   } />
+                </Route>
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="rezerwacje" element={<AdminReservations />} />
+                  <Route path="uzytkownicy" element={<AdminUsers />} />
+                  <Route path="produkty" element={<AdminProducts />} />
+                  <Route path="eventy" element={<AdminEvents />} />
                 </Route>
               </Routes>
             </Suspense>

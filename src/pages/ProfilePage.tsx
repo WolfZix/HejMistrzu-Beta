@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 type Reservation = {
@@ -37,23 +37,9 @@ export default function ProfilePage() {
   return (
     <div className="min-h-[25vh] flex mt-24 px-10 flex-col gap-5">
       <p>Witaj {username}! Profile page bedzie dostepny po zrobieniu bazy danych uzytkownikow</p>
-      {reservations.map((rezerwacja, i) => (
-          <div key={i} className="flex flex-col">
-            <p>ID: {rezerwacja.id}</p>
-            <p>ID wydarzenia: {rezerwacja.eventId}</p>
-            <p>Imię: {rezerwacja.firstName}</p>
-            <p>Nazwisko: {rezerwacja.lastName}</p>
-            <p>Email: {rezerwacja.email}</p>
-            <p>Pokemon ID: {rezerwacja.pokemonId}</p>
-            <p>Liczba miejsc: {rezerwacja.slots}</p>
-            <button
-            onClick={() => handleDelete(rezerwacja.id)}
-            className="w-fit px-2 py-1 rounded-xl bg-red-500 text-white"
-            >
-            DELETE
-            </button>
-          </div>
-      ))}
+      {username === "WolfZix" && (
+        <Link to="/admin" className="px-4 py-2 w-fit bg-card border-border rounded-xl">Panel admina</Link>
+      )}
     </div>
   )
 }

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import HeroBackground from "@/assets/HeroBackground.webp";
-import LoginModal from "../auth/LoginModal";
 
 export default function HeroSection() {
   const { scrollY } = useScroll();
@@ -102,9 +101,6 @@ export default function HeroSection() {
           <ChevronDown className="w-6 h-6 text-primary/40" />
         </motion.div>
       </motion.div>
-      {isLoginOpen && (
-        <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-      )}
     </section>
   );
 }

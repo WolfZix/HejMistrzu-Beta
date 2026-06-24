@@ -53,11 +53,14 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
         <div className="mt-auto flex items-end justify-between">
           <div className="flex items-baseline gap-2">
             <span className="font-heading text-xl font-bold text-gold-gradient">
-              {product.onSale ? product.salePrice : product.price} zł
-              </span>
-            {product.regularPrice && product.onSale && (
-              <span className="text-muted-foreground line-through">{product.regularPrice} zł</span>
-            )}
+              {product.price.toFixed(2)} zł
+            </span>
+            {product.regularPrice &&
+              product.regularPrice > product.price && (
+                <span className="text-muted-foreground line-through">
+                  {product.regularPrice.toFixed(2)} zł
+                </span>
+              )}
           </div>
           {product.inStock ? (
             <Button size="sm" className="bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground border border-primary/20 h-9 w-9 p-0 rounded-lg transition-all duration-300" onClick={(event) => onAddToCart(product, event)}>
@@ -75,7 +78,7 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
             </Button>
           ) : (
             <Button size="sm" disabled variant="outline" className="h-9 text-xs border-border text-muted-foreground">
-              Premiera wkrótce
+              Wkrótce
             </Button>
           )}
         </div>
