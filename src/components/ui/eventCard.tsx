@@ -6,10 +6,10 @@ type EventCardProps = {
   event: Event;
   months: Months;
   selectedDate: Date | null;
-  setSelectedEvent: React.Dispatch<React.SetStateAction<Event | null>>;
+  handleEventClick: (event: Event) => void;
 }
 
-export default function EventCard({event, months, setSelectedEvent}: EventCardProps) {
+export default function EventCard({event, months, handleEventClick}: EventCardProps) {
 
   const freeSlots = event.totalSlots - event.bookedSlots
   const today = new Date();
@@ -96,7 +96,7 @@ export default function EventCard({event, months, setSelectedEvent}: EventCardPr
             : "bg-primary/80 text-black/80 cursor-pointer hover:bg-primary hover:text-black hover:scale-[102%] hover:shadow-[0_0_10px_1px_hsl(43,50%,26%)]"
           }
         `}
-        onClick={() => setSelectedEvent(event)}
+        onClick={() => handleEventClick(event)}
       >
         {isPastEvent
           ? "Wydarzenie zakończone"

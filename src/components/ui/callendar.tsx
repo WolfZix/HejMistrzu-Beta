@@ -168,7 +168,7 @@ export default function Calendar({ getEventForDay, month, months, setMonth, year
           }
           ${isPast 
             ? event 
-              ? "bg-muted-foreground/30 opacity-30 cursor-not-allowed hover:bg-muted-foreground/30 hover:ring-0"
+              ? "bg-muted-foreground/40 opacity-30 cursor-not-allowed hover:bg-muted-foreground/40 hover:ring-0"
               : " opacity-30 cursor-not-allowed hover:bg-transparent hover:ring-0" : ""
           }
           `}

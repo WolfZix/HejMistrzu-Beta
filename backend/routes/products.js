@@ -35,9 +35,7 @@ router.get("/", async (req, res) => {
 
     const visibleProducts = allProducts.filter((product) => product.status === "publish");
 
-    const products = visibleProducts.filter(
-      product => !product.categories.some(category => category.id === 34)
-    ).map(product => ({
+    const products = visibleProducts.map(product => ({
       id: product.id,
       name: product.name,
       price: Number(product.price),
@@ -53,7 +51,6 @@ router.get("/", async (req, res) => {
       description: product.short_description || "",
     }));
     res.json(products);
-
   } catch (error) {
     console.error(error.response?.data);
     res.status(500).json({

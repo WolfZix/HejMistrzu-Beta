@@ -1,30 +1,30 @@
 import { Dice5, Swords, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
-import BoardGames from "@/assets/BoardGames.webp"
-import Warhammer from "@/assets/WarhammerOpenBattle.webp";
-import Pokemon from "@/assets/Pokemon.webp"
+import image1 from "@/assets/image1.png";
+import image5 from "@/assets/image5.png"
+import image7 from "@/assets/image7.png";
 
 const features = [
   {
     icon: Dice5,
     title: "Rozrywka",
     description: "Ponad 100 gier planszowych i karcianych oraz pokój RPG do dyspozycji. Przyjdź i zagraj!",
-    image: `${BoardGames}`,
+    image: `${image7}`,
     aspect: "aspect-[4/3]",
   },
   {
     icon: Swords,
     title: "Rywalizacja",
     description: "Regularne turnieje, pojedynki 1vs1, nagrody i wiele innych. Zmierz się z innymi na żywo! ",
-    image: `${Warhammer}`,
+    image: `${image1}`,
     aspect: "aspect-[4/3]",
   },
   {
     icon: Trophy,
     title: "Społeczność TCG",
     description: "Dołącz, wymieniaj się kartami lub zmierz się w pojedynku z innymi fanami Pokémon!",
-    image: `${Pokemon}`,
+    image: `${image5}`,
     aspect: "aspect-[4/3]",
   },
 ];
@@ -71,7 +71,8 @@ export default function FeaturesSection() {
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
+              <div className="absolute inset-0 bg-black/30" />
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-7">
               <div className="flex items-center gap-3 mb-3">

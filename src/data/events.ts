@@ -39,7 +39,7 @@ export const events = [
     id: 6, title: "Warhammer 40K: Painting Workshop", date: "2026-07-22", startTime: "14:00",
     description: "Warsztaty malowania figurek dla początkujących i zaawansowanych. Materiały w cenie!",
     category: "Warhammer 40K", image: Warhammer, location: "Hej Mistrzu, Rumia", totalSlots: 20,
-    bookedSlots: 12, price: 35, link: "",
+    bookedSlots: 20, price: 35, link: "",
   },
   {
     id: 7, title: "Warhammer 40K: Painting Workshop", date: "2026-06-15", startTime: "14:00",

@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Dice5, Trophy, Users, Heart, Shield, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
-import Tavern from "@/assets/Tavern.webp"
+import image9 from "@/assets/image9.jpg"
 import Warhammer from "@/assets/Warhammer.webp"
 import BoardGames from "@/assets/BoardGames.webp"
 
-const VENUE_IMG = Tavern;
+const VENUE_IMG = image9;
 const COMMUNITY_IMG = Warhammer;
 const RPG_IMG = BoardGames;
 
@@ -67,7 +67,7 @@ export default function About() {
             variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }}
             className="relative"
           >
-            <img src={VENUE_IMG} alt="Wnętrze Hej Mistrzu" className="rounded-2xl shadow-2xl shadow-primary/5 w-full" loading="lazy" />
+            <img src={VENUE_IMG} alt="Wnętrze Hej Mistrzu" className="rounded-2xl shadow-2xl shadow-primary/5 w-full max-h-[30rem] object-cover" loading="lazy" />
           </motion.div>
         </div>
       </section>

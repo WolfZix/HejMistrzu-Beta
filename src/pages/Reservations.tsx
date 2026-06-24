@@ -63,6 +63,21 @@ export default function Reservations() {
     );
   });
 
+  const handleEventClick = (event: Event) => {
+    if (event.category === "Pokémon TCG" || event.category === "Planszówki") {
+      setSelectedEvent(event);
+      return;
+    }
+    if (event.category === "Warhammer 40K") {
+      window.open("https://www.facebook.com/p/hej-mistrzu-centrum-gier-rpg-61567368993724/","_blank");
+      return;
+    }
+    if (event.category === "Riftbound") {
+      window.open(`${event.link}`, "_blank");
+      return;
+    }
+  }
+
   return (
     <>
     <div className="pt-20 overflow-x-hidden">
@@ -102,7 +117,7 @@ export default function Reservations() {
                   selectedDate={selectedDate}
                   months={MONTHS}
                   events={currentEvents}
-                  setSelectedEvent={setSelectedEvent}
+                  handleEventClick={handleEventClick}
                 />
             </motion.div>
             </>
@@ -114,9 +129,9 @@ export default function Reservations() {
     </div>
     {selectedEvent && (
       <ReservationModal
-        months={MONTHS}
-        event={selectedEvent}
-        onClose={() => setSelectedEvent(null)}
+      months={MONTHS}
+      event={selectedEvent}
+      onClose={() => setSelectedEvent(null)}
       />
     )}
     </>

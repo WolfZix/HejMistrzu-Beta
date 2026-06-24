@@ -9,10 +9,10 @@ type callendarRightProps = {
   selectedDate: Date | null;
   months: Months;
   events: Event[];
-  setSelectedEvent: React.Dispatch<React.SetStateAction<Event | null>>;
+  handleEventClick: (event: Event) => void;
 }
 
-export default function CallendarRight({events, selectedDate, months, setSelectedEvent}: callendarRightProps) {
+export default function CallendarRight({events, selectedDate, months, handleEventClick}: callendarRightProps) {
 
   const dateToShow = selectedDate ?? new Date();
 
@@ -46,7 +46,7 @@ export default function CallendarRight({events, selectedDate, months, setSelecte
           </div>
         ) : (
           events.map((event) => (
-          <EventCard key={event.id} event={event} months={months} selectedDate={selectedDate} setSelectedEvent={setSelectedEvent} />
+          <EventCard key={event.id} event={event} months={months} selectedDate={selectedDate} handleEventClick={handleEventClick} />
         ))
         )
       }

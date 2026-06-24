@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, ArrowRight, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
-import Tavern from "@/assets/Tavern.webp"
+import image4 from "@/assets/image4.png"
 
 export default function CTASection() {
   return (
@@ -12,7 +12,7 @@ export default function CTASection() {
         <div
           className="w-full h-full bg-cover bg-center bg-fixed bg-no-repeat"
           style={{
-            backgroundImage: `url(${Tavern})`,
+            backgroundImage: `url(${image4})`,
           }}
         />
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />

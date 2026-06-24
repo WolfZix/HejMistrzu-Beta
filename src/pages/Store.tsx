@@ -42,6 +42,7 @@ export default function Store() {
   const hasChildren = (categoryId: number) => categories.some((category) => category.parent === categoryId);
 
   // UI
+  const [isLoading, setIsLoading] = useState(true);
   const [wishlist, setWishlist] = useState<number[]>([]);
   const [notified, setNotified] = useState<Record<number, boolean>>({});
   const { addItem } = useCart();
@@ -95,9 +96,13 @@ export default function Store() {
 
   useEffect(() => {
   async function fetchProducts() {
-    const response = await fetch("http://localhost:3000/products");
-    const data = await response.json();
-    setProducts(data);
+    try {
+      const response = await fetch("http://localhost:3000/products");
+      const data = await response.json();
+      setProducts(data);
+    } finally {
+      setIsLoading(false);
+    }
   }
   fetchProducts();
 }, []);
@@ -116,23 +121,29 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  const timer = setTimeout(() => {
+  if (selectedCategory !== null) {
+    const timer = setTimeout(() => {
     window.scrollTo({
-    top: 200,
+    top: 0,
     behavior: "smooth",
   });
   }, 10);
   return () => clearTimeout(timer);
+  } else {
+    const timer = setTimeout(() => {
+    window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+  }, 10);
+  return () => clearTimeout(timer);
+  }
 }, [selectedCategory])
 
   return (
     <div className="pt-20 pb-24">
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <SectionHeader
-          badge="Sklep"
-          title="Produkty i akcesoria"
-          subtitle="Karty, boostery, akcesoria i zestawy startowe — wszystko dla gracza."
-        />
+        
         <div className="flex flex-col lg:flex-row gap-8">
           <StoreSidebar
             categories={categories}
@@ -194,8 +205,15 @@ useEffect(() => {
                 </button>
               </div>
             )}
-            {filtered.length === 0 && (
-              <div className="text-center py-20 text-muted-foreground">
+              {isLoading ? (
+              <div className="h-full flex flex-col items-center justify-center gap-4">
+                <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+                <p className="font-heading text-primary tracking-wider text-lg">
+                  Ładowanie...
+                </p>
+              </div>
+              ) : filtered.length === 0 && (
+                <div className="text-center py-20 text-muted-foreground">
                 <p className="font-heading text-lg mb-2 flex items-center justify-center gap-1">
                   <span>
                     Brak wyników dla kategorii: {" "}

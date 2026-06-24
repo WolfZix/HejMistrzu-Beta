@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { RotateCcw, Check, ChevronDown, ChevronUp, ShieldCheck, Tag, Truck, FilterX } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, ShieldCheck, Tag, Truck, FilterX } from "lucide-react";
 import type { Category } from "@/types/store";
 
 type StoreSidebarProps = {
@@ -50,7 +50,7 @@ export default function StoreSidebar({
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+              transition={{ type: "spring", stiffness: 500, damping: 20 }}
               onClick={() => resetFilters()}
               className="
               transition-colors
@@ -68,11 +68,11 @@ export default function StoreSidebar({
           <button
             onClick={() => setOnlyInStock(!onlyInStock)}
             className={`
-              w-full flex gap-2 items-center px-3 py-2 rounded-lg text-sm border border-transparent transition-all
+              w-full flex gap-2 items-center px-3 py-2 rounded-lg text-sm border transition-all
               ${
                 onlyInStock
-                  ? "bg-primary/10 text-primary border-primary/20 hover:text-primary"
-                  : "text-muted-foreground border-border hover:bg-muted/30 hover:text-foreground"
+                  ? "bg-primary/10 text-primary border-primary/20"
+                  : "text-muted-foreground border-muted-foreground/20 hover:bg-muted/30 hover:text-foreground"
               }
             `}
           >
@@ -82,11 +82,11 @@ export default function StoreSidebar({
           <button
             onClick={() => setOnlyPromotions(!onlyPromotions)}
             className={`
-              w-full flex gap-2 items-center px-3 py-2 rounded-lg text-sm border border-transparent transition-all
+              w-full flex gap-2 items-center px-3 py-2 rounded-lg text-sm border transition-all
               ${
                 onlyPromotions
-                  ? "bg-primary/10 text-primary border-primary/20 hover:text-primary"
-                  : "text-muted-foreground border-border hover:bg-muted/30 hover:text-foreground"
+                  ? "bg-primary/10 text-primary border-primary/20"
+                  : "text-muted-foreground border-muted-foreground/20 hover:bg-muted/30 hover:text-foreground"
               }
             `}
           >
@@ -171,10 +171,10 @@ export default function StoreSidebar({
                           onClick={() => {
                             setSelectedCategory(subcategory.id)
                           }}
-                          className={`w-full flex justify-between px-3 py-2 text-sm rounded-lg transition-all ${
+                          className={`w-full flex justify-between px-3 py-2 text-sm border border-transparent rounded-lg transition-all ${
                             selectedCategory === subcategory.id
                               ? "bg-primary/10 text-primary border border-primary/20"
-                              : "text-muted-foreground hover:text-primary"
+                              : "text-muted-foreground hover:text-primary border-transparent"
                           }`}
                         >
                           <span>{subcategory.name}</span>
