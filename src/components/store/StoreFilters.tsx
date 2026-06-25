@@ -33,95 +33,95 @@ export default function StoreFilters({
 }: StoreFiltersProps) {
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-8">
-              <div className="relative flex-1">
-                <p className="text-xs text-muted-foreground mb-1">
-                  Szukaj produktów
-                </p>
-                <Search className="absolute left-3 top-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Znajdź coś dla siebie..."
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  className="pl-10 bg-card border-border focus:border-primary/50 h-11 rounded-xl"
-                />
-              </div>
-              <div className="relative min-w-[220px]">
-                <p className="text-xs text-muted-foreground mb-1">
-                  Sortowanie
-                </p>
+      <div className="relative flex-1">
+        <p className="text-xs text-muted-foreground mb-1">
+          Szukaj produktów
+        </p>
+        <Search className="absolute left-3 top-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          placeholder="Znajdź coś dla siebie..."
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          className="pl-10 bg-card border-border focus:border-primary/50 h-11 rounded-xl"
+        />
+      </div>
+      <div className="relative min-w-[220px]">
+        <p className="text-xs text-muted-foreground mb-1">
+          Sortowanie
+        </p>
 
+        <button
+          onClick={() => setIsSortOpen(!isSortOpen)}
+          className="
+            w-full
+            h-11
+            px-4
+            rounded-xl
+            border
+            border-border
+            bg-card
+            flex
+            items-center
+            justify-between
+          "
+        >
+          <span>
+            {sortOptions.find(
+              option => option.value === sortBy
+            )?.label}
+          </span>
+
+          <ChevronDown
+            size={18}
+            className={`transition-transform ${
+              isSortOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        <AnimatePresence>
+          {isSortOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="
+                absolute
+                top-full
+                mt-1
+                z-50
+                w-full
+                rounded-xl
+                border
+                border-border
+                bg-card
+                p-1
+                "
+            >
+              {sortOptions.map((option) => (
                 <button
-                  onClick={() => setIsSortOpen(!isSortOpen)}
+                  key={option.value}
+                  onClick={() => {
+                    setSortBy(option.value);
+                    setIsSortOpen(false);
+                  }}
                   className="
                     w-full
-                    h-11
-                    px-4
-                    rounded-xl
-                    border
-                    border-border
-                    bg-card
-                    flex
-                    items-center
-                    justify-between
+                    text-left
+                    p-2
+                    rounded-md
+                    hover:bg-primary
+                    hover:text-black
                   "
                 >
-                  <span>
-                    {sortOptions.find(
-                      option => option.value === sortBy
-                    )?.label}
-                  </span>
-
-                  <ChevronDown
-                    size={18}
-                    className={`transition-transform ${
-                      isSortOpen ? "rotate-180" : ""
-                    }`}
-                  />
+                  {option.label}
                 </button>
-
-                <AnimatePresence>
-                  {isSortOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="
-                        absolute
-                        top-full
-                        mt-1
-                        z-50
-                        w-full
-                        rounded-xl
-                        border
-                        border-border
-                        bg-card
-                        p-1
-                      "
-                    >
-                      {sortOptions.map((option) => (
-                        <button
-                          key={option.value}
-                          onClick={() => {
-                            setSortBy(option.value);
-                            setIsSortOpen(false);
-                          }}
-                          className="
-                            w-full
-                            text-left
-                            p-2
-                            rounded-md
-                            hover:bg-primary
-                            hover:text-black
-                          "
-                        >
-                          {option.label}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
               <div className="flex flex-wrap justify-center gap-2 lg:hidden">
                 {rootCategories.map((entry, index) => (
                   <button

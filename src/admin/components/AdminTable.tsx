@@ -7,8 +7,8 @@ export default function AdminTable({
 }: AdminTableProps) {
   return (
     <div className="glass rounded-xl overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="overflow-hidden">
+        <table className="w-full table-fixed">
           {children}
         </table>
       </div>

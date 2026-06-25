@@ -2,21 +2,23 @@ import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import ProductForm from "./ProductForm";
-import type { ProductFormData } from "@/types/store";
+import type { ProductFormData, StoreProduct } from "@/types/store";
 
-type AddProductModalProps = {
+type EditProductModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  product: StoreProduct | null;
   formData: ProductFormData;
   setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
 };
 
-export default function AddProductModal({
+export default function EditProductModal({
   isOpen,
   onClose,
+  product,
   formData,
   setFormData,
-}: AddProductModalProps) {
+}: EditProductModalProps) {
 
   useEffect(() => {
     document.body.style.overflow = isOpen
@@ -28,23 +30,35 @@ export default function AddProductModal({
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if(!product) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      name: product.name,
+      description: product.description,
+      regularPrice: product.regularPrice?.toString() ?? "",
+      salePrice: product.salePrice?.toString() ?? "",
+      stock: product.stock.toString(),
+      category: product.categories.at(-1)?.name ?? "",
+    }))
+
+  }, [product]);
+
   function closeModal() {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       name: "",
       category: "",
       stock: "",
       description: "",
       regularPrice: "",
       salePrice: "",
-    })
-
+    }))
     onClose();
   }
 
-  function handleSubmit(
-    e: React.FormEvent
-  ) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     closeModal();
   }
@@ -129,14 +143,16 @@ export default function AddProductModal({
                   font-semibold
                 "
               >
-                Dodaj produkt
+                Edytuj produkt
               </h2>
             </div>
 
             <ProductForm
               formData={formData}
               setFormData={setFormData}
-              handleSubmit={handleSubmit}
+              handleSubmit={
+                handleSubmit
+              }
               closeModal={closeModal}
             />
           </motion.div>

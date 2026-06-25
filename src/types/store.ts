@@ -17,6 +17,7 @@ export interface StoreProduct {
   image: string;
   badge?: BadgeKind;
   inStock: boolean;
+  stock: number;
   rating?: number | null;
   description: string;
 }
@@ -48,3 +49,12 @@ export type Category = {
   parent: number;
   count: number;
 };
+
+export type ProductFormData = {
+  name: string;
+  category: string;
+  stock: string;
+  description: string;
+  regularPrice: string;
+  salePrice: string;
+}

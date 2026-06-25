@@ -1,24 +1,82 @@
 import { useState, useEffect } from "react";
-import { Search, Plus, Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, Plus } from "lucide-react";
 import AdminTable from "../components/AdminTable";
 import { StoreProduct } from "@/types/store";
 import PageLoader from "@/pages/PageLoader";
 import AddProductModal from "../components/Products/AddProductModal";
+import EditProductModal from "../components/Products/EditProductModal";
+import { normalizeText } from "@/utils";
+import TableFilters from "../components/TableFilters";
 
 export default function Products() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const PRODUCTS_PER_PAGE = 6;
-  const [isOpen, setIsOpen] = useState(false);
+
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<StoreProduct | null>(null);
+
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(
-    products.length / PRODUCTS_PER_PAGE
-  );
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("default");
 
-  const currentProducts = products.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE
-  );
+  const filteredProducts = products.filter((product) =>
+  normalizeText(product.name).includes(
+    normalizeText(search)
+  ));
+  
+  const sortedProducts = [...filteredProducts];
+
+  switch (sortBy) {
+    case "name-asc":
+      sortedProducts.sort((a,b) => a.name.localeCompare(b.name));
+      break;
+    case "name-desc":
+      sortedProducts.sort((a,b) => b.name.localeCompare(a.name));
+      break;
+    case "price-asc":
+      sortedProducts.sort((a,b) => a.price - b.price);
+      break;
+    case "price-desc":
+      sortedProducts.sort((a,b) => b.price - a.price);
+      break;
+  }
+
+  const totalPages = Math.ceil(sortedProducts.length / PRODUCTS_PER_PAGE);
+  const currentProducts = sortedProducts.slice((currentPage - 1) * PRODUCTS_PER_PAGE, currentPage * PRODUCTS_PER_PAGE);
+
+  const sortOptions = [
+    {
+      value: "default",
+      label: "Domyślnie",
+    },
+    {
+      value: "name-asc",
+      label: "Nazwa A-Z",
+    },
+    {
+      value: "name-desc",
+      label: "Nazwa Z-A",
+    },
+    {
+      value: "price-asc",
+      label: "Cena rosnąco",
+    },
+    {
+      value: "price-desc",
+      label: "Cena malejąco",
+    },
+  ];
+
+  const [formData, setFormData] = useState({
+    name: "",
+    category: "",
+    stock: "",
+    description: "",
+    regularPrice: "",
+    salePrice: "",
+  })
 
   useEffect(() => {
     fetch("http://localhost:3000/products")
@@ -31,10 +89,12 @@ export default function Products() {
     })
   }, [])
 
-  function getStockClass(inStock: boolean) {
-    return inStock
-    ? "bg-green-500/10 text-green-400"
-    : "bg-red-500/10 text-red-400"
+  function getStockClass(stock: number) {
+    return stock > 15
+    ? "text-green-400"
+    : stock <= 10 && stock > 5
+      ? "text-yellow-400"
+      : "text-red-400"
   }
 
   return (
@@ -50,72 +110,45 @@ export default function Products() {
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 justify-between">
-        <div className="relative flex-1">
-          <Search
-            size={18}
-            className="
-              absolute
-              left-3
-              top-1/2
-              -translate-y-1/2
-              text-muted-foreground
-              z-10
-            "
-          />
-
-          <input
-            placeholder="Szukaj produktu..."
-            className="
-            w-full
-            glass
-            border
-            border-border
-            rounded-lg
-            py-2
-            pl-10
-            pr-4
-            outline-none
-            focus:border-primary/50
-            text-primary
-            "
-          />
-        </div>
-
+        <TableFilters
+        search={search}
+        setSearch={setSearch}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        sortOptions={sortOptions}
+        button={
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="
+        onClick={() => setIsAddOpen(true)}
+        className="
             flex
             items-center
             gap-2
             px-4
-            py-2
+            py-3
             rounded-lg
             bg-primary/90
             w-fit
             text-black/90
-            font-heading
-            font-medium
             hover:shadow-[0_0_10px_1px_hsl(43,50%,26%)]
             hover:bg-primary
             hover:text-black
             transition-all duration-200
-          "
-        >
-          <Plus size={16} />
-          Dodaj produkt
+          ">
+          <Plus size={18} /> Dodaj Produkt
         </button>
-      </div>
+      }
+        />
+
       <div className="h-[34rem] flex flex-col justify-between">
         <AdminTable>
           <thead>
             <tr className="border-b border-border text-primary text-center">
-              <th className="p-4">ID</th>
-              <th className="p-4">Produkt</th>
-              <th className="p-4">Kategoria</th>
-              <th className="p-4">Cena</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Akcje</th>
+              <th className="p-4 w-20">ID</th>
+              <th className="p-4 w-[45%]">Produkt</th>
+              <th className="p-4 w-[20%]">Kategoria</th>
+              <th className="p-4 w-32">Cena</th>
+              <th className="p-4 w-40">Magazyn: szt.</th>
+              <th className="p-4 w-28">Akcje</th>
             </tr>
           </thead>
 
@@ -131,38 +164,91 @@ export default function Products() {
                 "
               >
                 <td className="p-4">{product.id}</td>
+                <td className="p-4">
+                  <div className="relative group">
+                    <div className="truncate">
+                      {product.name}
+                    </div>
+
+                    <div
+                      className="
+                        hidden
+                        group-hover:block
+                        absolute
+                        left-0
+                        right-0
+                        w-fit
+                        mx-auto
+                        bottom-full
+                        mb-1
+                        z-50
+                        rounded-md
+                        bg-zinc-900
+                        px-2
+                        py-1
+                        text-sm
+                        whitespace-nowrap
+                        shadow-lg
+                      "
+                    >
+                      {product.name}
+                    </div>
+                  </div>
+                </td>
 
                 <td className="p-4">
-                  {product.name}
+                  <div className="relative group">
+                    <div className="truncate">
+                      {product.categories.at(-1)?.name || "-"}
+                    </div>
+
+                    <div
+                      className="
+                        hidden
+                        group-hover:block
+                        absolute
+                        left-0
+                        right-0
+                        w-fit
+                        mx-auto
+                        bottom-full
+                        mb-1
+                        z-50
+                        rounded-md
+                        bg-zinc-900
+                        px-2
+                        py-1
+                        text-sm
+                        whitespace-nowrap
+                        shadow-lg
+                      "
+                    >
+                      {product.categories.at(-1)?.name || "-"}
+                    </div>
+                  </div>
                 </td>
 
+                <td className="p-4 text-nowrap">{product.price.toFixed(2)} zł</td>
                 <td className="p-4">
-                  {product.categories.at(-1)?.name || "-"}
-                </td>
-
-                <td className="p-4 text-nowrap">
-                  {product.price.toFixed(2)} zł
-                </td>
-
-                <td className="p-4 flex gap-1 justify-center">
-                  <span
-                    className={`
-                      px-2 py-1 rounded-md text-xs font-medium
-                      ${getStockClass(product.inStock)}
-                    `}
-                  >
-                    {product.inStock ? "Dostępny" : "Brak"}
-                  </span>
-                  {product.onSale && (
-                  <span className="px-2 py-1 rounded-md text-xs font-medium bg-yellow-500/10 text-yellow-400">
-                    Promocja
-                  </span>
-                  )}
+                  <div className="flex justify-center gap-1">
+                    <span className={`${getStockClass(product.stock)}`}>
+                      {product.stock}
+                    </span>
+                    {product.onSale && (
+                    <span className="px-2 py-1 rounded-md text-xs font-medium bg-red-500/50 text-white">
+                      Promocja
+                    </span>
+                    )}
+                  </div>
                 </td>
 
                 <td className="p-4">
                   <div className="flex justify-center gap-2">
                       <button
+                        onClick={() => {
+                          setSelectedProduct(product);
+                          setIsEditOpen(!isEditOpen);
+                        }}
                         className="
                           p-2
                           rounded-lg
@@ -254,8 +340,25 @@ export default function Products() {
           </div>
         )}
     </div>
-    {isOpen && (
-      <AddProductModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    {isAddOpen && (
+      <AddProductModal
+        formData={formData}
+        setFormData={setFormData}
+        isOpen={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+      />
+    )}
+    {isEditOpen && (
+      <EditProductModal
+        product={selectedProduct}
+        formData={formData}
+        setFormData={setFormData}
+        isOpen={isEditOpen}
+        onClose={() => {
+          setSelectedProduct(null);
+          setIsEditOpen(false);
+        }}
+      />
     )}
     </>
   );

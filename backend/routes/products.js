@@ -48,6 +48,7 @@ router.get("/", async (req, res) => {
       })),
       image: product.images?.[0]?.src || "",
       inStock: product.stock_status === "instock",
+      stock: product.stock_quantity ?? 0,
       description: product.short_description || "",
     }));
     res.json(products);
