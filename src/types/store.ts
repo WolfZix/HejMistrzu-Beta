@@ -55,6 +55,6 @@ export type ProductFormData = {
   category: string;
   stock: string;
   description: string;
-  regularPrice: string;
+  price: string;
   salePrice: string;
 }

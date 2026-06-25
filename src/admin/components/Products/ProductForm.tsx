@@ -85,18 +85,6 @@ export default function ProductForm({
               label: subcategory,
             }))}
           />
-
-          <FormInput
-            label="Stan magazynowy"
-            value={formData.stock}
-            onChange={(value) => setFormData((prev) => ({
-              ...prev,
-              stock: value,
-            }))}
-            type="number"
-            placeholder="9999"
-            required
-          />
         </div>
       </div>
 
@@ -150,10 +138,10 @@ export default function ProductForm({
       <div className="grid grid-cols-3 gap-4">
         <FormInput
           label="Cena"
-          value={formData.regularPrice}
-         onChange={(value) => setFormData((prev) => ({
+          value={formData.price}
+          onChange={(value) => setFormData((prev) => ({
               ...prev,
-              regularPrice: value,
+              price: value,
             }))}
           type="number"
           placeholder="9999,99"
@@ -172,16 +160,16 @@ export default function ProductForm({
         />
 
         <FormInput
-          label="Cena przed promocją"
-          value={formData.regularPrice}
-          onChange={(value) => setFormData((prev) => ({
+            label="Stan magazynowy"
+            value={formData.stock}
+            onChange={(value) => setFormData((prev) => ({
               ...prev,
-              regularPrice: value,
+              stock: value,
             }))}
-          type="number"
-          placeholder="9999,99"
-        />
-
+            type="number"
+            placeholder="9999"
+            required
+          />
       </div>
 
       {/* BUTTONS */}

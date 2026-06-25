@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trash2, Pencil, Plus } from "lucide-react";
+import { Trash2, Pencil, Plus, AlertTriangle } from "lucide-react";
 import AdminTable from "../components/AdminTable";
 import { StoreProduct } from "@/types/store";
 import PageLoader from "@/pages/PageLoader";
@@ -7,6 +7,7 @@ import AddProductModal from "../components/Products/AddProductModal";
 import EditProductModal from "../components/Products/EditProductModal";
 import { normalizeText } from "@/utils";
 import TableFilters from "../components/TableFilters";
+import DeleteModal from "../components/DeleteModal";
 
 export default function Products() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
@@ -14,6 +15,7 @@ export default function Products() {
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<StoreProduct | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -74,7 +76,7 @@ export default function Products() {
     category: "",
     stock: "",
     description: "",
-    regularPrice: "",
+    price: "",
     salePrice: "",
   })
 
@@ -89,10 +91,14 @@ export default function Products() {
     })
   }, [])
 
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [search]);
+
   function getStockClass(stock: number) {
-    return stock > 15
+    return stock >= 25
     ? "text-green-400"
-    : stock <= 10 && stock > 5
+    : stock < 25 && stock > 15
       ? "text-yellow-400"
       : "text-red-400"
   }
@@ -105,7 +111,7 @@ export default function Products() {
           Produkty
         </h1>
 
-        <p className="text-muted-foreground mt-1">
+        <p className="text-muted-foreground">
           Zarządzaj produktami sklepu.
         </p>
       </div>
@@ -148,6 +154,7 @@ export default function Products() {
               <th className="p-4 w-[20%]">Kategoria</th>
               <th className="p-4 w-32">Cena</th>
               <th className="p-4 w-40">Magazyn: szt.</th>
+              <th className="p-4 w-20">Status</th>
               <th className="p-4 w-28">Akcje</th>
             </tr>
           </thead>
@@ -228,17 +235,27 @@ export default function Products() {
                   </div>
                 </td>
 
-                <td className="p-4 text-nowrap">{product.price.toFixed(2)} zł</td>
+                <td className="p-4 text-nowrap">
+                  {product.price.toFixed(2)} zł {" "}
+                  <span className="text-muted-foreground line-through text-sm">
+                    {product.onSale ? product.regularPrice?.toFixed(2) + " zł" : ""}  
+                  </span>
+                  </td>
                 <td className="p-4">
                   <div className="flex justify-center gap-1">
-                    <span className={`${getStockClass(product.stock)}`}>
+                    <span className={`flex gap-1 items-center ${getStockClass(product.stock)}`}>
+                      {product.stock < 25 ? (<AlertTriangle size={14} />) : ""}
                       {product.stock}
                     </span>
-                    {product.onSale && (
-                    <span className="px-2 py-1 rounded-md text-xs font-medium bg-red-500/50 text-white">
-                      Promocja
+                  </div>
+                </td>
+                <td className="p-4">
+                  <div className="flex justify-center gap-1">
+                    <span className={`px-2 py-1 rounded-md text-xs font-medium
+                      ${product.onSale ? "bg-red-500/50 text-white" : "bg-muted text-white"}`}
+                    >
+                    {product.onSale ? "Promocja" : "Zwykły"}
                     </span>
-                    )}
                   </div>
                 </td>
 
@@ -261,6 +278,10 @@ export default function Products() {
                       </button>
 
                       <button
+                        onClick={() => {
+                          setSelectedProduct(product);
+                          setIsDeleteOpen(true);
+                        }}
                         className="
                           p-2
                           rounded-lg
@@ -357,6 +378,31 @@ export default function Products() {
         onClose={() => {
           setSelectedProduct(null);
           setIsEditOpen(false);
+        }}
+      />
+    )}
+    {isDeleteOpen && (
+      <DeleteModal
+        isOpen={isDeleteOpen}
+        title="Usuń produkt"
+        description={
+          <>
+            Czy na pewno chcesz usunąć produkt:
+            <br />
+            <span className="font-medium text-foreground">
+              {selectedProduct?.name} ?
+            </span>
+          </>
+        }
+        onClose={() => {
+          setSelectedProduct(null);
+          setIsDeleteOpen(false);
+        }}
+        onConfirm={() => {
+          console.log("delete", selectedProduct);
+
+          setSelectedProduct(null);
+          setIsDeleteOpen(false);
         }}
       />
     )}

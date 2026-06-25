@@ -37,7 +37,7 @@ export default function EditProductModal({
       ...prev,
       name: product.name,
       description: product.description,
-      regularPrice: product.regularPrice?.toString() ?? "",
+      price: product.price?.toString(),
       salePrice: product.salePrice?.toString() ?? "",
       stock: product.stock.toString(),
       category: product.categories.at(-1)?.name ?? "",
@@ -52,7 +52,7 @@ export default function EditProductModal({
       category: "",
       stock: "",
       description: "",
-      regularPrice: "",
+      price: "",
       salePrice: "",
     }))
     onClose();

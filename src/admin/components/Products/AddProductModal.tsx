@@ -35,16 +35,14 @@ export default function AddProductModal({
       category: "",
       stock: "",
       description: "",
-      regularPrice: "",
+      price: "",
       salePrice: "",
     })
 
     onClose();
   }
 
-  function handleSubmit(
-    e: React.FormEvent
-  ) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     closeModal();
   }
