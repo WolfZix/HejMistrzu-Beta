@@ -3,6 +3,7 @@ import FormSelect from "@/components/Forms/FormSelect";
 import { Input } from "@/components/ui/input";
 
 type TableFiltersProps = {
+  label: string;
   search: string;
   setSearch: (value: string) => void;
 
@@ -18,6 +19,7 @@ type TableFiltersProps = {
 };
 
 export default function TableFilters({
+  label,
   search,
   setSearch,
   sortBy,
@@ -29,7 +31,7 @@ export default function TableFilters({
     <div className="flex flex-col md:flex-row gap-4 items-end justify-between">
       <div className="flex-1 flex-col gap-2">
         <p className="text-sm mb-2">
-          Szukaj produktów
+          {label}
         </p>
         <div className="relative">
           <Input

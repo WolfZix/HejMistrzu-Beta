@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardSection from "../components/Dashboard/DashboardSection";
 import InventorySection from "../components/Dashboard/InventorySection";
+import type { User } from "@/types/user";
+import { StoreProduct } from "@/types/store";
 
 export default function Dashboard() {
   const [openSections, setOpenSections] = useState<string[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [products, setProducts] = useState<StoreProduct[]>([]);
 
   const SECTION_USERS = "Użytkownicy";
   const SECTION_EVENTS = "Eventy";
@@ -12,18 +16,54 @@ export default function Dashboard() {
   const SECTION_BATTLEPASS = "Battlepass";
   const SECTION_INVENTORY = "Magazyn"
 
+  useEffect(() => {
+    fetch("http://localhost:3000/users")
+      .then((res) => res.json())
+      .then((data: User[]) => setUsers(data))
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/products")
+      .then((res) => res.json())
+      .then((data: StoreProduct[]) => setProducts(data))
+      .catch(console.error);
+  }, []);
+
   function toggleSection(section: string) {
-  if (openSections.includes(section)) {
-    setOpenSections(
-      openSections.filter((s) => s !== section)
-    );
-  } else {
-    setOpenSections([
-      ...openSections,
-      section,
-    ]);
+    if (openSections.includes(section)) {
+      setOpenSections(
+        openSections.filter((s) => s !== section)
+      );
+    } else {
+      setOpenSections([
+        ...openSections,
+        section,
+      ]);
+    }
   }
-}
+
+  const now = new Date();
+  const usersThisMonth = users.filter((user) => {
+    const created = new Date(user.createdAt);
+    return (
+      created.getMonth() === now.getMonth() &&
+      created.getFullYear() === now.getFullYear()
+    );
+  }).length;
+
+  const adminCount = users.filter(
+    (user) => user.role === "admin"
+  ).length
+
+  const outOfStock = products.filter(
+    (product) => product.stock === 0
+  );
+
+  const lowStock = products.filter(
+    (product) => product.stock > 0 && product.stock <= 5
+  );
+
   return (
     <div className="space-y-6">
       <div>
@@ -44,16 +84,16 @@ export default function Dashboard() {
             onToggle={() => toggleSection(SECTION_USERS)}
             stats={[
               {
-                label: "W tym miesiącu",
-                value: 12,
+                label: "Nowi w tym miesiącu",
+                value: usersThisMonth,
               },
               {
-                label: "W tym roku",
-                value: 85,
+                label: "Administratorzy",
+                value: adminCount,
               },
               {
                 label: "Łącznie",
-                value: 124,
+                value: users.length,
               },
             ]}
           />
@@ -209,25 +249,11 @@ export default function Dashboard() {
           <InventorySection
             isOpen={openSections.includes(SECTION_INVENTORY)}
             onToggle={() => toggleSection(SECTION_INVENTORY)}
-            outOfStock={[
-              { name: "Pokemon ETB" },
-              { name: "Starter Deck" },
-              { name: "Citadel Black" },
-            ]}
-            lowStock={[
-              {
-                name: "Dragon Shield",
-                quantity: 3,
-              },
-              {
-                name: "Booster Box",
-                quantity: 4,
-              },
-              {
-                name: "Dice Set",
-                quantity: 5,
-              },
-            ]}
+            outOfStock={outOfStock.map(product => ({ name: product.name }))}
+            lowStock={lowStock.map(product => ({
+              name: product.name,
+              quantity: product.stock,
+            }))}
           />
         </div>
       </div>

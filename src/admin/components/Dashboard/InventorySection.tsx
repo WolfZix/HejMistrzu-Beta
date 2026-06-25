@@ -68,7 +68,7 @@ export default function InventorySection({
               </span>
               <span>523</span>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4 overflow-y-auto max-h-72">
               <div>
                 <h3 className="text-red-500 font-medium mb-3 flex gap-2">
                   <TriangleAlert size={18} />

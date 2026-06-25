@@ -1,88 +1,99 @@
-import { useState } from "react";
-import { Search, Plus, Trash2, Pencil, Eye } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Plus, Trash2, Pencil, Eye } from "lucide-react";
 import AdminTable from "../components/AdminTable";
 import PageLoader from "@/pages/PageLoader";
 import AddEventModal from "../components/Events/AddEventModal";
+import { events } from "@/data/events";
+import { normalizeText } from "@/utils";
+import TableFilters from "../components/TableFilters";
 
-const events = [
-  {
-    id: 1,
-    title: "Friday Night Magic",
-    category: "MTG",
-    date: "27.06.2026",
-    occupiedSlots: 18,
-    maxSlots: 24,
-    price: 25,
-  },
-  {
-    id: 2,
-    title: "Pokemon League",
-    category: "Pokemon",
-    date: "28.06.2026",
-    occupiedSlots: 12,
-    maxSlots: 20,
-    price: 20,
-  },
-  {
-    id: 3,
-    title: "Warhammer 40k",
-    category: "Warhammer",
-    date: "29.06.2026",
-    occupiedSlots: 10,
-    maxSlots: 16,
-    price: 30,
-  },
-  {
-    id: 4,
-    title: "D&D One Shot",
-    category: "RPG",
-    date: "01.07.2026",
-    occupiedSlots: 5,
-    maxSlots: 8,
-    price: 15,
-  },
-  {
-    id: 5,
-    title: "Lorcana Tournament",
-    category: "Lorcana",
-    date: "02.07.2026",
-    occupiedSlots: 14,
-    maxSlots: 20,
-    price: 20,
-  },
-  {
-    id: 6,
-    title: "Pokemon Challenge",
-    category: "Pokemon",
-    date: "03.07.2026",
-    occupiedSlots: 7,
-    maxSlots: 16,
-    price: 10,
-  },
-  {
-    id: 7,
-    title: "Commander Night",
-    category: "MTG",
-    date: "04.07.2026",
-    occupiedSlots: 22,
-    maxSlots: 24,
-    price: 25,
-  },
-];
 const EVENTS_PER_PAGE = 6;
 
 export default function Events() {
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("default");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
+
+  const filteredEvents = events.filter((event) =>
+    normalizeText(event.title).includes(
+      normalizeText(search)
+    ));
+    
+    const sortedEvents = [...filteredEvents];
+
+    switch (sortBy) {
+      case "title-asc":
+        sortedEvents.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+  
+      case "title-desc":
+        sortedEvents.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+  
+      case "date-asc":
+        sortedEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        break;
+  
+      case "date-desc":
+        sortedEvents.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        break;
+
+      case "slots-asc":
+        sortedEvents.sort((a, b) => a.bookedSlots - b.bookedSlots);
+        break;
+  
+      case "slots-desc":
+        sortedEvents.sort((a, b) => b.bookedSlots - a.bookedSlots);
+        break;
+    }
+
   const totalPages = Math.ceil(
-    events.length / EVENTS_PER_PAGE
+    sortedEvents.length / EVENTS_PER_PAGE
   );
 
-  const currentEvents = events.slice(
+  const currentEvents = sortedEvents.slice(
     (currentPage - 1) * EVENTS_PER_PAGE,
     currentPage * EVENTS_PER_PAGE
   );
+  
+
+    const sortOptions = [
+  {
+    value: "default",
+    label: "Domyślnie",
+  },
+  {
+    value: "title-asc",
+    label: "Tytuł A-Z",
+  },
+  {
+    value: "title-desc",
+    label: "Tytuł Z-A",
+  },
+  {
+    value: "date-asc",
+    label: "Najbliższe",
+  },
+  {
+    value: "date-desc",
+    label: "Najdalsze",
+  },
+  {
+    value: "slots-asc",
+    label: "Miejsca-asc",
+  },
+  {
+    value: "slots-desc",
+    label: "Miejsca-desc",
+  },
+];
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search])
 
   return (
     <>
@@ -97,69 +108,44 @@ export default function Events() {
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 justify-between">
-        <div className="relative flex-1">
-          <Search
-            size={18}
+      <TableFilters
+        label="Szukaj eventów"
+        search={search}
+        setSearch={setSearch}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        sortOptions={sortOptions}
+        button={
+          <button
+            onClick={() => setIsOpen(true)}
             className="
-              absolute
-              left-3
-              top-1/2
-              -translate-y-1/2
-              text-muted-foreground
-              z-10
-            "
-          />
-
-          <input
-            placeholder="Szukaj wydarzenia..."
-            className="
-            w-full
-            glass
-            border
-            border-border
-            rounded-lg
-            py-2
-            pl-10
-            pr-4
-            outline-none
-            focus:border-primary/50
-            text-primary
-            "
-          />
-        </div>
-
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="
             flex
             items-center
             gap-2
             px-4
-            py-2
+            py-3
             rounded-lg
             bg-primary/90
             w-fit
             text-black/90
-            font-heading
-            font-medium
             hover:shadow-[0_0_10px_1px_hsl(43,50%,26%)]
             hover:bg-primary
             hover:text-black
             transition-all duration-200
-          "
-        >
-          <Plus size={16} />
-          Dodaj event
-        </button>
-      </div>
+            "
+          >
+            <Plus size={18} />
+            Dodaj event
+          </button>
+        }
+      />
       <div className="h-[33rem] flex flex-col justify-between">
         <AdminTable>
           <thead>
             <tr className="border-b border-border text-primary text-center">
-              <th className="p-4">ID</th>
-              <th className="p-4">Tytuł</th>
-              <th className="p-4">Kategoria</th>
+              <th className="p-4 w-20">ID</th>
+              <th className="p-4 w-[25%]">Tytuł</th>
+              <th className="p-4 w-[25%]">Kategoria</th>
               <th className="p-4">Data</th>
               <th className="p-4">Miejsca</th>
               <th className="p-4">Cena</th>
@@ -178,38 +164,54 @@ export default function Events() {
                   text-center
                 "
               >
-                <td className="p-4">{event.id}</td>
-
+                <td className="p-4"> {event.id} </td>
                 <td className="p-4">
-                  {event.title}
-                </td>
+                  <div className="relative group">
+                    <div className="truncate">
+                      {event.title}
+                    </div>
 
-                <td className="p-4">
-                  {event.category}
+                    <div
+                      className="
+                        hidden
+                        group-hover:block
+                        absolute
+                        left-0
+                        right-0
+                        w-fit
+                        mx-auto
+                        bottom-full
+                        mb-1
+                        z-50
+                        rounded-md
+                        bg-zinc-900
+                        px-2
+                        py-1
+                        text-sm
+                        whitespace-nowrap
+                        shadow-lg
+                      "
+                    >
+                      {event.title}
+                    </div>
+                  </div>
                 </td>
-
-                <td className="p-4">
-                  {event.date}
-                </td>
-
+                <td className="p-4"> {event.category} </td>
+                <td className="p-4"> {new Date(event.date).toLocaleDateString("pl-PL")} </td>
                 <td className="p-4">
                   <span
                     className={
-                      event.occupiedSlots / event.maxSlots > 0.8
+                      event.bookedSlots / event.totalSlots > 0.8
                         ? "text-red-400"
-                        : event.occupiedSlots / event.maxSlots > 0.5
+                        : event.bookedSlots / event.totalSlots > 0.5
                         ? "text-yellow-400"
                         : "text-green-400"
                     }
                   >
-                    {event.occupiedSlots}/{event.maxSlots}
+                    {event.bookedSlots}/{event.totalSlots}
                   </span>
                 </td>
-
-                <td className="p-4">
-                  {event.price} zł
-                </td>
-
+                <td className="p-4"> {event.price} zł </td>
                 <td className="p-4">
                   <div className="flex justify-center gap-2">
                     <button

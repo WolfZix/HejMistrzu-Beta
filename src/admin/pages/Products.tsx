@@ -9,9 +9,10 @@ import { normalizeText } from "@/utils";
 import TableFilters from "../components/TableFilters";
 import DeleteModal from "../components/DeleteModal";
 
+const PRODUCTS_PER_PAGE = 6;
+
 export default function Products() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
-  const PRODUCTS_PER_PAGE = 6;
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -37,6 +38,12 @@ export default function Products() {
     case "name-desc":
       sortedProducts.sort((a,b) => b.name.localeCompare(a.name));
       break;
+    case "stock-asc":
+      sortedProducts.sort((a,b) => a.stock - b.stock);
+      break;
+    case "stock-desc":
+      sortedProducts.sort((a,b) => b.stock - a.stock);
+      break;
     case "price-asc":
       sortedProducts.sort((a,b) => a.price - b.price);
       break;
@@ -60,6 +67,14 @@ export default function Products() {
     {
       value: "name-desc",
       label: "Nazwa Z-A",
+    },
+    {
+      value: "stock-asc",
+      label: "Ilość rosnąco",
+    },
+    {
+      value: "stock-desc",
+      label: "Ilość malejąco",
     },
     {
       value: "price-asc",
@@ -96,9 +111,9 @@ export default function Products() {
   }, [search]);
 
   function getStockClass(stock: number) {
-    return stock >= 25
+    return stock >= 5
     ? "text-green-400"
-    : stock < 25 && stock > 15
+    : stock < 5 && stock > 1
       ? "text-yellow-400"
       : "text-red-400"
   }
@@ -117,6 +132,7 @@ export default function Products() {
       </div>
 
         <TableFilters
+        label="Szukaj produktów"
         search={search}
         setSearch={setSearch}
         sortBy={sortBy}
@@ -244,7 +260,7 @@ export default function Products() {
                 <td className="p-4">
                   <div className="flex justify-center gap-1">
                     <span className={`flex gap-1 items-center ${getStockClass(product.stock)}`}>
-                      {product.stock < 25 ? (<AlertTriangle size={14} />) : ""}
+                      {product.stock < 5 ? (<AlertTriangle size={14} />) : ""}
                       {product.stock}
                     </span>
                   </div>

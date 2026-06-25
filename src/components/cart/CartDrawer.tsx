@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingCart, Trash2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 export default function CartDrawer() {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice, totalItems } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
   if (isOpen) {
@@ -66,7 +68,10 @@ export default function CartDrawer() {
                   </p>
                   <Button
                     variant="outline"
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      navigate("/sklep");
+                      setIsOpen(false);
+                    }}
                     className="font-heading tracking-wider text-xs"
                   >
                     Przeglądaj sklep
