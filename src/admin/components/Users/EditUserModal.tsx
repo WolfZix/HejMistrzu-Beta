@@ -51,7 +51,6 @@ export default function EditUserModal({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log(formData);
     closeModal();
   }
 

@@ -65,12 +65,10 @@ router.post("/", (req, res) => {
     success: true,
     message: "Rezerwacja dodana pomyślnie :)",
   })
-  console.log("REZERWACJE:",reservations)
 })
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  console.log("Usuwam:", id);
   reservations = reservations.filter(
     reservation => reservation.id !== id
   )

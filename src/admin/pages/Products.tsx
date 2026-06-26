@@ -415,8 +415,6 @@ export default function Products() {
           setIsDeleteOpen(false);
         }}
         onConfirm={() => {
-          console.log("delete", selectedProduct);
-
           setSelectedProduct(null);
           setIsDeleteOpen(false);
         }}

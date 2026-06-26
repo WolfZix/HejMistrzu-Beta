@@ -300,7 +300,6 @@ export default function Users() {
           setIsDeleteOpen(false);
         }}
         onConfirm={() => {
-          console.log(selectedUser);
           setSelectedUser(null);
           setIsDeleteOpen(false);
         }}
