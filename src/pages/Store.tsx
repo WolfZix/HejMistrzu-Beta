@@ -97,7 +97,7 @@ export default function Store() {
   useEffect(() => {
   async function fetchProducts() {
     try {
-      const response = await fetch("http://localhost:3000/products");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/products`);
       const data = await response.json();
       setProducts(data);
     } finally {
@@ -113,7 +113,7 @@ useEffect(() => {
 
 useEffect(() => {
   async function fetchCategories() {
-    const response = await fetch("http://localhost:3000/categories");
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/categories`);
     const data: Category[] = await response.json();
     setCategories(data);
   }

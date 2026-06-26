@@ -20,13 +20,13 @@ export default function ProfilePage() {
   },[])
 
   async function fetchReservations() {
-      const response = await fetch("http://localhost:3000/reservations");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/reservations`);
       const data = await response.json();
       setReservations(data.rezerwacje);
     }
 
   async function handleDelete(id: string) {
-    const response = await fetch(`http://localhost:3000/reservations/${id}`,
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/reservations/${id}`,
       {
         method: "DELETE",
       }

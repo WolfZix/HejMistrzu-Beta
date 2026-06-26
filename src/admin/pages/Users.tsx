@@ -91,7 +91,7 @@ export default function Users() {
   }, [search])
 
   useEffect(() => {
-    fetch("http://localhost:3000/users")
+    fetch(`${import.meta.env.VITE_API_URL}/users`)
     .then((res) => res.json())
     .then((data: User[]) => { setUsers(data) })
     .catch(console.error);

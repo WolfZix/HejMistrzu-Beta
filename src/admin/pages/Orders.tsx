@@ -19,7 +19,7 @@ export default function Orders() {
   );
 
   // useEffect(() => {
-  //   fetch("http://localhost:3000/orders")
+  //   fetch(`${import.meta.env.VITE_API_URL}/orders`)
   //   .then((res) => res.json())
   //   .then((data: Order[]) => {
   //     setOrders(data);

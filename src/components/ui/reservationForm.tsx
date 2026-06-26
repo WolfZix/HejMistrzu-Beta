@@ -111,7 +111,7 @@ export default function ReservationForm({event, freeSlots, onClose }: Reservatio
     email: formData.email,
     slots,
   };
-  const response = await fetch("http://localhost:3000/reservations", {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/reservations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
