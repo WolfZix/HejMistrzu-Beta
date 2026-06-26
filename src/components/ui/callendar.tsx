@@ -135,11 +135,15 @@ export default function Calendar({ getEventForDay, month, months, setMonth, year
         cellDate.setHours(0,0,0,0);
         const isPast = cellDate < today;
         const shouldHighlight = isSelected || (!selectedDate && isToday);
-        const dayClass = !event 
+        const dayClass = isPast
+        ? event
+          ? "bg-muted-foreground/40 text-foreground opacity-30 cursor-not-allowed"
+          : "bg-background text-foreground opacity-30 cursor-not-allowed"
+        : !event
           ? "bg-background text-foreground hover:bg-transparent hover:ring hover:ring-primary"
-          : event?.bookedSlots < event?.totalSlots
-              ? "bg-primary/50 text-foreground hover:ring hover:ring-primary"
-              : "bg-primary/10 text-foreground hover:ring hover:ring-primary"
+          : event.bookedSlots < event.totalSlots
+            ? "bg-primary/50 text-foreground hover:ring hover:ring-primary"
+            : "bg-primary/10 text-foreground hover:ring hover:ring-primary";
         return (
         <button
           disabled={isPast}
@@ -165,11 +169,6 @@ export default function Calendar({ getEventForDay, month, months, setMonth, year
           ${shouldHighlight
             ? "text-foreground z-10 ring-2 ring-primary shadow-lg shadow-primary/50 scale-105"
             : ""
-          }
-          ${isPast 
-            ? event 
-              ? "bg-muted-foreground/40 opacity-30 cursor-not-allowed hover:bg-muted-foreground/40 hover:ring-0"
-              : " opacity-30 cursor-not-allowed hover:bg-transparent hover:ring-0" : ""
           }
           `}
         >

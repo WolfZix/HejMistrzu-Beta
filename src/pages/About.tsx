@@ -50,14 +50,14 @@ export default function About() {
             <p className="text-muted-foreground leading-relaxed">
               Nasz prywatny pokój RPG z unikalną atmosferą przenosi Cię w sam środek przygody, a rosnąca kolekcja ponad 100 gier sprawia, że zawsze znajdziesz coś nowego do odkrycia.
             </p>
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap gap-3">
               <Link to="/rezerwacje">
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider text-xs group">
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-heading tracking-wider text-sm group">
                   Odwiedź nas <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" />
                 </Button>
               </Link>
               <Link to="/strefa-gier">
-                <Button variant="outline" className="border-primary/20 text-foreground hover:bg-primary/10 hover:border-primary/40 font-heading tracking-wider text-xs">
+                <Button variant="outline" className="border-primary/20 text-foreground hover:text-primary hover:bg-primary/10 hover:border-primary/40 font-heading tracking-wider text-sm">
                   Zobacz gry
                 </Button>
               </Link>

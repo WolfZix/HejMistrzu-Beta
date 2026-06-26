@@ -69,8 +69,10 @@ export default function CartDrawer() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      navigate("/sklep");
                       setIsOpen(false);
+                      requestAnimationFrame(() => {
+                        navigate("/sklep");
+                      });
                     }}
                     className="font-heading tracking-wider text-xs"
                   >
