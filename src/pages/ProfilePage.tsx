@@ -37,7 +37,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-[25vh] flex mt-24 px-10 flex-col gap-5">
       <p>Witaj {username}! Profile page bedzie dostepny po zrobieniu bazy danych uzytkownikow</p>
-      {username === "admin" && (
+      {username === "Admin" && (
         <Link to="/admin" className="px-4 py-2 w-fit bg-card border-border rounded-xl">Panel admina</Link>
       )}
     </div>
