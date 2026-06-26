@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { MapPin, Mail, Clock, Car, Send, CheckCircle2, Phone, MessageSquare } from "lucide-react";
+import { MapPin, Mail, Clock, Car, Send, CheckCircle2, Phone, MessageSquare, LoaderCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import Facebook from "@/assets/facebook.webp";
@@ -31,10 +31,45 @@ const fadeItem = {
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  })
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        console.error(data.message);
+        return;
+      }
+
+      setSubmitted(true);
+      setIsLoading(false);
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+
+    } catch (error) { 
+      console.error(error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -134,24 +169,85 @@ export default function Contact() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Imię</Label>
-                    <Input required placeholder="Imię" className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
+                    <Input
+                    required
+                    placeholder="Imię"
+                    value={formData.name}
+                    onChange={(e) => setFormData((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))}
+                    className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
                   </div>
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Email</Label>
-                    <Input required type="email" placeholder="przykład@email.com" className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
+                    <Input
+                    required
+                    type="email"
+                    placeholder="przykład@email.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))}
+                    className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Temat</Label>
-                  <Input required placeholder="W czym możemy pomóc?" className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
+                  <Input
+                  required
+                  placeholder="W czym możemy pomóc?"
+                  value={formData.subject}
+                    onChange={(e) => setFormData((prev) => ({
+                      ...prev,
+                      subject: e.target.value,
+                    }))}
+                  className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Wiadomość</Label>
-                  <Textarea required placeholder="Twoja wiadomość..." className="bg-card border-border focus:border-primary/50 min-h-[140px] rounded-xl" />
+                  <Textarea
+                  required
+                  placeholder="Twoja wiadomość..."
+                  value={formData.message}
+                    onChange={(e) => setFormData((prev) => ({
+                      ...prev,
+                      message: e.target.value,
+                    }))}
+                  className="bg-card border-border focus:border-primary/50 min-h-[140px] rounded-xl" />
                 </div>
-                <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider py-6 text-base glow-gold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 group">
-                  <Send className="w-5 h-5 mr-2" />
-                  Wyślij wiadomość
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="
+                    w-full
+                    bg-primary
+                    text-primary-foreground
+                    hover:bg-primary/90
+                    font-heading
+                    tracking-wider
+                    py-6
+                    text-base
+                    glow-gold
+                    hover:shadow-lg
+                    hover:shadow-primary/30
+                    transition-all
+                    duration-300
+                    disabled:opacity-70
+                  "
+                >
+                  {isLoading ? (
+                    <>
+                      <LoaderCircle className="w-5 h-5 mr-2 animate-spin" />
+                      Wysyłanie...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5 mr-2" />
+                      Wyślij wiadomość
+                    </>
+                  )}
                 </Button>
               </form>
             )}

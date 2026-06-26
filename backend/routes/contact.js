@@ -34,30 +34,42 @@ router.post("/", async (req, res) => {
         border-radius:16px;
         overflow:hidden;
       ">
-
         <div style="
-          background:#c79b3b;
-          padding:24px;
+          background:#181b22;
+          padding:32px;
           text-align:center;
+          border-bottom:1px solid #2b2f38;
         ">
+
+          <img
+            src="https://hejmistrzu.netlify.app/logo.webp"
+            alt="Hej Mistrzu"
+            style="
+              width:60px;
+              height:auto;
+              display:block;
+              margin:0 auto 16px auto;
+            "
+          />
+
           <h1 style="
             margin:0;
-            color:#111;
-            font-size:28px;
+            color:hsl(43, 78%, 46%);
+            font-size:26px;
+            font-weight:bold;
           ">
-            🎲 Hej Mistrzu
+            Hej Mistrzu!
           </h1>
 
           <p style="
-            margin-top:8px;
-            color:#222;
+            margin:12px 0 0 0;
+            color:#b8b8b8;
+            font-size:15px;
           ">
-            Nowa wiadomość z formularza kontaktowego
+            Formularz kontaktowy • Hej Mistrzu
           </p>
         </div>
-
         <div style="padding:30px;">
-
           <table style="
             width:100%;
             border-collapse:collapse;
@@ -67,17 +79,14 @@ router.post("/", async (req, res) => {
               <td style="padding:12px 0;color:#999;width:120px;">
                 Imię
               </td>
-
               <td style="padding:12px 0;font-weight:bold;">
                 ${name}
               </td>
             </tr>
-
             <tr>
               <td style="padding:12px 0;color:#999;">
                 Email
               </td>
-
               <td style="padding:12px 0;">
                 <a
                   href="mailto:${email}"
@@ -90,18 +99,24 @@ router.post("/", async (req, res) => {
                 </a>
               </td>
             </tr>
-
             <tr>
               <td style="padding:12px 0;color:#999;">
                 Temat
               </td>
-
               <td style="padding:12px 0;">
                 ${subject}
               </td>
             </tr>
-          </table>
+            <tr>
+              <td style="padding:12px 0;color:#999;">
+                Wysłano
+              </td>
 
+              <td style="padding:12px 0;">
+                ${new Date().toLocaleString("pl-PL")}
+              </td>
+            </tr>
+          </table>
           <h2 style="
             margin-bottom:12px;
             color:#c79b3b;
@@ -109,7 +124,6 @@ router.post("/", async (req, res) => {
           ">
             Treść wiadomości
           </h2>
-
           <div style="
             background:#101216;
             border:1px solid #2b2f38;
@@ -120,9 +134,7 @@ router.post("/", async (req, res) => {
           ">
             ${message}
           </div>
-
         </div>
-
         <div style="
           padding:20px;
           text-align:center;
@@ -134,7 +146,6 @@ router.post("/", async (req, res) => {
           <br>
           <strong>Hej Mistrzu</strong>
         </div>
-
       </div>
     </div>
     `,
