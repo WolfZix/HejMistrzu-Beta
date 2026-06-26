@@ -8,7 +8,7 @@ import { Event } from "@/types/event";
 import { normalizeText } from "@/utils/index";
 import ReservationModal from "@/components/shared/ReservationModal";
 
-const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Planszówki"];
+const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Inne"];
 const MONTHS = {
         1: {name: 'Styczeń', days: 31},
         2: {name: 'Luty', days: 28},
@@ -56,7 +56,7 @@ export default function Events() {
   );
 
   const handleEventClick = (event: Event) => {
-    if (event.category === "Pokémon TCG" || event.category === "Planszówki") {
+    if (event.category === "Pokémon TCG" || event.category === "Inne") {
       setSelectedEvent(event);
       return;
     }
@@ -126,7 +126,7 @@ export default function Events() {
               `${isPastEvent 
                 ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
                 : "bg-red-950/80 text-red-200 border-red-500/50 shadow-red-500/30 hover:bg-red-800/30 hover:text-red-300"}`,
-              "Planszówki":
+              "Inne":
               `${isPastEvent 
                 ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
                 : "bg-blue-950/80 text-blue-200 border-blue-500/50 shadow-blue-500/30 hover:bg-blue-800/30 hover:text-blue-300"}`,

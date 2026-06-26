@@ -134,8 +134,7 @@ export default function Events() {
             transition-all duration-200
             "
           >
-            <Plus size={18} />
-            Dodaj event
+            <Plus size={18} /> Dodaj event
           </button>
         }
       />

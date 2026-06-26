@@ -24,10 +24,10 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
         <button
           onClick={(event) => { event.stopPropagation(); onToggleWishlist(product.id); }}
           className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur border transition-all duration-300 ${
-            isWishlisted ? "bg-red-500/20 border-red-500/30 text-red-400" : "bg-background/60 border-border/50 text-muted-foreground opacity-0 group-hover:opacity-100"
+            isWishlisted ? "bg-red-500/50 border-red-500 text-red-500" : "bg-background/60 border-border/50 text-muted-foreground opacity-0 group-hover:opacity-100"
           }`}
         >
-          <Heart className={`w-4 h-4 ${isWishlisted ? "fill-red-400" : ""}`} />
+          <Heart className={`w-5 h-5 ${isWishlisted ? "fill-red-500" : ""}`} />
         </button>
       </div>
 

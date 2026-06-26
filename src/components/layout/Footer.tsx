@@ -112,7 +112,7 @@ export default function Footer() {
                 <span>biuro.hejmistrzu@gmail.com</span>
               </div>
               <Link to="/rezerwacje" className="inline-flex items-center gap-1.5 text-primary hover:text-primary/80 font-medium transition-colors mt-2 group">
-                Zarezerwuj stolik
+                Sprawdź dostępność
                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </Link>
             </div>

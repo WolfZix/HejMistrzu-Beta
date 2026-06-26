@@ -64,7 +64,7 @@ export default function Reservations() {
   });
 
   const handleEventClick = (event: Event) => {
-    if (event.category === "Pokémon TCG" || event.category === "Planszówki") {
+    if (event.category === "Pokémon TCG" || event.category === "Inne") {
       setSelectedEvent(event);
       return;
     }
@@ -90,7 +90,7 @@ export default function Reservations() {
         <button
         onClick={handleCallendarOpen}
         className="bg-primary px-5 py-2 rounded-full w-fit text-black font-heading font-medium mb-14 hover:shadow-[0_0_10px_1px_hsl(43,50%,26%)] hover:scale-105 transition-all duration-300">
-          Sprawdź dostępne terminy
+          Pokaż dostępne terminy
         </button>
         <AnimatePresence>
         {isOpen && (

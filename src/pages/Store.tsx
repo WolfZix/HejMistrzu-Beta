@@ -26,6 +26,7 @@ export default function Store() {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [onlyInStock, setOnlyInStock] = useState(false);
   const [onlyPromotions, setOnlyPromotions] = useState(false);
+  const [onlyWishlist, setOnlyWishlist] = useState(false);
 
   // Products
   const [products, setProducts] = useState<StoreProduct[]>([]);
@@ -73,15 +74,17 @@ export default function Store() {
 
     const matchesStock = !onlyInStock || product.inStock;
     const matchesPromotions = !onlyPromotions || product.onSale;
+    const matchesWishlist = !onlyWishlist || wishlist.includes(product.id);
 
     return (
       matchesCategory &&
       matchesSearch &&
       matchesStock &&
-      matchesPromotions
+      matchesPromotions &&
+      matchesWishlist
     );
   });
-}, [sortedProducts, selectedCategory, search, onlyInStock, onlyPromotions]);
+}, [sortedProducts, selectedCategory, search, onlyInStock, onlyPromotions, onlyWishlist, wishlist]);
 
   const toggleWishlist = (productId: number) => {
     setWishlist((prev) => (prev.includes(productId) ? prev.filter((entry) => entry !== productId) : [...prev, productId]));
@@ -158,6 +161,8 @@ useEffect(() => {
             setOnlyInStock={setOnlyInStock}
             onlyPromotions={onlyPromotions}
             setOnlyPromotions={setOnlyPromotions}
+            onlyWishlist={onlyWishlist}
+            setOnlyWishlist={setOnlyWishlist}
           />
           <div className="flex-1 min-w-0">
             <StoreFilters

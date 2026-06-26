@@ -43,7 +43,7 @@ export default function CTASection() {
               className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider px-8 py-6 text-base glow-gold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 group"
             >
               <CalendarDays className="w-5 h-5 mr-2" />
-              Zarezerwuj teraz
+              Sprawdź dostępność
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
             </Button>
           </Link>

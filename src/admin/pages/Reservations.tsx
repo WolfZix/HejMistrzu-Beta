@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Search, Plus, Trash2, Pencil } from "lucide-react";
 import AdminTable from "../components/AdminTable";
-import { events } from "@/data/events";
 import PageLoader from "@/pages/PageLoader";
 
 const reservations = [
@@ -12,6 +11,7 @@ const reservations = [
     eventId: 1,
     date: "26.06.2026",
     status: "Potwierdzona",
+    type: "Gralnia 2h",
   },
   {
     id: 2,
@@ -20,6 +20,7 @@ const reservations = [
     eventId: 2,
     date: "27.06.2026",
     status: "Anulowana",
+    type: "Event",
   },
   {
     id: 3,
@@ -28,6 +29,7 @@ const reservations = [
     eventId: 3,
     date: "28.06.2026",
     status: "Anulowana",
+    type: "Event",
   },
   {
     id: 4,
@@ -36,6 +38,7 @@ const reservations = [
     eventId: 4,
     date: "29.06.2026",
     status: "Potwierdzona",
+    type: "Sala RPG 5h",
   },
   {
     id: 5,
@@ -44,6 +47,7 @@ const reservations = [
     eventId: 5,
     date: "30.06.2026",
     status: "Potwierdzona",
+    type: "Event",
   },
   {
     id: 6,
@@ -52,6 +56,7 @@ const reservations = [
     eventId: 6,
     date: "01.07.2026",
     status: "Potwierdzona",
+    type: "Sesja RPG z mistrzem gry",
   },
   {
     id: 7,
@@ -60,6 +65,7 @@ const reservations = [
     eventId: 7,
     date: "02.07.2026",
     status: "Potwierdzona",
+    type: "Event",
   },
 ];
 
@@ -158,13 +164,13 @@ export default function Reservations() {
         <AdminTable>
           <thead>
             <tr className="border-b border-border text-primary text-center">
-              <th className="p-4">ID</th>
-              <th className="p-4">Imię i nazwisko</th>
-              <th className="p-4">Email</th>
-              <th className="p-4">Event</th>
-              <th className="p-4">Data</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Akcje</th>
+              <th className="p-4 w-12">ID</th>
+              <th className="p-4 w-[20%]">Imię i nazwisko</th>
+              <th className="p-4 w-[20%]">Email</th>
+              <th className="p-4">Typ</th>
+              <th className="p-4 w-36">Data</th>
+              <th className="p-4 w-36">Status</th>
+              <th className="p-4 w-36">Akcje</th>
             </tr>
           </thead>
 
@@ -190,11 +196,7 @@ export default function Reservations() {
                 </td>
 
                 <td className="p-4">
-                  {
-                    events.find(
-                      (event) => event.id === reservation.eventId
-                    )?.title
-                  }
+                  {reservation.type}
                 </td>
 
                 <td className="p-4">

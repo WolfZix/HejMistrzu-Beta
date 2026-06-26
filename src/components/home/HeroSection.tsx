@@ -71,7 +71,7 @@ export default function HeroSection() {
               size="lg"
               className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading font-semibold tracking-wider px-8 py-6 text-base glow-gold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 group"
             >
-              Zarezerwuj stolik
+              Sprawdź dostępność
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
             </Button>
           </Link>

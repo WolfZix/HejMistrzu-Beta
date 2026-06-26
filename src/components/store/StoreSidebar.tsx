@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronDown, ChevronUp, ShieldCheck, Tag, Truck, FilterX } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, ShieldCheck, Tag, Truck, FilterX, Heart } from "lucide-react";
 import type { Category } from "@/types/store";
 
 type StoreSidebarProps = {
@@ -15,6 +15,8 @@ type StoreSidebarProps = {
   setOnlyInStock: (onlyInStock: boolean) => void;
   onlyPromotions: boolean;
   setOnlyPromotions: (onlyPromotions: boolean) => void;
+  onlyWishlist: boolean;
+  setOnlyWishlist: (onlyWishlist: boolean) => void;
 }
 
 export default function StoreSidebar({
@@ -30,6 +32,8 @@ export default function StoreSidebar({
   setOnlyInStock,
   onlyPromotions,
   setOnlyPromotions,
+  onlyWishlist,
+  setOnlyWishlist,
 }: StoreSidebarProps) {
 
   function resetFilters() {
@@ -37,6 +41,7 @@ export default function StoreSidebar({
     setExpandedCategory(null);
     setOnlyPromotions(false);
     setOnlyInStock(false);
+    setOnlyWishlist(false);
   }
 
   return (
@@ -90,7 +95,21 @@ export default function StoreSidebar({
               }
             `}
           >
-            <Tag size={14} />Tylko promocje
+            <Tag size={14} />Na promocji
+          </button>
+
+          <button
+            onClick={() => setOnlyWishlist(!onlyWishlist)}
+            className={`
+              w-full flex gap-2 items-center px-3 py-2 rounded-lg text-sm border transition-all
+              ${
+                onlyWishlist
+                  ? "bg-primary/10 text-primary border-primary/20"
+                  : "text-muted-foreground border-muted-foreground/20 hover:bg-muted/30 hover:text-foreground"
+              }
+            `}
+          >
+            <Heart size={14} />Polubione
           </button>
         </div>
         <div className="space-y-1">

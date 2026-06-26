@@ -32,7 +32,7 @@ export const events = [
   {
     id: 5, title: "Noc Planszówek", date: "2026-07-15", startTime: "18:00",
     description: "Maratońska noc planszówek — graj do rana! Specjalne promocje na napoje i przekąski.",
-    category: "Planszówki", image: BoardGames, location: "Hej Mistrzu, Rumia", totalSlots: 20,
+    category: "Inne", image: BoardGames, location: "Hej Mistrzu, Rumia", totalSlots: 20,
     bookedSlots: 12, price: 35, link: "",
   },
   {

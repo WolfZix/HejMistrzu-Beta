@@ -23,14 +23,7 @@ const MONTHS = {
         12: {name: 'Grudzień', days: 31},
 };
 
-const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Planszówki"];
-
-const categoryStyles: Record<string, string> = {
-  "Pokémon TCG": "bg-yellow-950/80 text-yellow-200 border-yellow-500/50 shadow-yellow-500/30 hover:bg-yellow-800/30 hover:text-yellow-300",
-  "Riftbound": "bg-purple-950/80 text-purple-200 border-purple-200/50 hover:bg-purple-800/30 hover:text-purple-300",
-  "Warhammer 40K": "bg-red-950/80 text-red-200 border-red-200/50 hover:bg-red-800/30 hover:text-red-300",
-  "Planszówki": "bg-blue-950/80 text-blue-200 border-blue-200/50 hover:bg-blue-800/30 hover:text-blue-300",
-};
+const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Inne"];
 
 const container = {
   hidden: { opacity: 0 },
@@ -115,7 +108,7 @@ export default function UpcomingEvents() {
               `${isPastEvent 
                 ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
                 : "bg-red-950/80 text-red-200 border-red-500/50 shadow-red-500/30 hover:bg-red-800/30 hover:text-red-300"}`,
-              "Planszówki":
+              "Inne":
               `${isPastEvent 
                 ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
                 : "bg-blue-950/80 text-blue-200 border-blue-500/50 shadow-blue-500/30 hover:bg-blue-800/30 hover:text-blue-300"}`,

@@ -18,7 +18,7 @@ const categories = [
   "Magic",
   "Warhammer",
   "RPG",
-  "Planszówki",
+  "Inne",
   "Akcesoria",
 ];
 

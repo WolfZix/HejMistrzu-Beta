@@ -33,7 +33,7 @@ const eventCategories = [
   "Pokemon",
   "Warhammer",
   "RPG",
-  "Planszówki",
+  "Inne",
 ];
 
 export default function AddEventForm({
