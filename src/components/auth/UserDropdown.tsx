@@ -170,38 +170,6 @@ export default function UserDropdown({ onLoginClick, onRegisterClick }: UserDrop
                   Profil
                 </Link>
 
-                <Link
-                  to={`/profil/${username}/statystyki`}
-                  className="
-                    w-full
-                    text-left
-                    px-4
-                    py-3
-                    hover:bg-primary/10
-                    transition-all
-                    flex gap-2 items-center
-                  "
-                >
-                  <Trophy size={18} />
-                  Statystyki
-                </Link>
-
-                <Link
-                  to={`/profil/${username}/historia`}
-                  className="
-                    w-full
-                    text-left
-                    px-4
-                    py-3
-                    hover:bg-primary/10
-                    transition-all
-                    flex gap-2 items-center
-                  "
-                >
-                  <History size={18} />
-                  Historia
-                </Link>
-
                 <button
                   onClick={() => {
                     setIsOpen(false);

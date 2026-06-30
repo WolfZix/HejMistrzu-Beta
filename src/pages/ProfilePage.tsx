@@ -1,45 +1,30 @@
-import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-
-type Reservation = {
-  id: string;
-  eventId: number;
-  firstName: string;
-  lastName: string;
-  pokemonId: string;
-  email: string;
-  slots: number;
-}
+import ProfileButtons from "@/components/profile/Left/ProfileButtons";
+import ProfileHero from "@/components/profile/Left/ProfileHero";
+import ProfileStats from "@/components/profile/Left/ProfileStats";
+import BattlepassCard from "@/components/profile/Right/Battlepass/BattlepassCard";
+import ProfileHistory from "@/components/profile/Right/ProfileHistory";
 
 export default function ProfilePage() {
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-  const { username } = useParams();
-
-  useEffect(() => {
-    fetchReservations();
-  },[])
-
-  async function fetchReservations() {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/reservations`);
-      const data = await response.json();
-      setReservations(data.rezerwacje);
-    }
-
-  async function handleDelete(id: string) {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/reservations/${id}`,
-      {
-        method: "DELETE",
-      }
-    );
-    const data = await response.json();
-    await fetchReservations();
-  }
+  const role = "admin"
+  const username = "Admin"
   return (
-    <div className="min-h-[25vh] flex mt-24 px-10 flex-col gap-5">
-      <p>Witaj {username}! Profile page bedzie dostepny po zrobieniu bazy danych uzytkownikow</p>
-      {username === "Admin" && (
-        <Link to="/admin" className="px-4 py-2 w-fit bg-card border-border rounded-xl">Panel admina</Link>
-      )}
-    </div>
-  )
+    <section className="container mx-auto max-w-7xl px-4 py-28">
+      <div className="grid grid-cols-4 gap-8">
+
+        {/* Lewa kolumna */}
+        <aside className="bg-card/40 backdrop-blur-md border border-border-40 rounded-3xl p-6 sticky top-28 space-y-8">
+          <ProfileHero username={username} role={role} />
+          <ProfileButtons role={role} />
+          <ProfileStats events={17} reservations={2} orders={3} />
+        </aside>
+
+        {/* Prawa kolumna */}
+        <div className="col-span-3">
+          <BattlepassCard />
+          <ProfileHistory />
+        </div>
+
+      </div>
+    </section>
+  );
 }

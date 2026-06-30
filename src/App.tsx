@@ -54,11 +54,6 @@ function App() {
                       <ProfilePage />
                     </ProtectedRoute>
                   } />
-                  <Route path="/profil/:username/historia" element={
-                    <ProtectedRoute>
-                      <HistoryPage />
-                    </ProtectedRoute>
-                  } />
                 </Route>
                 <Route path="/admin" element={<AdminLayout />}>
                   <Route index element={<AdminDashboard />} />

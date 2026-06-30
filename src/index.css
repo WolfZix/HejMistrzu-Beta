@@ -137,8 +137,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     contrast(95%);
 }
 
-
 html {
   scrollbar-gutter: stable;
   background: hsl(217, 19%, 15%);
+}
+
+@keyframes battlepassGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px rgba(185, 92, 255, 0.35));
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 0 8px rgba(185, 92, 255, 0.7))
+      drop-shadow(0 0 14px rgba(216, 140, 255, 0.35));
+  }
+}
+
+.animate-battlepass-glow {
+  animation: battlepassGlow 5s ease-in-out infinite;
 }
