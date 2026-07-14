@@ -1,24 +1,27 @@
 import { CalendarDays, ShoppingBag, StarIcon, Ticket } from "lucide-react";
 
 type ProfileStatsProps = {
+  events: number;
+  reservations: number;
+  orders: number;
   battlepassLevel: number;
 };
 
-export default function ProfileStats({battlepassLevel}: ProfileStatsProps) {
+export default function ProfileStats({events, reservations, orders, battlepassLevel}: ProfileStatsProps) {
   const stats = [
     {
-      label: "Ukończone wydarzenia",
-      value: 17,
+      label: "Odwiedzone wydarzenia",
+      value: events,
       icon: CalendarDays,
     },
     {
       label: "Zamówienia",
-      value: 3,
+      value: orders,
       icon: ShoppingBag,
     },
     {
-      label: "Złożone ezerwacje",
-      value: 2,
+      label: "Złożone rezerwacje",
+      value: reservations,
       icon: Ticket,
     },
     {
