@@ -1,1 +1,0 @@
-import{j as e}from"./index-DvtLbF0E.js";function a({children:s}){return e.jsx("div",{className:"glass rounded-xl overflow-hidden",children:e.jsx("div",{className:"overflow-hidden",children:e.jsx("table",{className:"w-full table-fixed",children:s})})})}export{a as A};
