@@ -15,7 +15,7 @@ export default function ProfilePage() {
         <aside className="bg-card/40 backdrop-blur-md border border-border-40 rounded-3xl p-6 sticky top-28 space-y-8">
           <ProfileHero username={username} role={role} />
           <ProfileButtons role={role} />
-          <ProfileStats events={17} reservations={2} orders={3} />
+          <ProfileStats battlepassLevel={15} />
         </aside>
 
         {/* Prawa kolumna */}
