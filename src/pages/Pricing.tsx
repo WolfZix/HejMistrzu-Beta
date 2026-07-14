@@ -1,46 +1,33 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Check, Star, CalendarDays, Crown, Swords, Users, Clock } from "lucide-react";
+import { Check, Star, CalendarDays, Crown, Swords, Clock, Dices } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 
-const gamingPlans = [
+const plans = [
   {
-    id: 1, name: "Standard", duration: "2 godziny", price: "20", unit: "zł/os.",
-    features: ["Dostęp do strefy gier", "Ponad 100 planszówek", "Kawa lub herbata w cenie"],
-    popular: false, icon: Users,
+    id: 1, name: "Gralnia", duration: "Bez limitu", price: "0", unit: "zł",
+    features: ["Wszystko ze strefy gier", "Rezerwacja stolika online", "Wybór godziny"],
+    popular: false, icon: Dices,
   },
   {
-    id: 2, name: "Adventure", duration: "4 godziny", price: "28", unit: "zł/os.",
-    features: ["Dostęp do strefy gier", "Ponad 100 planszówek", "Kawa lub herbata w cenie", "Zniżka 10% w sklepie"],
-    popular: true, icon: Users,
-  },
-  {
-    id: 3, name: "Epic", duration: "Bez limitu", price: "40", unit: "zł/os.",
-    features: ["Dostęp do strefy gier", "Ponad 100 planszówek", "Kawa lub herbata w cenie", "Zniżka 15% w sklepie", "Priorytetowa rezerwacja"],
-    popular: false, icon: Users,
-  },
-];
-
-const rpgPlans = [
-  {
-    id: 1, name: "Standard", duration: "3 godziny", price: "120", unit: "zł/pokój",
-    features: ["Prywatny pokój RPG", "Atmosfera fantasy", "Mapy i figurki", "Napoje w cenie"],
-    popular: false, icon: Swords,
-  },
-  {
-    id: 2, name: "Adventure", duration: "5 godzin", price: "130", unit: "zł/pokój",
-    features: ["Prywatny pokój RPG", "Atmosfera fantasy", "Mapy i figurki", "Napoje w cenie", "Przedłużenie za dopłatą"],
+    id: 2, name: "Standard", duration: "3 godziny", price: "120", unit: "zł/pokój",
+    features: ["Prywatny pokój RPG", "Atmosfera fantasy", "Mapy i figurki"],
     popular: true, icon: Swords,
   },
   {
-    id: 3, name: "Epic", duration: "Bez limitu", price: "200", unit: "zł/pokój",
-    features: ["Prywatny pokój RPG", "Atmosfera fantasy", "Mapy i figurki", "Napoje w cenie", "Catering na życzenie"],
+    id: 3, name: "Adventure", duration: "5 godzin", price: "130", unit: "zł/pokój",
+    features: ["Prywatny pokój RPG", "Atmosfera fantasy", "Mapy i figurki", "Przedłużenie za dopłatą"],
+    popular: false, icon: Swords,
+  },
+  {
+    id: 4, name: "Epic", duration: "Bez limitu", price: "200", unit: "zł/pokój",
+    features: ["Prywatny pokój RPG", "Idealne na małe imprezy", "Mapy i figurki", "Bez limitu czasu", "Bez limitu osób"],
     popular: false, icon: Swords,
   },
 ];
 
-interface PricingPlan {
+interface Offer {
   id: number;
   name: string;
   duration: string;
@@ -52,11 +39,11 @@ interface PricingPlan {
 }
 
 interface PricingCardProps {
-  plan: PricingPlan;
+  plan: Offer;
   isPopular: boolean;
 }
 
-function PricingCard({ plan, isPopular }: PricingCardProps) {
+function OfferCard({ plan, isPopular }: PricingCardProps) {
   return (
     <div
       className={`relative glass rounded-2xl p-7 transition-all duration-500 hover:-translate-y-1.5 flex flex-col h-full ${
@@ -126,46 +113,14 @@ export default function Pricing() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <SectionHeader
           badge="Cennik"
-          title="Proste i przejrzyste ceny"
-          subtitle="Wybierz pakiet dopasowany do Twojej przygody."
+          title="Oferta Hej Mistrzu"
+          subtitle="Zarezerwuj stolik, wynajmij pokój RPG lub sesje z Game Masterem."
         />
 
-        {/* Gaming Area */}
-        <div className="mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-10"
-          >
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full glass border border-border/50">
-              <Users className="w-5 h-5 text-primary" />
-              <h3 className="font-heading text-lg font-semibold tracking-wide">Gralnia</h3>
-            </div>
-          </motion.div>
-          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto items-center">
-            {gamingPlans.map((plan) => (
-              <motion.div key={plan.id} variants={cardItem} className="h-full"><PricingCard plan={plan} isPopular={plan.popular} /></motion.div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* RPG Room */}
-        <div className="mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-10"
-          >
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full glass border border-border/50">
-              <Swords className="w-5 h-5 text-primary" />
-              <h3 className="font-heading text-lg font-semibold tracking-wide">Pokój RPG</h3>
-            </div>
-          </motion.div>
-          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto items-center">
-            {rpgPlans.map((plan) => (
-              <motion.div key={plan.id} variants={cardItem} className="h-full"><PricingCard plan={plan} isPopular={plan.popular} /></motion.div>
+        <div className="mb-20 mt-20">
+          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-60px" }} className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto items-center">
+            {plans.map((plan) => (
+              <motion.div key={plan.id} variants={cardItem} className="h-full"><OfferCard plan={plan} isPopular={plan.popular} /></motion.div>
             ))}
           </motion.div>
         </div>

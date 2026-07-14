@@ -1,15 +1,15 @@
 import type { Event } from "@/types/event";
 import { Calendar, Clock, Tag, Users, X } from "lucide-react";
 import type { Months } from "@/pages/Reservations";
-import ReservationForm from "../ui/reservationForm";
+import EventReservationForm from "../ui/EventReservationForm";
 
-type ReservationModalProps = {
+type EventModalProps = {
   months: Months;
   event: Event;
   onClose: () => void;
 }
 
-export default function ReservationModal({ event, onClose, months }: ReservationModalProps) {
+export default function EventModal({ event, onClose, months }: EventModalProps) {
   const eventDate = new Date(event.date);
   const eventDay = eventDate.getDate();
   const eventMonthName = months[(eventDate.getMonth() + 1) as keyof typeof months].name;
@@ -62,7 +62,7 @@ export default function ReservationModal({ event, onClose, months }: Reservation
             </p>
           </div>
         </div> 
-        <ReservationForm
+        <EventReservationForm
         event={event}
         freeSlots={freeSlots}
         onClose={onClose}

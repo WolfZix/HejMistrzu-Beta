@@ -21,7 +21,7 @@ const Methods = [
 
 export default function BookingMethods() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto mt-[5rem]">
+    <div id="booking-methods" className="grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto mt-[8rem]">
           {Methods.map((method, i) => (
             <motion.a
               key={method.name}

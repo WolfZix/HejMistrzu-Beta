@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { events } from "@/data/events";
 import { Event } from "@/types/event";
 import { normalizeText } from "@/utils/index";
-import ReservationModal from "@/components/shared/ReservationModal";
+import EventReservationModal from "@/components/shared/EventModal";
 
 const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Inne"];
 const MONTHS = {
@@ -193,7 +193,7 @@ export default function Events() {
           </div>
         )}
         {selectedEvent && (
-          <ReservationModal
+          <EventReservationModal
           months={MONTHS}
           event={selectedEvent}
           onClose={() => setSelectedEvent(null)}

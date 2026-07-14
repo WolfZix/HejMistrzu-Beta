@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
-import ReservationModal from "../shared/ReservationModal";
+import EventReservationModal from "../shared/EventModal";
 import { events } from "@/data/events";
 import type { Event } from "@/types/event";
 
@@ -175,7 +175,7 @@ export default function UpcomingEvents() {
             </motion.div>
           )})}
           {selectedEvent && (
-            <ReservationModal
+            <EventReservationModal
               months={MONTHS}
               event={selectedEvent}
               onClose={() => setSelectedEvent(null)}

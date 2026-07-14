@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Users, Clock, Baby, Dice5, Swords, BookOpen, Info } from "lucide-react";
+import { Search, Users, Clock, Baby, Dice5, Swords, BookOpen } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 

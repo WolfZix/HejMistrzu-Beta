@@ -1,5 +1,4 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import type { Event } from "@/types/event";
 import type { Months } from "@/pages/Reservations";
 
 type CalendarProps = {
@@ -8,22 +7,11 @@ type CalendarProps = {
     setMonth: React.Dispatch<React.SetStateAction<number>>;
     year: number;
     setYear: React.Dispatch<React.SetStateAction<number>>;
-    events: Event[];
-    setSelectedDate: React.Dispatch<React.SetStateAction<Date | null>>;
-    selectedDate: Date | null;
-    getEventForDay: (day: number) => {
-      id: number;
-      title: string;
-      description: string;
-      date: string;
-      startTime: string
-      totalSlots: number;
-      bookedSlots: number;
-      image: string;
-    } | undefined;
+    setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
+    selectedDate: Date;
 }
 
-export default function Calendar({ getEventForDay, month, months, setMonth, year, setYear, setSelectedDate, selectedDate }: CalendarProps) {
+export default function Calendar({ month, months, setMonth, year, setYear, setSelectedDate, selectedDate }: CalendarProps) {
   const currentMonth = months[month as keyof typeof months];
 
   const previousMonth = month === 1 ? 12 : month - 1;
@@ -128,33 +116,19 @@ export default function Calendar({ getEventForDay, month, months, setMonth, year
         ))}
       {Array.from({ length: days }, (_, i) => {
         const day = i + 1;
-        const event = getEventForDay(day);
-        const isSelected = selectedDate && selectedDate.getDate() === day && selectedDate.getMonth() === month - 1;
+        const isSelected = selectedDate.getDate() === day && selectedDate.getMonth() === month - 1 && selectedDate.getFullYear() === year;
         const isToday = day === today.getDate() && month === today.getMonth() + 1 && year === today.getFullYear();
         const cellDate = new Date(year,month-1,day);
         cellDate.setHours(0,0,0,0);
         const isPast = cellDate < today;
-        const shouldHighlight = isSelected || (!selectedDate && isToday);
-        const dayClass = isPast
-        ? event
-          ? "bg-muted-foreground/40 text-foreground opacity-30 cursor-not-allowed"
-          : "bg-background text-foreground opacity-30 cursor-not-allowed"
-        : !event
-          ? "bg-background text-foreground hover:bg-transparent hover:ring hover:ring-primary"
-          : event.bookedSlots < event.totalSlots
-            ? "bg-primary/50 text-foreground hover:ring hover:ring-primary"
-            : "bg-primary/10 text-foreground hover:ring hover:ring-primary";
+        const shouldHighlight = isSelected;
+        
         return (
         <button
           disabled={isPast}
           onClick={() => {
                 const clickedDate = new Date(year, month-1, day);
-                setSelectedDate(prev => {
-                  if (
-                    prev && prev.getDate() === day && prev.getMonth() === month - 1 && !isToday
-                  ) return null;
-                  return clickedDate;
-                });
+                setSelectedDate(clickedDate);
               }}
           key={i}
           className={`
@@ -165,7 +139,6 @@ export default function Calendar({ getEventForDay, month, months, setMonth, year
           p-1
           h-12 w-12 md:h-16 md:w-16 xl:h-20 xl:w-20
           text-sm md:text-lg
-          ${dayClass}
           ${shouldHighlight
             ? "text-foreground z-10 ring-2 ring-primary shadow-lg shadow-primary/50 scale-105"
             : ""
