@@ -22,6 +22,17 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
     '5 godzin',
     'Bez limitu'
   ]
+  const [reservationTime, setReservationTime] = useState("");
+  const [isHourOpen, setIsHourOpen] = useState(false);
+  const hourOptions = [
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+  ]
   const requiresDuration = reservationType === "Sesja RPG";
 
   const [formData, setFormData] = useState({
@@ -119,13 +130,11 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="glass p-4 rounded-2xl sm:p-8 w-full md:w-[31rem] lg:w-[30rem] xl:w-[36rem] mx-auto border-primary/10"
+      className="glass p-4 rounded-2xl sm:p-6 w-full md:w-[31rem] lg:w-[30rem] xl:w-[36rem] mx-auto border-primary/10"
     >
-      <div className="text-center mb-4">
-        <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto mb-2">
-          <CalendarDays className="w-6 h-6 text-primary" />
-        </div>
-        <h3 className="font-heading text-xl font-bold tracking-wide">Formularz rezerwacji</h3>
+      <div className="flex items-center gap-4 mb-4">
+        <CalendarDays className="w-6 h-6 text-primary" />
+        <h2 className="font-heading text-2xl">Formularz rezerwacji</h2>
       </div>
 
       {submitted ? (
@@ -149,108 +158,112 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
               <Label>Wybrana data</Label>
 
               <div className="bg-card border border-border rounded-xl h-11 px-3 flex items-center">
-                  {formattedDate}
+                {formattedDate}
               </div>
             </div>
+
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Rodzaj rezerwacji <span className="text-red-500">*</span></Label>
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsTimeOpen(false);
-                    setIsSessionOpen(prev => !prev)
-                  }}
-                  className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-11 rounded-xl "
-                >
-                  <span className={reservationType ? "" : "text-foreground/60"}>
-                    {reservationType || "Gralnia czy Sesja RPG?"}
-                  </span>
-                  <span>
-                    <ChevronDown size={14}  className="text-foreground/30"/>  
-                  </span>
-                </button>
-                <AnimatePresence>
-                {isSessionOpen && (
-                  <motion.div
-                  onClick={(e) => e.stopPropagation()}
-                  initial={{opacity: 0, y: -10}}
-                  animate={{opacity: 1, y: 0}}
-                  exit={{opacity: 0, y: -10}}
-                  transition={{duration: 0.2}}
-                  className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1">
-                    {bookingOptions.map(option => (
-                      <button
-                        key={option}
-                        type="button"
-                        className="bg-transparent hover:bg-primary w-full text-left rounded-md p-2 hover:text-black"
-                        onClick={() => {
-                          setReservationType(option);
-                          setDuration("");
-                          setIsSessionOpen(false);
-                        }}
-                      >
-                        {option}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-          <div className={`grid grid-cols-1 gap-5 ${requiresDuration ? "sm:grid-cols-2" : ""}`}>
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Imię i nazwisko <span className="text-red-500">*</span></Label>
-              <Input
-              required
-              placeholder="Jan Kowalski"
-              value={formData.fullName}
-              onChange={(e) => handleChange("fullName", e.target.value)}
-              className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
-              {errors.fullName && (
-                <p className="text-red-500 text-sm">{errors.fullName}</p>
-              )}
-            </div>
-          {requiresDuration && (
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Ilość godzin <span className="text-red-500">*</span></Label>
+              <Label className="text-sm font-medium">
+                Godzina <span className="text-red-500">*</span>
+              </Label>
+
               <div className="relative">
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsSessionOpen(false);
-                    setIsTimeOpen(prev => !prev)
+                    setIsTimeOpen(false);
+                    setIsHourOpen((prev) => !prev);
                   }}
-                  className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-11 rounded-xl cursor-pointer"
+                  className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-11 rounded-xl"
                 >
-                  <span className={duration ? "" : "text-foreground/60"}>
-                    {duration || "3h, 5h czy bez limitu?"}
+                  <span className={reservationTime ? "" : "text-foreground/60"}>
+                    {reservationTime || "Wybierz godzinę"}
                   </span>
-                  <span>
-                    <ChevronDown size={14}  className="text-foreground/30"/>  
-                  </span>
+
+                  <ChevronDown
+                    size={14}
+                    className="text-foreground/30"
+                  />
                 </button>
+
                 <AnimatePresence>
-                  {isTimeOpen && (
+                  {isHourOpen && (
                     <motion.div
-                    onClick={(e) => e.stopPropagation()}
-                    initial={{opacity: 0, y: -10}}
-                    animate={{opacity: 1, y: 0}}
-                    exit={{opacity: 0, y: -10}}
-                    transition={{duration: 0.2}}
-                    className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1">
-                      {durationOptions.map(option => (
+                      onClick={(e) => e.stopPropagation()}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1"
+                    >
+                      {hourOptions.map((hour) => (
                         <button
-                        key={option}
-                        type="button"
-                        className="bg-transparent hover:bg-primary w-full text-left rounded-md p-2 hover:text-black"
-                        onClick={() => {
-                          setDuration(option);
-                          setIsTimeOpen(false);
-                        }}
+                          key={hour}
+                          type="button"
+                          className="bg-transparent hover:bg-primary w-full text-left rounded-md p-2 hover:text-black"
+                          onClick={() => {
+                            setReservationTime(hour);
+                            setIsHourOpen(false);
+                          }}
+                        >
+                          {hour}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">
+                Rodzaj rezerwacji <span className="text-red-500">*</span>
+              </Label>
+
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsHourOpen(false);
+                    setIsTimeOpen(false);
+                    setIsSessionOpen((prev) => !prev);
+                  }}
+                  className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-11 rounded-xl"
+                >
+                  <span className={reservationType ? "" : "text-foreground/60"}>
+                    {reservationType || "Gralnia czy Sesja RPG?"}
+                  </span>
+
+                  <ChevronDown
+                    size={14}
+                    className="text-foreground/30"
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {isSessionOpen && (
+                    <motion.div
+                      onClick={(e) => e.stopPropagation()}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1"
+                    >
+                      {bookingOptions.map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          className="bg-transparent hover:bg-primary w-full text-left rounded-md p-2 hover:text-black"
+                          onClick={() => {
+                            setReservationType(option);
+                            setDuration("");
+                            setIsSessionOpen(false);
+                          }}
                         >
                           {option}
                         </button>
@@ -260,50 +273,149 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
                 </AnimatePresence>
               </div>
             </div>
-          )}
+
+            {requiresDuration ? (
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Ilość godzin <span className="text-red-500">*</span>
+                </Label>
+
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsSessionOpen(false);
+                      setIsHourOpen(false);
+                      setIsTimeOpen((prev) => !prev);
+                    }}
+                    className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-11 rounded-xl"
+                  >
+                    <span className={duration ? "" : "text-foreground/60"}>
+                      {duration || "3h, 5h czy bez limitu?"}
+                    </span>
+
+                    <ChevronDown
+                      size={14}
+                      className="text-foreground/30"
+                    />
+                  </button>
+
+                  <AnimatePresence>
+                    {isTimeOpen && (
+                      <motion.div
+                        onClick={(e) => e.stopPropagation()}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1"
+                      >
+                        {durationOptions.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            className="bg-transparent hover:bg-primary w-full text-left rounded-md p-2 hover:text-black"
+                            onClick={() => {
+                              setDuration(option);
+                              setIsTimeOpen(false);
+                            }}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            ) : (
+                <p className=" flex items-center text-xs text-muted-foreground border rounded-lg p-2 mt-auto">
+                  Rezerwacja Gralni obejmuje maksymalnie 4 osoby. Większe grupy prosimy zgłaszać telefonicznie lub w notatkach.
+                </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">
+              Imię i nazwisko <span className="text-red-500">*</span>
+            </Label>
+
+            <Input
+              required
+              placeholder="Jan Kowalski"
+              value={formData.fullName}
+              onChange={(e) => handleChange("fullName", e.target.value)}
+              className="bg-card border-border focus:border-primary/50 h-11 rounded-xl"
+            />
+
+            {errors.fullName && (
+              <p className="text-red-500 text-sm">{errors.fullName}</p>
+            )}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Email <span className="text-red-500">*</span></Label>
+              <Label className="text-sm font-medium">
+                Email <span className="text-red-500">*</span>
+              </Label>
+
               <Input
-              required
-              type="email"
-              placeholder="przykładowy@email.com"
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
+                required
+                type="email"
+                placeholder="przykladowy@email.com"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                className="bg-card border-border focus:border-primary/50 h-11 rounded-xl"
+              />
+
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
               )}
             </div>
+
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Telefon (opcjonalnie)</Label>
+              <Label className="text-sm font-medium">
+                Telefon (opcjonalnie)
+              </Label>
+
               <Input
-              type="text"
-              placeholder="+48 123 456 789"
-              value={formData.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
+                type="text"
+                placeholder="+48 123 456 789"
+                value={formData.phone}
+                onChange={(e) => handleChange("phone", e.target.value)}
+                className="bg-card border-border focus:border-primary/50 h-11 rounded-xl"
+              />
+
               {errors.phone && (
                 <p className="text-red-500 text-sm">{errors.phone}</p>
               )}
             </div>
           </div>
-          {(!canSubmit) && (
-              <p className="text-sm text-red-400 mt-2 text-left">Uzupełnij wszystkie wymagane pola</p>
-            )}
+
+          {!canSubmit && (
+            <p className="text-sm text-red-400 text-left">
+              Uzupełnij wszystkie wymagane pola.
+            </p>
+          )}
+
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Dodatkowe informacje</Label>
+            <Label className="text-sm font-medium">
+              Dodatkowe informacje
+            </Label>
+
             <Textarea
-            placeholder="Napisz, jeśli masz jakieś pytania..."
-            value={formData.notes}
-            onChange={(e) => handleChange("notes", e.target.value)}
-            className="bg-card border-border focus:border-primary/50 min-h-[50px] rounded-xl" />
+              placeholder="Napisz, jeśli masz jakieś pytania..."
+              value={formData.notes}
+              onChange={(e) => handleChange("notes", e.target.value)}
+              className="bg-card border-border focus:border-primary/50 min-h-[70px] rounded-xl resize-none"
+            />
           </div>
+
           <Button
-          type="submit"
-          disabled={!canSubmit}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider py-6 text-base glow-gold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 group relative">
+            type="submit"
+            disabled={!canSubmit}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider py-6 text-base glow-gold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 group"
+          >
             <CalendarDays className="w-5 h-5 mr-2" />
             Wyślij rezerwację
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />

@@ -38,7 +38,6 @@ export default function Reservations() {
         <SectionHeader
           badge="Rezerwacje"
           title="Zarezerwuj swoją przygodę"
-          subtitle="Wybierz wygodną metodę rezerwacji i zabookuj miejsce dla siebie i przyjaciół."
         />
         <AnimatePresence>
             <motion.div
