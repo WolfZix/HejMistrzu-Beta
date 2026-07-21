@@ -72,7 +72,7 @@ export default function ProfileButtons({ role }: ProfileButtonsProps) {
       <button
       className={buttonClass}
       onClick={() => {
-        document.getElementById("edit-profile")?.scrollIntoView({ behavior: "smooth" });
+        document.getElementById("edit-profile")?.scrollIntoView({ behavior: "smooth", block: "center" });
       }}
       >
         <Pencil size={16} className="text-primary" />

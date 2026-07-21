@@ -85,7 +85,7 @@ export default function AdminSidebar() {
 
       <div className="border-t border-border p-4">
         <NavLink
-          to="/"
+          to="/profil/Admin"
           className="
             flex items-center gap-3
             rounded-xl px-4 py-3
@@ -98,7 +98,7 @@ export default function AdminSidebar() {
           "
         >
           <ArrowLeft size={18} />
-          Powrót na stronę
+          Wróć do profilu
         </NavLink>
       </div>
     </aside>

@@ -41,6 +41,7 @@ export default function FormInput({
           focus:ring-2
           focus:ring-primary/50
           outline-none
+          
         "
       />
     </div>

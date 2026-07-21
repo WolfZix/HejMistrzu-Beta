@@ -40,7 +40,7 @@ export default function BattlepassCard() {
   const [selectedReward, setSelectedReward] = useState(rewards[0]);
 
   return (
-    <div className="glass rounded-2xl p-6 col-span-3">
+    <div className="bg-transparent border glass rounded-2xl p-6 col-span-3">
       <h2 className="font-heading text-xl mb-2">
         Battlepass
       </h2>
