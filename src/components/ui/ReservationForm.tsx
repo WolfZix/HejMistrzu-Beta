@@ -23,6 +23,10 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
     'Bez limitu'
   ]
   const [reservationTime, setReservationTime] = useState("");
+  const [peopleCount, setPeopleCount] = useState(4);
+  const [isPeopleCountOpen, setIsPeopleCountOpen] = useState(false);
+  const peopleCountOptions = [1, 2, 3, 4];
+
   const [isHourOpen, setIsHourOpen] = useState(false);
   const hourOptions = [
     "09:00",
@@ -55,9 +59,10 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
     phone: "",
   };
 
-  const nameRegex = /^[A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż]+(?:\s[A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż]+)+$/;
+  const nameRegex =
+    /^[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+(?:[-'][A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+)?(?:\s[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+(?:[-'][A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+)?)+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const phoneRegex = /^\+?\d{9}$/;
+  const phoneRegex = /^\+?\d{9,15}$/;
 
   const phone = formData.phone.replace(/\s/g, "");
 
@@ -80,7 +85,8 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
     const isValid = validateForm();
 
     if (!isValid) return;
-    if (!reservationType || !duration) return;
+    if (!reservationType) return;
+    if (requiresDuration && !duration) return;
 
     setSubmitted(true);
   };
@@ -103,6 +109,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
     const handleClick = () => {
       setIsSessionOpen(false);
       setIsTimeOpen(false);
+      setIsPeopleCountOpen(false);
     }
     document.addEventListener("click", handleClick);
     return () => {
@@ -154,7 +161,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label>Wybrana data</Label>
 
               <div className="bg-card border border-border rounded-xl h-11 px-3 flex items-center">
@@ -162,7 +169,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label className="text-sm font-medium">
                 Godzina <span className="text-red-500">*</span>
               </Label>
@@ -218,7 +225,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label className="text-sm font-medium">
                 Rodzaj rezerwacji <span className="text-red-500">*</span>
               </Label>
@@ -230,6 +237,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
                     e.stopPropagation();
                     setIsHourOpen(false);
                     setIsTimeOpen(false);
+                    setIsPeopleCountOpen(false);
                     setIsSessionOpen((prev) => !prev);
                   }}
                   className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-11 rounded-xl"
@@ -275,7 +283,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
             </div>
 
             {requiresDuration ? (
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Label className="text-sm font-medium">
                   Ilość godzin <span className="text-red-500">*</span>
                 </Label>
@@ -330,13 +338,87 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
                 </div>
               </div>
             ) : (
-                <p className=" flex items-center text-xs text-muted-foreground border rounded-lg p-2 mt-auto">
-                  Rezerwacja Gralni obejmuje maksymalnie 4 osoby. Większe grupy prosimy zgłaszać telefonicznie lub w notatkach.
-                </p>
+                <div className="space-y-1">
+                <Label className="text-sm font-medium">
+                  Ilość osób <span className="text-red-500">*</span>
+                </Label>
+
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsSessionOpen(false);
+                      setIsHourOpen(false);
+                      setIsTimeOpen(false);
+                      setIsPeopleCountOpen((prev) => !prev);
+                    }}
+                    className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-11 rounded-xl"
+                  >
+                    <span>
+                      {peopleCount} {peopleCount === 1 ? "osoba" : "osoby"}
+                    </span>
+
+                    <ChevronDown
+                      size={14}
+                      className="text-foreground/30"
+                    />
+                  </button>
+
+                  <AnimatePresence>
+                    {isPeopleCountOpen && (
+                      <motion.div
+                        onClick={(e) => e.stopPropagation()}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1"
+                      >
+                        {peopleCountOptions.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            className="bg-transparent hover:bg-primary w-full text-left rounded-md p-2 hover:text-black"
+                            onClick={() => {
+                              setPeopleCount(option);
+                              setIsPeopleCountOpen(false);
+                            }}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
             )}
           </div>
-
-          <div className="space-y-2">
+          <AnimatePresence>
+            {reservationType !== "Sesja RPG" && (
+              <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.1 }}
+              className="overflow-hidden flex gap-1 text-xs text-muted-foreground"
+              >
+                <span>
+                  *
+                </span>
+                <span className="flex flex-col">
+                  <p>
+                    Rezerwacja Gralni obejmuje maksymalnie 4 osoby.
+                  </p>
+                  <p>
+                    Większe grupy prosimy zgłaszać telefonicznie lub w notatkach.
+                  </p>
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div className="space-y-1">
             <Label className="text-sm font-medium">
               Imię i nazwisko <span className="text-red-500">*</span>
             </Label>
@@ -354,7 +436,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
             )}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label className="text-sm font-medium">
                 Email <span className="text-red-500">*</span>
               </Label>
@@ -373,7 +455,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label className="text-sm font-medium">
                 Telefon (opcjonalnie)
               </Label>
@@ -392,13 +474,21 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
             </div>
           </div>
 
-          {!canSubmit && (
-            <p className="text-sm text-red-400 text-left">
-              Uzupełnij wszystkie wymagane pola.
-            </p>
-          )}
+          <AnimatePresence>
+            {!canSubmit && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.1 }}
+                className="text-sm text-red-400 text-left"
+              >
+                Uzupełnij wszystkie wymagane pola.
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          <div className="space-y-2">
+          <div className="space-y-1">
             <Label className="text-sm font-medium">
               Dodatkowe informacje
             </Label>

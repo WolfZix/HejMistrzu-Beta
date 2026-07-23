@@ -46,6 +46,12 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    if (isNaN(Number(id))) {
+      return res.status(400).json({
+        success: false,
+        message: "Niepoprawny numer wydarzenia",
+      });
+    }
     const result = await pool.query(`SELECT * FROM events WHERE id = $1`, [id]);
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -99,6 +105,12 @@ router.put("/:id", async (req, res) => {
     });
   try {
     const { id } = req.params;
+    if (isNaN(Number(id))) {
+      return res.status(400).json({
+        success: false,
+        message: "Niepoprawne id",
+      });
+    }
     const existingEvent = await pool.query(`SELECT * FROM events WHERE id = $1`, [id]);
     if (existingEvent.rows.length === 0) { 
       return res.status(404).json({
@@ -129,6 +141,12 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    if (isNaN(Number(id))) {
+      return res.status(400).json({
+        success: false,
+        message: "Niepoprawne id",
+      });
+    }
     const existingEvent = await pool.query(`SELECT * FROM events WHERE id = $1`, [id]);
     if (existingEvent.rows.length === 0) { 
       return res.status(404).json({
