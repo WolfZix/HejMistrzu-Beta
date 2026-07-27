@@ -15,12 +15,12 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
   const [isSessionOpen, setIsSessionOpen] = useState(false);
   const [isTimeOpen, setIsTimeOpen] = useState(false);
   const [reservationType, setReservationType] = useState("");
-  const [duration, setDuration] = useState("");
+  const [duration, setDuration] = useState<number | null>(null);
   const bookingOptions = ['Gralnia', 'Sesja RPG']
   const durationOptions = [
-    '3 godziny',
-    '5 godzin',
-    'Bez limitu'
+    {value: 3, label: "3 godziny"},
+    {value: 5, label: "5 godzin"},
+    {value: 0, label: "Bez limitu"},
   ]
   const [reservationTime, setReservationTime] = useState("");
   const [peopleCount, setPeopleCount] = useState(4);
@@ -269,7 +269,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
                           className="bg-transparent hover:bg-primary w-full text-left rounded-md p-2 hover:text-black"
                           onClick={() => {
                             setReservationType(option);
-                            setDuration("");
+                            setDuration(null);
                             setIsSessionOpen(false);
                           }}
                         >
@@ -321,15 +321,15 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
                       >
                         {durationOptions.map((option) => (
                           <button
-                            key={option}
+                            key={option.value}
                             type="button"
                             className="bg-transparent hover:bg-primary w-full text-left rounded-md p-2 hover:text-black"
                             onClick={() => {
-                              setDuration(option);
+                              setDuration(option.value);
                               setIsTimeOpen(false);
                             }}
                           >
-                            {option}
+                            {option.label}
                           </button>
                         ))}
                       </motion.div>
