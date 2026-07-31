@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import AddEventForm from "./AddEventForm";
+import type { EventFormData } from "@/types/event";
 
 type AddEventModalProps = {
   isOpen: boolean;
@@ -12,14 +13,17 @@ export default function AddEventModal({
   isOpen,
   onClose,
 }: AddEventModalProps) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [image, setImage] = useState("");
-  const [price, setPrice] = useState("");
-  const [totalSlots, setTotalSlots] = useState("");
+  const [formData, setFormData] = useState<EventFormData>({
+    title: "",
+    description: "",
+    category: "",
+    date: "",
+    time: "",
+    image: null,
+    price: "",
+    totalSlots: "",
+    link: "",
+  })
 
   useEffect(() => {
     document.body.style.overflow = isOpen
@@ -31,17 +35,18 @@ export default function AddEventModal({
     };
   }, [isOpen]);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    closeModal();
-  }
-
   function closeModal() {
-    setTitle("");
-    setDescription("");
-    setCategory("");
-    setPrice("0");
-    setTotalSlots("0");
+    setFormData({
+      title: '',
+      description: '',
+      category: '',
+      date: '',
+      time: '',
+      image: null,
+      price: '',
+      totalSlots: '',
+      link: '',
+    })
     onClose();
   }
 
@@ -93,7 +98,7 @@ export default function AddEventModal({
               bg-card
               px-6
               pb-6
-              pt-12
+              pt-6
               shadow-[0_0_15px_1px_hsl(43,50%,10%)]
             "
           >
@@ -113,27 +118,14 @@ export default function AddEventModal({
             </button>
 
             <div className="">
-              <h2 className="font-heading text-center text-2xl mb-4 font-semibold">
+              <h2 className="font-heading text-center text-2xl mb-2 font-semibold">
                 Dodaj Event
               </h2>
             </div>
 
             <AddEventForm
-              title={title}
-              setTitle={setTitle}
-              description={description}
-              setDescription={setDescription}
-              category={category}
-              setCategory={setCategory}
-              date={date}
-              setDate={setDate}
-              time={time}
-              setTime={setTime}
-              price={price}
-              setPrice={setPrice}
-              totalSlots={totalSlots}
-              setTotalSlots={setTotalSlots}
-              handleSubmit={handleSubmit}
+              formData={formData}
+              setFormData={setFormData}
               closeModal={closeModal}
             />
           </motion.div>

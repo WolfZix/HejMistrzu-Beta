@@ -7,8 +7,33 @@ export type Event = {
   category: string;
   image: string;
   location: string;
-  totalSlots: number;
-  bookedSlots: number;
+  maxSlots: number;
   price: number;
   link: string;
 };
+
+export type EventFormData = {
+  title: string;
+  description: string;
+  image: File | null;
+  category: string;
+  date: string;
+  time: string;
+  price: string;
+  totalSlots: string;
+  link: string;
+  location: string;
+}
+
+export type EventFormErrors = {
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  date: string;
+  time: string;
+  price: string;
+  totalSlots: string;
+  link: string;
+  location: string;
+}

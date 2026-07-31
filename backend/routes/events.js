@@ -1,22 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../src/config/db");
+const pool = require("../config/db");
+const upload = require("../config/multer");
 
-const validateEvent = ({ title, description, category, eventDate, eventTime, maxSlots, price }) => {
+const validateEvent = ({ title, description, category, eventDate, eventTime, maxSlots, price, link, image, location }) => {
   if (!title || !description || !category || !eventDate || !eventTime || !maxSlots || price == null) { return "Brakuje wymaganych pól" }
-  if (isNaN(Number(maxSlots)) || Number(maxSlots) <= 0) { return "Wprowadzono niepoprawne dane" }
-  if (isNaN(Number(price)) || Number(price) < 0 || Number(price) >= 9999) { return "Wprowadzono niepoprawne dane" }
-  if (title.trim().length === 0) { return "Wprowadzono niepoprawne dane" }
-  if (description.trim().length === 0) { return "Wprowadzono niepoprawne dane" }
-  if (category.trim().length === 0) { return "Wprowadzono niepoprawne dane" }
-  if (isNaN(Date.parse(eventDate))) { return "Wprowadzono niepoprawne dane" }
+  if (isNaN(Number(maxSlots)) || Number(maxSlots) <= 0) { return "Niepoprawna ilość miejsc" }
+  if (isNaN(Number(price)) || Number(price) < 0 || Number(price) >= 9999) { return "Niepoprawna cena" }
+  if (title.trim().length === 0) { return "Niepoprawny tytuł" }
+  if (description.trim().length === 0) { return "Niepoprawny opis" }
+  if (category.trim().length === 0) { return "Niepoprawna kategoria" }
+  if (isNaN(Date.parse(eventDate))) { return "Niepoprawna data" }
+  if (!image) { return "Brakuje zdjęcia" }
+  if (link && !/^https?:\/\/.+/i.test(link)) { return "Niepoprawny link" }
+  if (!location) { return "Brak lokalizacji" }
   return null;
 };
 
 router.get("/", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, title, description, category, event_date, event_time, max_slots, price, created_at, updated_at
+      SELECT id, title, description, image, category, event_date, event_time, max_slots, price, link, location, created_at, updated_at
       FROM events
       ORDER BY event_date ASC, event_time ASC
       `);
@@ -25,11 +29,14 @@ router.get("/", async (req, res) => {
         id: event.id,
         title: event.title,
         description: event.description,
+        image: event.image,
         category: event.category,
-        eventDate: event.event_date,
-        eventTime: event.event_time,
+        date: event.event_date,
+        startTime: event.event_time,
         maxSlots: event.max_slots,
         price: event.price,
+        link: event.link,
+        location: event.location,
         createdAt: event.created_at,
         updatedAt: event.updated_at,
       }));
@@ -69,23 +76,29 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", upload.single("image"), async (req, res) => {
   const badRequest = (message) =>
     res.status(400).json({
       success: false,
       message,
     });
   try {
-    const validationError = validateEvent(req.body);
+    if (!req.file) { return badRequest("Zdjęcie wydarzenia jest wymagane") }
+    const validationError = validateEvent({
+      ...req.body,
+      image: req.file.filename,
+    });
     if (validationError) { return badRequest(validationError) }
 
-    const { title, description, category, eventDate, eventTime, maxSlots, price } = req.body;
+    const { title, description, category, eventDate, eventTime, maxSlots, price, link, location } = req.body;
+    const image = req.file.filename;
+
     const result = await pool.query(
       `INSERT INTO events
-      (title, description, category, event_date, event_time, max_slots, price)
-      VALUES ($1,$2,$3,$4,$5,$6,$7)
+      (title, description, image, category, event_date, event_time, max_slots, price, link, location)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8, $9, $10)
       RETURNING *`,
-      [title, description, category, eventDate, eventTime, maxSlots, price]
+      [title, description, image, category, eventDate, eventTime, maxSlots, price, link, location]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -121,13 +134,13 @@ router.put("/:id", async (req, res) => {
     const validationError = validateEvent(req.body);
     if (validationError) { return badRequest(validationError) }
 
-    const { title, description, category, eventDate, eventTime, maxSlots, price } = req.body;
+    const { title, description, image, category, eventDate, eventTime, maxSlots, price, link } = req.body;
     const result = await pool.query(`
       UPDATE events
-      SET title = $1, description = $2, category = $3, event_date = $4, event_time = $5, max_slots = $6, price = $7
-      WHERE id = $8
+      SET title = $1, description = $2, image = $3, category = $4, event_date = $5, event_time = $6, max_slots = $7, price = $8, link = $9, location = $10
+      WHERE id = $11
       RETURNING *`,
-      [title, description, category, eventDate, eventTime, maxSlots, price, id]
+      [title, description, image, category, eventDate, eventTime, maxSlots, price, link, location, id]
     );
     res.status(200).json(result.rows[0]);
   } catch(error) {

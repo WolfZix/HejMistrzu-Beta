@@ -1,6 +1,7 @@
 const cors = require("cors");
 const express = require("express");
-const pool = require("./src/config/db");
+const path = require("path");
+const pool = require("./config/db");
 const app = express();
 
 const productsRouter = require("./routes/products");
@@ -13,8 +14,8 @@ const reservationsRouter = require("./routes/reservations");
 
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.use("/reservations", reservationsRouter);
 app.use("/products", productsRouter);
 app.use("/categories", categoriesRouter);
 app.use("/auth", authRouter);

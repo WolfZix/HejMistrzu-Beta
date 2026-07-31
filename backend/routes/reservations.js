@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../src/config/db");
+const pool = require("../config/db");
 
 const validateReservation = ({
   fullName,
@@ -46,6 +46,89 @@ const validateReservation = ({
   
   if (isNaN(Date.parse(reservationDate))) { return "Wprowadzono niepoprawne dane" }
   return null;
+}
+
+async function validateRpgReservation({
+  reservationType,
+  reservationDate,
+  reservationTime,
+  duration,
+  excludeReservationId = null,
+}) {
+
+  let query = `
+    SELECT reservation_time, duration
+    FROM reservations
+    WHERE reservation_type = $1
+    AND reservation_date = $2
+  `;
+
+  const params = [reservationType, reservationDate];
+
+  if (excludeReservationId !== null) {
+    query += ` AND id <> $3`;
+    params.push(excludeReservationId);
+  }
+
+  const existingReservations = await pool.query(query, params);
+
+  const dayOfWeek = new Date(reservationDate).getDay();
+  const schedule = openingHours[dayOfWeek];
+
+  if (!schedule) {
+    return {
+      success: false,
+      status: 400,
+      message: "Lokal jest zamknięty w tym dniu.",
+    };
+  }
+
+  const newStart = Number(reservationTime.split(":")[0]);
+  const newEnd =
+    Number(duration) === 0
+      ? schedule.close
+      : newStart + Number(duration);
+
+  if (newStart < schedule.open || newStart >= schedule.close) {
+    return {
+      success: false,
+      status: 400,
+      message: "Wybrana godzina jest poza godzinami otwarcia",
+    };
+  }
+
+  if (newEnd > schedule.close) {
+    return {
+      success: false,
+      status: 400,
+      message: "Rezerwacja wykracza poza godziny otwarcia",
+      availableDuration: schedule.close - newStart,
+      requestedDuration: duration,
+    };
+  }
+
+  for (const reservation of existingReservations.rows) {
+    const existingStart = Number(
+      reservation.reservation_time.split(":")[0]
+    );
+
+    const existingEnd =
+      Number(reservation.duration) === 0
+        ? schedule.close
+        : existingStart + Number(reservation.duration);
+
+    if (newStart < existingEnd && newEnd > existingStart) {
+      return {
+        success: false,
+        status: 409,
+        message: "Sala RPG jest już zajęta w tym czasie.",
+      };
+    }
+  }
+
+  return {
+    success: true,
+  };
 }
 
 const mapReservation = (reservation) => ({
@@ -169,53 +252,15 @@ router.post("/", async (req, res) => {
         })
       }
     } else if (reservationType === "Sesja RPG") {
-        const existingReservations = await pool.query(`
-          SELECT reservation_time, duration
-          FROM reservations
-          WHERE reservation_type = $1
-          AND reservation_date = $2
-          `, [reservationType, reservationDate])
-
-        const dayOfWeek = new Date(reservationDate).getDay();
-        const schedule = openingHours[dayOfWeek];
-        
-        if (!schedule) {
-          return res.status(400).json({
-            success: false,
-            message: "Lokal jest zamknięty w tym dniu.",
-          });
+        const validation = await validateRpgReservation({
+          reservationType,
+          reservationDate,
+          reservationTime,
+          duration,
+        })
+        if (!validation.success) {
+          return res.status(validation.status).json(validation);
         }
-
-        const newStart = Number(reservationTime.split(":")[0]);
-        const newEnd = Number(duration) === 0 ? schedule.close : newStart + Number(duration);
-
-        if (newStart < schedule.open || newStart >= schedule.close) {
-          return res.status(400).json({
-            success: false,
-            message: "Wybrana godzina jest poza godzinami otwarcia",
-          });
-        }
-
-        if (newEnd > schedule.close) {
-          return res.status(400).json({
-            success: false,
-            message: "Rezerwacja wykracza poza godziny otwarcia",
-            "availableDuration": schedule.close - newStart,
-            "requestedDuration": duration,
-          });
-        }
-          
-        for (const reservation of existingReservations.rows) {
-          const existingStart = Number(reservation.reservation_time.split(":")[0]);
-          const existingEnd = Number(reservation.duration) === 0 ? schedule.close : existingStart + Number(reservation.duration);
-
-        if (newStart < existingEnd && newEnd > existingStart) {
-          return res.status(409).json({
-            success: false,
-            message: "Sala RPG jest już zajęta w tym czasie.",
-          });
-        }
-      }
     }
 
     const result = await pool.query(`
@@ -299,53 +344,15 @@ router.put("/:id", async (req, res) => {
         })
       }
     } else if (reservationType === "Sesja RPG") {
-      const existingReservations = await pool.query(`
-        SELECT reservation_time, duration
-        FROM reservations
-        WHERE reservation_type = $1
-        AND reservation_date = $2
-        AND id <> $3
-        `, [reservationType, reservationDate, id])
-
-        const dayOfWeek = new Date(reservationDate).getDay();
-        const schedule = openingHours[dayOfWeek];
-        
-        if (!schedule) {
-          return res.status(400).json({
-            success: false,
-            message: "Lokal jest zamknięty w tym dniu.",
-          });
-        }
-
-        const newStart = Number(reservationTime.split(":")[0]);
-        const newEnd = Number(duration) === 0 ? schedule.close : newStart + Number(duration);
-
-        if (newStart < schedule.open || newStart >= schedule.close) {
-          return res.status(400).json({
-            success: false,
-            message: "Wybrana godzina jest poza godzinami otwarcia",
-          });
-        }
-
-        if (newEnd > schedule.close) {
-          return res.status(400).json({
-            success: false,
-            message: "Rezerwacja wykracza poza godziny otwarcia",
-            "availableDuration": schedule.close - newStart,
-            "requestedDuration": duration,
-          });
-        }
-          
-        for (const reservation of existingReservations.rows) {
-          const existingStart = Number(reservation.reservation_time.split(":")[0]);
-          const existingEnd = Number(reservation.duration) === 0 ? schedule.close : existingStart + Number(reservation.duration);
-
-        if (newStart < existingEnd && newEnd > existingStart) {
-          return res.status(409).json({
-            success: false,
-            message: "Sala RPG jest już zajęta w tym czasie.",
-          });
-        }
+      const validation = await validateRpgReservation({
+        reservationType,
+        reservationDate,
+        reservationTime,
+        duration,
+        excludeReservationId: id,
+      })
+      if (!validation.success) {
+        return res.status(validation.status).json(validation);
       }
     }
 

@@ -14,7 +14,7 @@ export default function EventModal({ event, onClose, months }: EventModalProps) 
   const eventDay = eventDate.getDate();
   const eventMonthName = months[(eventDate.getMonth() + 1) as keyof typeof months].name;
   const eventYear = eventDate.getFullYear();
-  const freeSlots = event.totalSlots - event.bookedSlots;
+  const freeSlots = event.maxSlots;
 
   return (
   <div
@@ -55,7 +55,7 @@ export default function EventModal({ event, onClose, months }: EventModalProps) 
           </div>
           <div className="space-y-1">
             <p className="flex gap-2 w-fit">
-              <Clock size={18} className="text-primary" />Godzina: {event.startTime}
+              <Clock size={18} className="text-primary" />Godzina: {event.startTime.slice(0,5)}
             </p>
             <p className="flex gap-2 w-fit">
               <Tag size={18} className="text-primary" />Cena: {event.price}zł
@@ -69,7 +69,7 @@ export default function EventModal({ event, onClose, months }: EventModalProps) 
         />
       </div>
       <img
-      src={event.image}
+      src={`http://localhost:3000/uploads/${event.image}`}
       className="
       absolute top-0 bottom-0 left-0 right-0
       w-full h-full

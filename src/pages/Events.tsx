@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar, Clock, MapPin, ArrowRight, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import { Input } from "@/components/ui/input";
-import { events } from "@/data/events";
 import { Event } from "@/types/event";
 import { normalizeText } from "@/utils/index";
 import EventReservationModal from "@/components/shared/EventModal";
+import axios from "axios";
 
 const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Inne"];
 const MONTHS = {
@@ -28,6 +28,21 @@ export default function Events() {
   const [activeCategory, setActiveCategory] = useState("Wszystkie");
   const [search, setSearch] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [events, setEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await axios.get("http://localhost:3000/events");
+        console.log(response.data);
+        setEvents(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchEvents();
+  }, []);
+
   const today = new Date();
   today.setHours(0,0,0,0);
 
@@ -56,18 +71,11 @@ export default function Events() {
   );
 
   const handleEventClick = (event: Event) => {
-    if (event.category === "Pokémon TCG" || event.category === "Inne") {
-      setSelectedEvent(event);
+    if (event.link) {
+      window.open(event.link, "_blank");
       return;
     }
-    if (event.category === "Warhammer 40K") {
-      window.open("https://www.facebook.com/p/hej-mistrzu-centrum-gier-rpg-61567368993724/","_blank");
-      return;
-    }
-    if (event.category === "Riftbound") {
-      window.open(`${event.link}`, "_blank");
-      return;
-    }
+    setSelectedEvent(event);
   }
 
   return (
@@ -143,7 +151,7 @@ export default function Events() {
               >
                 <div className="aspect-[16/9] overflow-hidden relative shrink-0">
                   <img
-                  src={event.image}
+                  src={`http://localhost:3000/uploads/${event.image}`}
                   alt={event.title}
                   loading="lazy"
                   className={`w-full h-full object-cover transition-transform duration-700
@@ -163,7 +171,7 @@ export default function Events() {
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground text-xs">
                       <Clock className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
-                      <span>{event.startTime}</span>
+                      <span>{event.startTime.slice(0,5)}</span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground text-xs">
                       <MapPin className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
