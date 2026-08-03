@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import AddEventForm from "./AddEventForm";
-import type { EventFormData } from "@/types/event";
+import type { EventFormData, Event } from "@/types/event";
+import EventCard from "@/components/ui/EventCard";
 
 type AddEventModalProps = {
   isOpen: boolean;
@@ -23,7 +24,22 @@ export default function AddEventModal({
     price: "",
     totalSlots: "",
     link: "",
+    location: "",
   })
+
+  const [previewImage, setPreviewImage] = useState<string>();
+
+  useEffect(() => {
+    if (!formData.image) {
+      setPreviewImage(undefined);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(formData.image);
+    setPreviewImage(objectUrl);
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    }
+  }, [formData.image])
 
   useEffect(() => {
     document.body.style.overflow = isOpen
@@ -46,9 +62,24 @@ export default function AddEventModal({
       price: '',
       totalSlots: '',
       link: '',
+      location: '',
     })
     onClose();
   }
+
+  const previewEvent: Event = {
+    id: 0,
+    title: formData.title || "Nowe wydarzenia",
+    description: formData.description || "Tutaj pojawi się opis wydarzenia",
+    category: formData.category || "Inne",
+    date: formData.date || new Date().toISOString().split("T")[0],
+    startTime: formData.time || "12:00",
+    image: "",
+    location: formData.location || "Hej Mistrzu, Rumia",
+    maxSlots: Number(formData.totalSlots) || 20,
+    price: Number(formData.price) || 0,
+    link: formData.link,
+  };
 
   return (
     <AnimatePresence>
@@ -62,9 +93,10 @@ export default function AddEventModal({
             fixed
             inset-0
             z-50
-            flex
             items-center
             justify-center
+            gap-40
+            flex
             bg-black/60
             backdrop-blur-sm
             p-4
@@ -100,6 +132,7 @@ export default function AddEventModal({
               pb-6
               pt-6
               shadow-[0_0_15px_1px_hsl(43,50%,10%)]
+              col-span-2
             "
           >
             <button
@@ -129,6 +162,7 @@ export default function AddEventModal({
               closeModal={closeModal}
             />
           </motion.div>
+          <EventCard event={previewEvent} isPreview imageSrc={previewImage} />
         </motion.div>
       )}
     </AnimatePresence>

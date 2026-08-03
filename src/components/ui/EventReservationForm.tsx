@@ -6,6 +6,7 @@ type EventReservationFormProps = {
   event: Event;
   freeSlots: number;
   onClose: () => void;
+  preview?: boolean;
 }
 
 type FormErrors = {
@@ -16,7 +17,7 @@ type FormErrors = {
   nickname: string;
 };
 
-export default function EventReservationForm({event, freeSlots, onClose }: EventReservationFormProps) {
+export default function EventReservationForm({event, freeSlots, onClose, preview = false }: EventReservationFormProps) {
   const [slots, setSlots] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
@@ -307,13 +308,14 @@ export default function EventReservationForm({event, freeSlots, onClose }: Event
           <div className="flex w-full md:w-auto gap-2">
             <button
             type="button"
+            disabled={preview}
             onClick={onClose}
-            className="px-4 py-2 w-full border rounded hover:bg-muted-foreground/20 transition-all duration-300">
+            className="px-4 py-2 w-full border rounded hover:bg-muted-foreground/20 transition-all duration-300 cursor-pointer">
               Anuluj
             </button>
             <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || preview}
             className="
               w-full
               tracking-tighter

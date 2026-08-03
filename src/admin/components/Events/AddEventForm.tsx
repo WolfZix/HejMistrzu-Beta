@@ -154,7 +154,7 @@ export default function AddEventForm({ formData, setFormData, closeModal }: AddE
         focus:border-primary
         focus:ring-2
         focus:ring-primary/50
-        transition-all
+        transition-colors
         duration-300
         text-primary
       "
@@ -173,6 +173,7 @@ export default function AddEventForm({ formData, setFormData, closeModal }: AddE
       <input
         ref={fileInputRef}
         type="file"
+        accept=".webp,image/webp"
         name="image"
         onChange={(e) => setFormData({
         ...formData,

@@ -1,0 +1,14 @@
+export const MONTHS = {
+        1: {name: 'Styczeń', days: 31},
+        2: {name: 'Luty', days: 28},
+        3: {name: 'Marzec', days: 31},
+        4: {name: 'Kwiecień', days: 30},
+        5: {name: 'Maj', days: 31},
+        6: {name: 'Czerwiec', days: 30},
+        7: {name: 'Lipiec', days: 31},
+        8: {name: 'Sierpień', days: 31},
+        9: {name: 'Wrzesień', days: 30},
+        10: {name: 'Październik', days: 31},
+        11: {name: 'Listopad', days: 30},
+        12: {name: 'Grudzień', days: 31},
+};

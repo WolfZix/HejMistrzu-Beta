@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { Calendar, Clock, MapPin, ArrowRight, Search } from "lucide-react";
-import { motion } from "framer-motion";
+import { Search } from "lucide-react";
 import SectionHeader from "@/components/shared/SectionHeader";
 import { Input } from "@/components/ui/input";
 import { Event } from "@/types/event";
 import { normalizeText } from "@/utils/index";
 import EventReservationModal from "@/components/shared/EventModal";
 import axios from "axios";
+import EventCard from "@/components/ui/EventCard";
 
 const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Inne"];
 const MONTHS = {
@@ -34,7 +34,6 @@ export default function Events() {
     async function fetchEvents() {
       try {
         const response = await axios.get("http://localhost:3000/events");
-        console.log(response.data);
         setEvents(response.data);
       } catch (error) {
         console.error(error);
@@ -115,83 +114,14 @@ export default function Events() {
           ))}
         </div>
 
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-            {sortedEvents.map((event) => {
-              const eventDateTime = new Date(`${event.date}T${event.startTime}`)
-              const isPastEvent = eventDateTime < new Date();
-              const categoryStyles = {
-              "Pokémon TCG": 
-              `${isPastEvent 
-                ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground" 
-                : "bg-yellow-950/80 text-yellow-200 border-yellow-500/50 shadow-yellow-500/30 hover:bg-yellow-800/30 hover:text-yellow-300"}`,
-              "Riftbound": 
-              `${isPastEvent 
-                ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
-                : "bg-purple-950/80 text-purple-200 border-purple-500/50 shadow-purple-500/30 hover:bg-purple-800/30 hover:text-purple-300"}`,
-              "Warhammer 40K": 
-              `${isPastEvent 
-                ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
-                : "bg-red-950/80 text-red-200 border-red-500/50 shadow-red-500/30 hover:bg-red-800/30 hover:text-red-300"}`,
-              "Inne":
-              `${isPastEvent 
-                ? "bg-muted/80 text-muted-foreground border-muted-foreground/50 shadow-muted-foreground/30 hover:bg-muted/80 hover:text-muted-foreground"
-                : "bg-blue-950/80 text-blue-200 border-blue-500/50 shadow-blue-500/30 hover:bg-blue-800/30 hover:text-blue-300"}`,
-            };
-              return (
-              <motion.div
-                key={event.id}
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-                className={`group glass rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1 flex flex-col h-full ${isPastEvent ? "text-muted-foreground" : "glass-hover"}`}
-              >
-                <div className="aspect-[16/9] overflow-hidden relative shrink-0">
-                  <img
-                  src={`http://localhost:3000/uploads/${event.image}`}
-                  alt={event.title}
-                  loading="lazy"
-                  className={`w-full h-full object-cover transition-transform duration-700
-                    ${isPastEvent ? "saturate-0 group-hover:scale-100 " : "saturate-100 group-hover:scale-105 "}`}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
-                  <div className={`absolute top-4 left-4 px-2 py-0.5 rounded-full select-none ${categoryStyles[event.category as keyof typeof categoryStyles]} border text-xs font-medium`}>
-                    {event.category}
-                  </div>
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className={`font-heading text-lg font-semibold tracking-wide mb-3 transition-colors ${isPastEvent ? "" : "group-hover:text-primary"}`}>{event.title}</h3>
-                  <div className="space-y-1.5 mb-4">
-                    <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                      <Calendar className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
-                      <span>{new Date(event.date).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" })}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                      <Clock className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
-                      <span>{event.startTime.slice(0,5)}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                      <MapPin className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
-                      <span>{event.location}</span>
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-1">{event.description}</p>
-                  <button
-                  disabled={isPastEvent}
-                  onClick={() => handleEventClick(event)}
-                  className={`w-full border py-2.5 flex justify-center rounded-lg font-heading tracking-wider text-xs transition-all duration-300
-                    ${isPastEvent  
-                    ? "bg-muted-foreground/30 text-muted-foreground hover:bg-muted-foreground/30 border border-foreground/20 cursor-not-allowed" 
-                    : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 cursor-pointer"}`}>
-                    {!isPastEvent ? "Zapisz się" : "Wydarzenie dobiegło końca"}
-                    {!isPastEvent && ( <ArrowRight className="w-3.5 h-3.5 ml-1.5" />)}
-                  </button>
-                </div>
-              </motion.div>
-            )})}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortedEvents.map((event) => (
+            <EventCard
+              key={event.id}
+              event={event}
+              onClick={() => handleEventClick(event)}
+            />
+          ))}
         </div>
 
         {filtered.length === 0 && (

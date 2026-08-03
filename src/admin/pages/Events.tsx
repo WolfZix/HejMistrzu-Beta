@@ -6,6 +6,9 @@ import AddEventModal from "../components/Events/AddEventModal";
 import { events } from "@/data/events";
 import { normalizeText } from "@/utils";
 import TableFilters from "../components/TableFilters";
+import type { Event } from "@/types/event";
+import ViewEventModal from "../components/Events/ViewEventModal";
+import { MONTHS } from "@/data/months";
 
 const EVENTS_PER_PAGE = 6;
 
@@ -15,6 +18,9 @@ export default function Events() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
+
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   const filteredEvents = events.filter((event) =>
     normalizeText(event.title).includes(
@@ -42,11 +48,11 @@ export default function Events() {
         break;
 
       case "slots-asc":
-        sortedEvents.sort((a, b) => a.bookedSlots - b.bookedSlots);
+        sortedEvents.sort((a, b) => a.maxSlots - b.maxSlots);
         break;
   
       case "slots-desc":
-        sortedEvents.sort((a, b) => b.bookedSlots - a.bookedSlots);
+        sortedEvents.sort((a, b) => b.maxSlots - a.maxSlots);
         break;
     }
 
@@ -200,20 +206,24 @@ export default function Events() {
                 <td className="p-4">
                   <span
                     className={
-                      event.bookedSlots / event.totalSlots > 0.8
+                      event.maxSlots > 0.8
                         ? "text-red-400"
-                        : event.bookedSlots / event.totalSlots > 0.5
+                        : event.maxSlots > 0.5
                         ? "text-yellow-400"
                         : "text-green-400"
                     }
                   >
-                    {event.bookedSlots}/{event.totalSlots}
+                    {event.maxSlots}
                   </span>
                 </td>
                 <td className="p-4"> {event.price} zł </td>
                 <td className="p-4">
                   <div className="flex justify-center gap-2">
                     <button
+                      onClick={() => {
+                        setSelectedEvent(event);
+                        setIsViewOpen(true);
+                      }}
                       className="
                         p-2
                         rounded-lg
@@ -319,6 +329,17 @@ export default function Events() {
     </div>
       {isOpen && (
         <AddEventModal isOpen={isOpen} onClose={() => setIsOpen(false)}/>
+      )}
+      {selectedEvent && (
+        <ViewEventModal
+          isOpen={isViewOpen}
+          onClose={() => {
+            setIsViewOpen(false);
+            setSelectedEvent(null);
+          }}
+          event={selectedEvent}
+          months={MONTHS}
+        />
       )}
     </>
   );

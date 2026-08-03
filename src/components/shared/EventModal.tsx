@@ -1,7 +1,7 @@
 import type { Event } from "@/types/event";
-import { Calendar, Clock, Tag, Users, X } from "lucide-react";
+import { X } from "lucide-react";
 import type { Months } from "@/pages/Reservations";
-import EventReservationForm from "../ui/EventReservationForm";
+import EventModalContent from "./EventModalContent";
 
 type EventModalProps = {
   months: Months;
@@ -10,12 +10,6 @@ type EventModalProps = {
 }
 
 export default function EventModal({ event, onClose, months }: EventModalProps) {
-  const eventDate = new Date(event.date);
-  const eventDay = eventDate.getDate();
-  const eventMonthName = months[(eventDate.getMonth() + 1) as keyof typeof months].name;
-  const eventYear = eventDate.getFullYear();
-  const freeSlots = event.maxSlots;
-
   return (
   <div
   onClick={onClose}
@@ -39,44 +33,11 @@ export default function EventModal({ event, onClose, months }: EventModalProps) 
       className="absolute top-2 right-2 z-50 p-2 rounded-full bg-background/80 backdrop-blur border border-border hover:bg-background transition-colors">
         <X className="w-4 h-4" />
       </button>
-      <div className="z-20">
-        <div>
-          <p className="font-heading text-lg md:text-2xl font-bold tracking-wide line-clamp-2">{event.title}</p>
-          <p className="text-muted-foreground text-sm md:text-base mb-4">{event.description}</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 mb-4 text-sm">
-          <div className="space-y-1">
-            <p className="flex gap-2 w-fit">
-              <Calendar size={18} className="text-primary" />Data: {eventDay} {eventMonthName} {eventYear}
-            </p>
-            <p className="flex gap-2 w-fit">
-              <Users size={18} className="text-primary" />Wolne miejsca: {freeSlots}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <p className="flex gap-2 w-fit">
-              <Clock size={18} className="text-primary" />Godzina: {event.startTime.slice(0,5)}
-            </p>
-            <p className="flex gap-2 w-fit">
-              <Tag size={18} className="text-primary" />Cena: {event.price}zł
-            </p>
-          </div>
-        </div> 
-        <EventReservationForm
+      <EventModalContent
         event={event}
-        freeSlots={freeSlots}
+        months={months}
         onClose={onClose}
-        />
-      </div>
-      <img
-      src={`http://localhost:3000/uploads/${event.image}`}
-      className="
-      absolute top-0 bottom-0 left-0 right-0
-      w-full h-full
-      object-cover
-      opacity-20
-      [mask-image:linear-gradient(to_bottom,black_0%,transparent_60%,transparent_100%)]
-      "/>
+      />
     </div>
   </div>
   )

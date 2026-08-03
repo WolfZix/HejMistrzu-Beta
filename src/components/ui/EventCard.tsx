@@ -1,109 +1,72 @@
 import type { Event } from "@/types/event";
-import type { Months } from "@/pages/Reservations";
-import { Calendar, Clock, MapPin, Tag, Users } from "lucide-react";
+import { ArrowRight, Calendar, Clock, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
+import { getCategoryStyles } from "@/data/events";
 
 type EventCardProps = {
   event: Event;
-  months: Months;
-  selectedDate: Date | null;
-  handleEventClick: (event: Event) => void;
+  onClick?: () => void;
+  isPreview?: boolean;
+  imageSrc?: string;
 }
 
-export default function EventCard({event, months, handleEventClick}: EventCardProps) {
-
-  const freeSlots = event.totalSlots - event.bookedSlots
-  const today = new Date();
-
-  const eventDate = new Date(event.date);
-  const eventDay = eventDate.getDate();
-  const eventMonthName = months[(eventDate.getMonth() + 1) as keyof typeof months].name;
-  const eventYear = eventDate.getFullYear();
-
-  today.setHours(0,0,0,0);
-  eventDate.setHours(0,0,0,0);
-
-  const isPastEvent = eventDate < today;
-
+export default function EventCard({event, onClick, isPreview = false, imageSrc}: EventCardProps) {
+  const eventDateTime = new Date(`${event.date}T${event.startTime}`);
+  const isPastEvent = eventDateTime < new Date();
+  const categoryStyles = getCategoryStyles(isPastEvent);
   return (
-    <div
-      className={`
-        flex flex-col
-        w-full h-fit
-        relative
-        p-5
-        border rounded-lg
-        mx-auto mb-2
-        overflow-hidden
-        transition-all duration-500
-        select-none
-        bg-muted-foreground/5
-        ${freeSlots == 0
-          ? "hover:border-muted-foreground/20 hover:shadow-[0_0_10px_1px_hsl(216,5%,20%)]"
-          : "hover:border-primary/20 hover:shadow-[0_0_10px_1px_hsl(43,50%,15%)]"
-        }
-    `}>
-    <img
-      src={event.image}
-      className="
-        absolute inset-0
-        w-[75%] h-[75%]
-        object-cover
-        opacity-30
-        [mask-image:linear-gradient(to_bottom_right,black_0%,transparent_60%,transparent_100%)]
-      "/>
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-heading font-semibold mb-2 md:mb-1">
-          {event.title}
-        </h3>
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+      className={`group glass rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1 flex flex-col min-h-[460px] w-full max-w-[400px] ${isPastEvent ? "text-muted-foreground" : "glass-hover"}`}
+    >
+      <div className="aspect-[16/9] overflow-hidden relative shrink-0">
+        <img
+        src={imageSrc ?? `http://localhost:3000/uploads/${event.image || "EventPlaceholder.webp"}`}
+        onError={(e) => {
+          e.currentTarget.src = "http://localhost:3000/uploads/EventPlaceholder.webp";
+        }}
+        alt={event.title}
+        loading="lazy"
+        className={`w-full h-full object-cover transition-transform duration-700
+          ${isPastEvent ? "saturate-0 group-hover:scale-100 " : "saturate-100 group-hover:scale-105 "}`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
+        <div className={`absolute top-4 left-4 px-2 py-0.5 rounded-full select-none ${categoryStyles[event.category as keyof typeof categoryStyles]} border text-xs font-medium`}>
+          {event.category}
+        </div>
       </div>
-      <p className="mb-2 flex flex-col gap-1 text-xs">
-        <span className=" text-foreground/90 flex gap-1 items-center">
-          <Calendar size={12} className={`${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`} />
-          {eventDay} {eventMonthName} {eventYear}
-        </span>
-        <span className="text-foreground/70 flex gap-1 items-center">
-          <Clock size={12} className={`${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`} />
-          {event.startTime}
-        </span>
-        <span className="text-foreground/70 flex gap-1 items-center">
-          <Users size={12} className={`${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`} />
-          {freeSlots} miejsc
-        </span>
-        <span className="text-foreground/70 flex gap-1 items-center">
-          <MapPin size={12} className={`${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`} />
-          {event.location}
-        </span>
-      </p>
-      <p className="ml-2"><span className="text-sm text-foreground/70">{event.description}</span></p>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4">
-        <span className={`text-2xl font-semibold flex gap-1 mb-4 md:mb-0 items-center ${freeSlots == 0 ? "text-muted-foreground" : "text-primary"}`}>
-          <Tag size={24} />
-          <span className="text-foreground">{event.price}zł</span>
-        </span>
-      <button
-        disabled={event.bookedSlots === event.totalSlots || isPastEvent}
-        className={`
-          w-full md:w-fit
-          tracking-tighter
-          font-heading font-semibold
-          px-5 py-1
-          rounded
-          transition-all
-          duration-300
-          z-10
-          ${event.bookedSlots === event.totalSlots || isPastEvent 
-            ? "bg-muted text-muted-foreground cursor-not-allowed hover:shadow-none"
-            : "bg-primary/80 text-black/80 cursor-pointer hover:bg-primary hover:text-black hover:scale-[102%] hover:shadow-[0_0_10px_1px_hsl(43,50%,26%)]"
-          }
-        `}
-        onClick={() => handleEventClick(event)}
-      >
-        {isPastEvent
-          ? "Wydarzenie zakończone"
-          : "Zarezerwuj miejsce"
-        }
-      </button>
+      <div className="p-6 flex flex-col flex-1">
+        <h3 className={`font-heading text-lg font-semibold tracking-wide mb-3 transition-colors ${isPastEvent ? "" : "group-hover:text-primary"}`}>{event.title}</h3>
+        <div className="space-y-1.5 mb-4">
+          <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <Calendar className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
+            <span>{new Date(event.date).toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" })}</span>
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <Clock className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
+            <span>{event.startTime.slice(0,5)}</span>
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <MapPin className={`w-3.5 h-3.5 shrink-0 ${isPastEvent ? "text-muted-foreground" : "text-primary/70"}`} />
+            <span>{event.location}</span>
+          </div>
+        </div>
+        <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-1 line-clamp-2 whitespace-pre-line">{event.description}</p>
+        <button
+        disabled={isPastEvent}
+        onClick={onClick}
+        className={`w-full border py-2.5 flex justify-center rounded-lg font-heading tracking-wider text-xs transition-all duration-300
+          ${isPastEvent  
+          ? "bg-muted-foreground/30 text-muted-foreground hover:bg-muted-foreground/30 border border-foreground/20 cursor-not-allowed" 
+          : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 cursor-pointer"}`}>
+          {!isPastEvent ? "Zapisz się" : "Wydarzenie dobiegło końca"}
+          {!isPastEvent && ( <ArrowRight className="w-3.5 h-3.5 ml-1.5" />)}
+        </button>
       </div>
-    </div>
+    </motion.div>
   )
 }
