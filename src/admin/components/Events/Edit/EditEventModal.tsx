@@ -1,19 +1,23 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import AddEventForm from "./AddEventForm";
+import EditEventForm from "./EditEventForm";
 import type { EventFormData, Event } from "@/types/event";
 import EventCard from "@/components/ui/EventCard";
 
-type AddEventModalProps = {
+type EditEventModalProps = {
   isOpen: boolean;
+  event: Event;
   onClose: () => void;
+  onEventUpdated: () => void;
 };
 
-export default function AddEventModal({
+export default function EditEventModal({
   isOpen,
+  event,
   onClose,
-}: AddEventModalProps) {
+  onEventUpdated,
+}: EditEventModalProps) {
   const [formData, setFormData] = useState<EventFormData>({
     title: "",
     description: "",
@@ -28,6 +32,7 @@ export default function AddEventModal({
   })
 
   const [previewImage, setPreviewImage] = useState<string>();
+  const [removeImage, setRemoveImage] = useState(false);
 
   useEffect(() => {
     if (!formData.image) {
@@ -35,11 +40,28 @@ export default function AddEventModal({
       return;
     }
     const objectUrl = URL.createObjectURL(formData.image);
+    setRemoveImage(false);
     setPreviewImage(objectUrl);
     return () => {
       URL.revokeObjectURL(objectUrl);
     }
   }, [formData.image])
+
+  useEffect(() => {
+    if (!event) return;
+    setFormData({
+      title: event.title,
+      description: event.description,
+      category: event.category,
+      date: event.date,
+      time: event.startTime.slice(0,5),
+      image: null,
+      price: event.price.toString(),
+      totalSlots: event.maxSlots.toString(),
+      link: event.link,
+      location: event.location,
+    })
+  }, [event]);
 
   useEffect(() => {
     document.body.style.overflow = isOpen
@@ -67,6 +89,15 @@ export default function AddEventModal({
     onClose();
   }
 
+  function removePreviewImage() {
+    setRemoveImage(true);
+    setPreviewImage(undefined);
+    setFormData((prev) => ({
+      ...prev,
+      image: null,
+    }));
+  }
+
   const previewEvent: Event = {
     id: 0,
     title: formData.title || "Nowe wydarzenia",
@@ -74,7 +105,7 @@ export default function AddEventModal({
     category: formData.category || "Inne",
     date: formData.date || new Date().toISOString().split("T")[0],
     startTime: formData.time || "12:00",
-    image: "",
+    image: removeImage ? "" : previewImage || event.image,
     location: formData.location || "Hej Mistrzu, Rumia",
     maxSlots: Number(formData.totalSlots) || 20,
     price: Number(formData.price) || 0,
@@ -152,14 +183,18 @@ export default function AddEventModal({
 
             <div className="">
               <h2 className="font-heading text-center text-2xl mb-2 font-semibold">
-                Dodaj Event
+                Edytuj Event
               </h2>
             </div>
 
-            <AddEventForm
+            <EditEventForm
+              event={event}
               formData={formData}
               setFormData={setFormData}
               closeModal={closeModal}
+              onEventUpdated={onEventUpdated}
+              onRemoveImage={removePreviewImage}
+              removeImage={removeImage}
             />
           </motion.div>
           <EventCard event={previewEvent} isPreview imageSrc={previewImage} />

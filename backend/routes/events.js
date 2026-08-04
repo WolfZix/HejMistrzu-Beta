@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
 const upload = require("../config/multer");
+const fs = require("fs/promises");
+const path = require("path");
 
 const validateEvent = ({ title, description, category, eventDate, eventTime, maxSlots, price, link, image, location }) => {
   if (!title || !description || !category || !eventDate || !eventTime || !maxSlots || price == null) { return "Brakuje wymaganych pól" }
@@ -20,7 +22,8 @@ const validateEvent = ({ title, description, category, eventDate, eventTime, max
 router.get("/", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, title, description, image, category, event_date, event_time, max_slots, price, link, location, created_at, updated_at
+      SELECT id, title, description, image, category, TO_CHAR(event_date, 'YYYY-MM-DD') AS event_date,
+            event_time, max_slots, price, link, location, created_at, updated_at
       FROM events
       ORDER BY event_date ASC, event_time ASC
       `);
@@ -110,7 +113,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", upload.single("image"), async (req, res) => {
   const badRequest = (message) =>
     res.status(400).json({
       success: false,
@@ -131,19 +134,39 @@ router.put("/:id", async (req, res) => {
         message: "Wydarzenie nie istnieje",
       });
     }
-    const validationError = validateEvent(req.body);
+    const validationError = validateEvent({
+      ...req.body,
+      image: req.file?.filename ?? existingEvent.rows[0].image,
+    });
     if (validationError) { return badRequest(validationError) }
 
-    const { title, description, image, category, eventDate, eventTime, maxSlots, price, link } = req.body;
+    const { title, description, category, eventDate, eventTime, maxSlots, price, link, location } = req.body;
+    let image = existingEvent.rows[0].image;
+    if (req.body.removeImage === "true") {
+      image = null;
+    } else if (req.file) {
+      image = req.file.filename;
+    }
     const result = await pool.query(`
       UPDATE events
-      SET title = $1, description = $2, image = $3, category = $4, event_date = $5, event_time = $6, max_slots = $7, price = $8, link = $9, location = $10
+      SET title = $1, description = $2, image = $3, category = $4, event_date = $5,
+          event_time = $6, max_slots = $7, price = $8, link = $9, location = $10
       WHERE id = $11
       RETURNING *`,
       [title, description, image, category, eventDate, eventTime, maxSlots, price, link, location, id]
     );
+    if (existingEvent.rows[0].image && (req.file || req.body.removeImage === "true")) {
+      try {
+        await fs.unlink(
+          path.join(__dirname, "../uploads", existingEvent.rows[0].image)
+        );
+      } catch(err) {
+        console.error("Nie udało się usunąć starego zdjęcia:", err);
+      }
+    }
     res.status(200).json(result.rows[0]);
   } catch(error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: "Nie udało się zedytować wydarzenia",
@@ -168,8 +191,16 @@ router.delete("/:id", async (req, res) => {
       });
     }
     const result = await pool.query(`DELETE FROM events WHERE id = $1 RETURNING *`, [id]);
+    if (existingEvent.rows[0].image) {
+      try {
+        await fs.unlink(path.join(__dirname, "../uploads", existingEvent.rows[0].image));
+      } catch (err) {
+        console.error("Nie udało się usunąć zdjęcia:", err);
+      }
+    }
     res.status(200).json(result.rows[0]);
   } catch(error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       message: "Nie udało się usunąć wydarzenia",

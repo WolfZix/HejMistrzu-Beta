@@ -4,22 +4,22 @@ import { useRef, useState } from "react";
 import type { EventFormData } from "@/types/event";
 import type { EventFormErrors } from "@/types/event";
 import axios from "axios";
+import { getCategoryNames } from "@/data/events";
+import type { Event } from "@/types/event";
 
-type AddEventFormProps = {
+type EditEventFormProps = {
+  event: Event;
   formData: EventFormData;
   setFormData: React.Dispatch<React.SetStateAction<EventFormData>>;
   closeModal: () => void;
+  onEventUpdated: () => void;
+  onRemoveImage: () => void;
+  removeImage: boolean;
 };
 
-const eventCategories = [
-  "Magic",
-  "Pokemon",
-  "Warhammer",
-  "RPG",
-  "Inne",
-];
+const eventCategories = getCategoryNames();
 
-export default function AddEventForm({ formData, setFormData, closeModal }: AddEventFormProps) {
+export default function EditEventForm({ event, formData, setFormData, closeModal, onEventUpdated, onRemoveImage, removeImage }: EditEventFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const today = new Date();
@@ -52,7 +52,6 @@ export default function AddEventForm({ formData, setFormData, closeModal }: AddE
 
     if (data.title.trim() === "") { newErrors.title = "Podaj tytuł wydarzenia" }
     if (data.description.trim() === "") { newErrors.description = "Podaj opis wydarzenia" }
-    if (!data.image) { newErrors.image = "Dodaj zdjęcie wydarzenia" }
     if (!eventCategories.includes(data.category)) { newErrors.category = "Wybierz kategorię" }
     if (data.date.trim() === "") {
       newErrors.date = "Wybierz datę"
@@ -67,7 +66,6 @@ export default function AddEventForm({ formData, setFormData, closeModal }: AddE
     if (data.totalSlots.trim() === "") { newErrors.totalSlots = "Podaj liczbę miejsc" }
     else if (Number(data.totalSlots) <= 0) { newErrors.totalSlots = "Liczba miejsc musi być większa od 0" }
     if (data.link.trim() !== "" && !/^https?:\/\/.+/i.test(data.link.trim())) { newErrors.link = "Podaj poprawny adres URL" }
-    if (!location) { newErrors.location = "Podaj lokalizację" }
     setErrors(newErrors);
     return Object.values(newErrors).every(error => error === "");
   }
@@ -86,8 +84,10 @@ export default function AddEventForm({ formData, setFormData, closeModal }: AddE
       data.append('maxSlots', formData.totalSlots);
       data.append('price', formData.price);
       data.append('link', formData.link);
-      data.append('location', formData.location);
-      await axios.post("http://localhost:3000/events", data);
+      data.append('location', formData.location.trim() || "Hej Mistrzu, Rumia");
+      data.append('removeImage', String(removeImage));
+      await axios.put(`http://localhost:3000/events/${event.id}`, data);
+      onEventUpdated();
       closeModal();
     } catch (error) {
       console.error(error);
@@ -197,14 +197,10 @@ export default function AddEventForm({ formData, setFormData, closeModal }: AddE
     </div>
     <button
     type="button"
-    onClick={() =>{
+    onClick={() => {
       if (fileInputRef.current) { fileInputRef.current.value = "" }
-      setFormData({
-        ...formData,
-        image: null,
-      })
-    }
-    }
+      onRemoveImage();
+    }}
     className="
     border
     p-3
@@ -471,12 +467,13 @@ export default function AddEventForm({ formData, setFormData, closeModal }: AddE
     </div>
     <div>
       <label className="mb-1 block">
-        Lokalizacja
+        Lokalizacja <span className="text-muted-foreground text-sm">(Opcjonalnie)</span>
       </label>
 
       <input
         type="text"
         value={formData.location}
+        placeholder="Hej Mistrzu, Rumia"
         onChange={(e) => setFormData({
         ...formData,
         location: e.target.value,
@@ -537,7 +534,7 @@ export default function AddEventForm({ formData, setFormData, closeModal }: AddE
         hover:shadow-[0_0_8px_4px_hsl(43,50%,30%)]
       "
     >
-      Dodaj
+      Zapisz zmiany
     </button>
   </div>
 </form>

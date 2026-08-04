@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { Plus, Trash2, Pencil, Eye } from "lucide-react";
 import AdminTable from "../components/AdminTable";
 import PageLoader from "@/pages/PageLoader";
-import AddEventModal from "../components/Events/AddEventModal";
-import { events } from "@/data/events";
+import AddEventModal from "../components/Events/Add/AddEventModal";
 import { normalizeText } from "@/utils";
 import TableFilters from "../components/TableFilters";
 import type { Event } from "@/types/event";
 import ViewEventModal from "../components/Events/ViewEventModal";
 import { MONTHS } from "@/data/months";
+import axios from "axios";
+import EditEventModal from "../components/Events/Edit/EditEventModal";
+import DeleteEventModal from "../components/Events/DeleteEventModal";
 
 const EVENTS_PER_PAGE = 6;
 
@@ -17,10 +19,16 @@ export default function Events() {
   const [sortBy, setSortBy] = useState("default");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [isOpen, setIsOpen] = useState(false);
-
+  
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const filteredEvents = events.filter((event) =>
     normalizeText(event.title).includes(
@@ -97,6 +105,22 @@ export default function Events() {
   },
 ];
 
+  async function fetchEvents() {
+    try {
+      setIsLoading(true);
+      const response = await axios.get("http://localhost:3000/events");
+      setEvents(response.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [search])
@@ -123,7 +147,7 @@ export default function Events() {
         sortOptions={sortOptions}
         button={
           <button
-            onClick={() => setIsOpen(true)}
+            onClick={() => setIsAddOpen(true)}
             className="
             flex
             items-center
@@ -236,6 +260,10 @@ export default function Events() {
                     </button>
 
                     <button
+                    onClick={() => {
+                      setSelectedEvent(event);
+                      setIsEditOpen(true);
+                    }}
                       className="
                         p-2
                         rounded-lg
@@ -248,6 +276,10 @@ export default function Events() {
                     </button>
 
                     <button
+                      onClick={() => {
+                        setSelectedEvent(event);
+                        setIsDeleteOpen(true);
+                      }}
                       className="
                         p-2
                         rounded-lg
@@ -321,25 +353,51 @@ export default function Events() {
           </div>
         </div>
       </div>
-      { events.length === 0 && (
+      {isLoading && (
         <div className="absolute -top-12 left-0 right-0 bottom-0">
           <PageLoader /> 
         </div>
       )}
     </div>
-      {isOpen && (
-        <AddEventModal isOpen={isOpen} onClose={() => setIsOpen(false)}/>
+      {isAddOpen && (
+        <AddEventModal isAddOpen={isAddOpen} onClose={() => setIsAddOpen(false)} onEventCreated={fetchEvents}/>
       )}
       {selectedEvent && (
-        <ViewEventModal
-          isOpen={isViewOpen}
-          onClose={() => {
-            setIsViewOpen(false);
-            setSelectedEvent(null);
-          }}
-          event={selectedEvent}
-          months={MONTHS}
-        />
+        <>
+          {isEditOpen && (
+            <EditEventModal 
+              isOpen={isEditOpen}
+              event={selectedEvent}
+              onClose={() => {
+                setIsEditOpen(false)
+                setSelectedEvent(null)
+              }}
+              onEventUpdated={fetchEvents}
+            />
+          )}
+          {isViewOpen && (
+            <ViewEventModal
+              isOpen={isViewOpen}
+              onClose={() => {
+                setIsViewOpen(false);
+                setSelectedEvent(null);
+              }}
+              event={selectedEvent}
+              months={MONTHS}
+            />
+          )}
+          {isDeleteOpen && (
+            <DeleteEventModal
+              isOpen={isDeleteOpen}
+              onClose={() => {
+                setIsDeleteOpen(false);
+                setSelectedEvent(null);
+              }}
+              event={selectedEvent}
+              onEventDeleted={fetchEvents}
+            />
+          )}
+        </>
       )}
     </>
   );
