@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import EventReservationModal from "../shared/EventModal";
@@ -9,21 +9,7 @@ import type { Event } from "@/types/event";
 import axios from "axios";
 import { getCategoryNames } from "@/data/events";
 import EventCard from "../ui/EventCard";
-
-const MONTHS = {
-        1: {name: 'Styczeń', days: 31},
-        2: {name: 'Luty', days: 28},
-        3: {name: 'Marzec', days: 31},
-        4: {name: 'Kwiecień', days: 30},
-        5: {name: 'Maj', days: 31},
-        6: {name: 'Czerwiec', days: 30},
-        7: {name: 'Lipiec', days: 31},
-        8: {name: 'Sierpień', days: 31},
-        9: {name: 'Wrzesień', days: 30},
-        10: {name: 'Październik', days: 31},
-        11: {name: 'Listopad', days: 30},
-        12: {name: 'Grudzień', days: 31},
-};
+import { MONTHS } from "../../data/months";
 
 const categories = getCategoryNames();
 

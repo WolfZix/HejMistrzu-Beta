@@ -7,22 +7,9 @@ import { normalizeText } from "@/utils/index";
 import EventReservationModal from "@/components/shared/EventModal";
 import axios from "axios";
 import EventCard from "@/components/ui/EventCard";
+import { MONTHS } from "@/data/months";
 
 const categories = ["Wszystkie", "Pokémon TCG", "Riftbound", "Warhammer 40K", "Inne"];
-const MONTHS = {
-        1: {name: 'Styczeń', days: 31},
-        2: {name: 'Luty', days: 28},
-        3: {name: 'Marzec', days: 31},
-        4: {name: 'Kwiecień', days: 30},
-        5: {name: 'Maj', days: 31},
-        6: {name: 'Czerwiec', days: 30},
-        7: {name: 'Lipiec', days: 31},
-        8: {name: 'Sierpień', days: 31},
-        9: {name: 'Wrzesień', days: 30},
-        10: {name: 'Październik', days: 31},
-        11: {name: 'Listopad', days: 30},
-        12: {name: 'Grudzień', days: 31},
-};
 
 export default function Events() {
   const [activeCategory, setActiveCategory] = useState("Wszystkie");

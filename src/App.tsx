@@ -18,7 +18,6 @@ const Reservations = lazy(() => import("@/pages/Reservations"));
 const About = lazy(() => import("@/pages/About"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
-const HistoryPage = lazy(() => import("@/pages/HistoryPage"));
 
 // Admin panel
 const AdminLayout = lazy(() => import("@/admin/components/AdminLayout"));

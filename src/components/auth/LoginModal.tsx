@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -18,6 +18,7 @@ export default function LoginModal({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { setUser } = useAuth();
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function LoginModal({
 const handleLogin = async (e: React.FormEvent) => {
   e.preventDefault();
   setError("");
+  setIsLoading(true);
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
       method: "POST",
@@ -56,6 +58,8 @@ const handleLogin = async (e: React.FormEvent) => {
   } catch (error) {
     console.error(error);
     setError("błąd połaczenia z serwerem");
+  } finally {
+    setIsLoading(false);
   }
 };
 
@@ -171,6 +175,7 @@ const handleLogin = async (e: React.FormEvent) => {
                 )}
                 <button
                   type="submit"
+                  disabled={isLoading}
                   className="
                   mt-2
                   py-3
@@ -183,9 +188,17 @@ const handleLogin = async (e: React.FormEvent) => {
                   duration-300
                   hover:bg-primary
                   hover:shadow-[0_0_8px_4px_hsl(43,50%,30%)]
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
                   "
                 >
-                  Zaloguj się
+                  {isLoading ? (
+                    <span className="flex gap-4 justify-center items-center text-nowrap">
+                      Logowanie<LoaderCircle size={16} className="animate-spin" />
+                    </span>
+                  ) : (
+                    "Zaloguj się"
+                  )}
                 </button>
               </form>
 
@@ -194,6 +207,7 @@ const handleLogin = async (e: React.FormEvent) => {
                   Nie masz konta?
                 </p>
                 <button
+                disabled={isLoading}
                 onClick={() => {
                   onLoginClose();
                   setIsRegisterOpen(true);

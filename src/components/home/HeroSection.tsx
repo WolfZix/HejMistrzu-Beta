@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -9,7 +9,6 @@ export default function HeroSection() {
   const { scrollY } = useScroll();
   const heroRef = useRef(null);
   const y = useTransform(scrollY, [0, 800], [0, 300]);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
     <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">

@@ -2,7 +2,6 @@ import type { Event } from "@/types/event";
 import type { Months } from "@/pages/Reservations";
 import EventReservationForm from "../ui/EventReservationForm";
 import { Calendar, Clock, Tag, Users } from "lucide-react";
-import { useEffect, useState } from "react";
 
 type EventModalContentProps = {
   event: Event;

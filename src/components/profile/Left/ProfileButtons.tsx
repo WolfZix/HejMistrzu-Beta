@@ -1,6 +1,5 @@
 import { Calendar, Pencil, Shield, ShoppingBag, Ticket } from "lucide-react";
 import { Link } from "react-router-dom";
-import { text } from "stream/consumers";
 
 type ProfileButtonsProps = {
   role: string;

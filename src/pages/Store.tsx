@@ -1,6 +1,5 @@
 import { useMemo, useState, type MouseEvent } from "react";
 import { ChevronRight } from "lucide-react";
-import SectionHeader from "@/components/shared/SectionHeader";
 import { ProductCard } from "@/components/store/ProductCard";
 import { ProductQuickView } from "@/components/store/ProductQuickView";
 import { useCart } from "@/context/CartContext";

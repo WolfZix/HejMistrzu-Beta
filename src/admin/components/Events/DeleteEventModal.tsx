@@ -1,5 +1,5 @@
 import type { Event } from "@/types/event";
-import { animate, AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { LoaderCircle, TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";

@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { User, LogIn, UserPlus, History, Trophy, LogOut } from "lucide-react";
+import { User, LogIn, UserPlus, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 type UserDropdownProps = {

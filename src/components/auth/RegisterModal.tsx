@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
 import { useState } from "react";
 
 type RegisterModalProps = {
@@ -16,35 +16,39 @@ export default function RegisterModal({
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
   const handleRegister = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError("");
-  try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      setError(data.message);
-      return;
-    }
+    e.preventDefault();
     setError("");
-    onRegisterClose();
-    setIsLoginOpen(true);
-  } catch (error) {
-    console.error(error);
-    setError("błąd połaczenia z serwerem");
-  }
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setError(data.message);
+        return;
+      }
+      setError("");
+      onRegisterClose();
+      setIsLoginOpen(true);
+    } catch (error) {
+      console.error(error);
+      setError("błąd połaczenia z serwerem");
+    } finally {
+      setIsLoading(false);
+    }
 };
 
   return (
@@ -181,6 +185,7 @@ export default function RegisterModal({
                 )}
                 <button
                   type="submit"
+                  disabled={isLoading}
                   className="
                   mt-2
                   py-3
@@ -193,9 +198,17 @@ export default function RegisterModal({
                   duration-300
                   hover:bg-primary
                   hover:shadow-[0_0_8px_4px_hsl(43,50%,30%)]
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
                   "
                 >
-                  Zarejestruj się
+                  {isLoading ? (
+                    <span className="flex gap-4 justify-center items-center text-nowrap">
+                      Rejestracja<LoaderCircle size={16} className="animate-spin" />
+                    </span>
+                  ) : (
+                    "Zarejestruj się"
+                  )}
                 </button>
               </form>
 
@@ -204,6 +217,7 @@ export default function RegisterModal({
                   Masz konto?
                 </p>
                 <button
+                disabled={isLoading}
                 onClick={() => {
                   onRegisterClose();
                   setIsLoginOpen(true);
