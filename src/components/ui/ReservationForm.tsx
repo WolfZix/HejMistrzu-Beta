@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { CalendarDays, CheckCircle2, ArrowRight, ChevronDown } from "lucide-react";
+import { CalendarDays, CheckCircle2, ArrowRight, ChevronDown, LoaderCircle } from "lucide-react";
+import axios from "axios";
 
 type ReservationFormProps = {
   selectedDate: Date;
@@ -12,10 +13,12 @@ type ReservationFormProps = {
 
 export default function ReservationForm({ selectedDate }: ReservationFormProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSessionOpen, setIsSessionOpen] = useState(false);
   const [isTimeOpen, setIsTimeOpen] = useState(false);
   const [reservationType, setReservationType] = useState("");
   const [duration, setDuration] = useState<number | null>(null);
+  const [serverError, setServerError] = useState("");
   const bookingOptions = ['Gralnia', 'Sesja RPG']
   const durationOptions = [
     {value: 3, label: "3 godziny"},
@@ -80,15 +83,54 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
   return !Object.values(newErrors).some(Boolean);
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setServerError("");
     const isValid = validateForm();
 
     if (!isValid) return;
     if (!reservationType) return;
     if (requiresDuration && !duration) return;
 
+    setIsSubmitting(true);
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/reservations`, {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        reservationDate: selectedDate.toLocaleDateString("en-CA"),
+        reservationTime,
+        duration: requiresDuration ? duration : null,
+        peopleCount: !requiresDuration ? peopleCount : null,
+        notes: formData.notes,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
     setSubmitted(true);
+    setFormData({
+      fullName: "",
+      email: "",
+      phone: "",
+      notes: "",
+    });
+    setReservationType("");
+    setDuration(null);
+    setReservationTime("");
+    setPeopleCount(4);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setServerError(
+          error.response?.data?.message ??
+          "Nie udało się wysłać rezerwacji."
+        );
+      } else {
+        setServerError("Nie udało się połączyć z serwerem.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -424,7 +466,6 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
             </Label>
 
             <Input
-              required
               placeholder="Jan Kowalski"
               value={formData.fullName}
               onChange={(e) => handleChange("fullName", e.target.value)}
@@ -442,7 +483,6 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
               </Label>
 
               <Input
-                required
                 type="email"
                 placeholder="przykladowy@email.com"
                 value={formData.email}
@@ -475,7 +515,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
           </div>
 
           <AnimatePresence>
-            {!canSubmit && (
+            {(!canSubmit || serverError) && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
@@ -483,7 +523,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
                 transition={{ duration: 0.1 }}
                 className="text-sm text-red-400 text-left"
               >
-                Uzupełnij wszystkie wymagane pola.
+                {serverError ? serverError : "Brakuje wymaganych pól"}
               </motion.div>
             )}
           </AnimatePresence>
@@ -503,12 +543,21 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
 
           <Button
             type="submit"
-            disabled={!canSubmit}
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider py-6 text-base glow-gold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 group"
+            disabled={isSubmitting}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider py-6 text-base glow-gold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <CalendarDays className="w-5 h-5 mr-2" />
-            Wyślij rezerwację
-            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
+            {isSubmitting ? (
+              <span className="flex items-center gap-2">
+                Wysyłanie
+                <LoaderCircle size={18} className="animate-spin" />
+              </span>
+            ) : (
+              <>
+                <CalendarDays className="w-5 h-5 mr-2" />
+                Wyślij rezerwację
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
+              </>
+            )}
           </Button>
         </form>
       )}

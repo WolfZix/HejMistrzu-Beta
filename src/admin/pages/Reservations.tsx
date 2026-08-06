@@ -1,98 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Plus, Trash2, Pencil } from "lucide-react";
 import AdminTable from "../components/AdminTable";
 import PageLoader from "@/pages/PageLoader";
-
-const reservations = [
-  {
-    id: 1,
-    fullName: "Jan Kowalski",
-    email: "jan@gmail.com",
-    eventId: 1,
-    date: "26.06.2026",
-    status: "Potwierdzona",
-    type: "Gralnia 2h",
-  },
-  {
-    id: 2,
-    fullName: "Anna Nowak",
-    email: "anna@gmail.com",
-    eventId: 2,
-    date: "27.06.2026",
-    status: "Anulowana",
-    type: "Event",
-  },
-  {
-    id: 3,
-    fullName: "Michał Wiśniewski",
-    email: "michal@gmail.com",
-    eventId: 3,
-    date: "28.06.2026",
-    status: "Anulowana",
-    type: "Event",
-  },
-  {
-    id: 4,
-    fullName: "Kacper Kowalczyk",
-    email: "kacper@gmail.com",
-    eventId: 4,
-    date: "29.06.2026",
-    status: "Potwierdzona",
-    type: "Sala RPG 5h",
-  },
-  {
-    id: 5,
-    fullName: "Piotr Nowak",
-    email: "piotr@gmail.com",
-    eventId: 5,
-    date: "30.06.2026",
-    status: "Potwierdzona",
-    type: "Event",
-  },
-  {
-    id: 6,
-    fullName: "Adam Lis",
-    email: "adam@gmail.com",
-    eventId: 6,
-    date: "01.07.2026",
-    status: "Potwierdzona",
-    type: "Sesja RPG z mistrzem gry",
-  },
-  {
-    id: 7,
-    fullName: "Tomasz Mazur",
-    email: "tomek@gmail.com",
-    eventId: 7,
-    date: "02.07.2026",
-    status: "Potwierdzona",
-    type: "Event",
-  },
-];
+import axios from "axios";
+import type { Reservation } from "@/types/reservation";
+import { normalizeText } from "@/utils";
 
 export default function Reservations() {
   const RESERVATIONS_PER_PAGE = 6;
-
   const [currentPage, setCurrentPage] = useState(1);
-  
-  const totalPages = Math.ceil(
-    reservations.length / RESERVATIONS_PER_PAGE
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filteredReservations = reservations.filter((reservation) => 
+    normalizeText(reservation.fullName).includes(normalizeText(search)) ||
+    normalizeText(reservation.email).includes(normalizeText(search))
   );
   
-  const currentReservations = reservations.slice(
+  const totalPages = Math.ceil(
+    filteredReservations.length / RESERVATIONS_PER_PAGE
+  );
+  
+  const currentReservations = filteredReservations.slice(
     (currentPage - 1) * RESERVATIONS_PER_PAGE,
     currentPage * RESERVATIONS_PER_PAGE
   );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  useEffect(() => {
+    fetchReservations();
+  })
+
+  async function fetchReservations() {
+    try {
+      setIsLoading(true);
+      const response = await axios.get("http://localhost:3000/reservations");
+      setReservations(response.data);
+    } catch(error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   
   function getStatusClass(status: string) {
     switch (status) {
+      case "Oczekująca":
+        return "bg-yellow-500/10 text-yellow-400";
       case "Potwierdzona":
         return "bg-green-500/10 text-green-400";
       case "Anulowana":
         return "bg-red-500/10 text-red-400";  
       default:
         return "";
-      }
     }
+  }
+
   return (
     <div className="space-y-6 min-h-[45rem] relative">
       <div>
@@ -120,6 +87,8 @@ export default function Reservations() {
           />
 
           <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Szukaj rezerwacji..."
             className="
             w-full
@@ -196,11 +165,13 @@ export default function Reservations() {
                 </td>
 
                 <td className="p-4">
-                  {reservation.type}
+                  {reservation.duration === null 
+                  ? "Gralnia" 
+                  : `Sesja RPG ${reservation.duration === 0 ? "Bez limitu" : `${reservation.duration}h`}`}
                 </td>
 
                 <td className="p-4">
-                  {reservation.date}
+                  {new Date(reservation.reservationDate).toLocaleDateString("pl-PL")}
                 </td>
 
                 <td className="p-4">

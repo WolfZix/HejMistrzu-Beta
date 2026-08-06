@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
+const jwt = require("jsonwebtoken");
 
 const validateReservation = ({
   fullName,
   email,
   phone,
-  reservationType,
   reservationDate,
   reservationTime,
   duration,
@@ -16,27 +16,19 @@ const validateReservation = ({
   if (
     !fullName ||
     !email ||
-    !reservationType ||
     !reservationDate ||
     !reservationTime ||
-    reservationType === "Gralnia" && !peopleCount ||
-    reservationType === "Sesja RPG" && duration == null
+    (!peopleCount && duration == null)
   )  { return "Brakuje wymaganych pól" }
 
   if (
-    reservationType !== "Gralnia" &&
-    reservationType !== "Sesja RPG"
-  ) { return "Wprowadzono niepoprawne dane" }
-
-  if (
-    reservationType === "Sesja RPG" &&
+    duration !== null &&
     duration !== 3 &&
     duration !== 5 &&
-    duration !== 0 &&
-    duration !== null
+    duration !== 0
   ) { return "Wprowadzono niepoprawne dane" }
 
-  if (reservationType === "Gralnia" && 
+  if (duration === null && 
     (
       isNaN(Number(peopleCount)) ||
       Number(peopleCount) < 1 ||
@@ -48,8 +40,19 @@ const validateReservation = ({
   return null;
 }
 
+function getUserId(req) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return null;
+  try {
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded.id;
+  } catch {
+    return null;
+  }
+}
+
 async function validateRpgReservation({
-  reservationType,
   reservationDate,
   reservationTime,
   duration,
@@ -59,14 +62,14 @@ async function validateRpgReservation({
   let query = `
     SELECT reservation_time, duration
     FROM reservations
-    WHERE reservation_type = $1
-    AND reservation_date = $2
+    WHERE reservation_date = $1
+    AND duration IS NOT NULL
   `;
 
-  const params = [reservationType, reservationDate];
+  const params = [reservationDate];
 
   if (excludeReservationId !== null) {
-    query += ` AND id <> $3`;
+    query += ` AND id <> $2`;
     params.push(excludeReservationId);
   }
 
@@ -137,12 +140,10 @@ const mapReservation = (reservation) => ({
   fullName: reservation.full_name,
   email: reservation.email,
   phone: reservation.phone,
-  reservationType: reservation.reservation_type,
   reservationDate: reservation.reservation_date,
   reservationTime: reservation.reservation_time,
   duration: reservation.duration,
   status: reservation.status,
-  paymentStatus: reservation.payment_status,
   notes: reservation.notes,
   createdAt: reservation.created_at,
   updatedAt: reservation.updated_at,
@@ -162,7 +163,7 @@ const openingHours = {
 router.get("/", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, user_id, full_name, email, phone, reservation_type, reservation_date, reservation_time, duration, status, payment_status, notes, created_at, updated_at, people_count
+      SELECT id, user_id, full_name, email, phone, reservation_date, reservation_time, duration, status, notes, created_at, updated_at, people_count
       FROM reservations
       ORDER BY reservation_date ASC, reservation_time ASC
       `)
@@ -209,7 +210,6 @@ router.post("/", async (req, res) => {
       fullName,
       email,
       phone,
-      reservationType,
       reservationDate,
       reservationTime,
       duration,
@@ -217,11 +217,13 @@ router.post("/", async (req, res) => {
       notes,
     } = req.body;
 
+    const isRpgReservation = duration !== null;
+    const userId = getUserId(req);
+
     const validationError = validateReservation({
       fullName,
       email,
       phone,
-      reservationType,
       reservationDate,
       reservationTime,
       duration,
@@ -235,14 +237,14 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (reservationType === "Gralnia") {
+    if (!isRpgReservation) {
       const occupiedSlots = await pool.query(`
       SELECT COALESCE(SUM(people_count), 0) AS booked_slots
       FROM reservations
-      WHERE reservation_type = $1
-      AND reservation_date = $2
-      AND reservation_time = $3
-      `, [reservationType, reservationDate, reservationTime])
+      WHERE duration IS NULL
+      AND reservation_date = $1
+      AND reservation_time = $2
+      `, [reservationDate, reservationTime])
 
       const bookedSlots = Number(occupiedSlots.rows[0].booked_slots);
       if (bookedSlots + Number(peopleCount) > 20) {
@@ -251,9 +253,8 @@ router.post("/", async (req, res) => {
           message: "Nie ma wolnych miejsc w wybranym terminie.",
         })
       }
-    } else if (reservationType === "Sesja RPG") {
+    } else {
         const validation = await validateRpgReservation({
-          reservationType,
           reservationDate,
           reservationTime,
           duration,
@@ -264,10 +265,10 @@ router.post("/", async (req, res) => {
     }
 
     const result = await pool.query(`
-      INSERT INTO reservations (full_name, email, phone, reservation_type, reservation_date, reservation_time, duration, people_count, notes)
+      INSERT INTO reservations (user_id, full_name, email, phone, reservation_date, reservation_time, duration, people_count, notes)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING *
-      `, [fullName, email, phone, reservationType, reservationDate, reservationTime, duration, peopleCount, notes])
+      `, [userId, fullName, email, phone, reservationDate, reservationTime, duration, peopleCount, notes])
     res.status(201).json(mapReservation(result.rows[0]));
   } catch (error) {
     console.error(error);
@@ -285,13 +286,14 @@ router.put("/:id", async (req, res) => {
       fullName,
       email,
       phone,
-      reservationType,
       reservationDate,
       reservationTime,
       duration,
       peopleCount,
       notes,
     } = req.body;
+
+    const isRpgReservation = duration !== null;
 
     if (isNaN(Number(id))) {
       return res.status(400).json({
@@ -312,7 +314,6 @@ router.put("/:id", async (req, res) => {
       fullName,
       email,
       phone,
-      reservationType,
       reservationDate,
       reservationTime,
       duration,
@@ -326,15 +327,15 @@ router.put("/:id", async (req, res) => {
       });
     }
 
-    if (reservationType === "Gralnia") {
+    if (!isRpgReservation) {
       const occupiedSlots = await pool.query(`
       SELECT COALESCE(SUM(people_count), 0) AS booked_slots
       FROM reservations
-      WHERE reservation_type = $1
-      AND reservation_date = $2
-      AND reservation_time = $3
-      AND id <> $4
-      `, [reservationType, reservationDate, reservationTime, id])
+      WHERE duration IS NULL
+      AND reservation_date = $1
+      AND reservation_time = $2
+      AND id <> $3
+      `, [reservationDate, reservationTime, id])
 
       const bookedSlots = Number(occupiedSlots.rows[0].booked_slots);
       if (bookedSlots + Number(peopleCount) > 20) {
@@ -343,9 +344,8 @@ router.put("/:id", async (req, res) => {
           message: "Nie ma wolnych miejsc w wybranym terminie.",
         })
       }
-    } else if (reservationType === "Sesja RPG") {
+    } else {
       const validation = await validateRpgReservation({
-        reservationType,
         reservationDate,
         reservationTime,
         duration,
@@ -362,16 +362,15 @@ router.put("/:id", async (req, res) => {
       full_name = $1,
       email = $2,
       phone = $3,
-      reservation_type = $4,
-      reservation_date = $5,
-      reservation_time = $6,
-      duration = $7,
-      people_count = $8,
-      notes = $9,
+      reservation_date = $4,
+      reservation_time = $5,
+      duration = $6,
+      people_count = $7,
+      notes = $8,
       updated_at = CURRENT_TIMESTAMP
-      WHERE id = $10
+      WHERE id = $9
       RETURNING *
-      `, [fullName, email, phone, reservationType, reservationDate, reservationTime, duration, peopleCount, notes, id])
+      `, [fullName, email, phone, reservationDate, reservationTime, duration, peopleCount, notes, id])
     
     res.status(200).json(mapReservation(result.rows[0]));
 
