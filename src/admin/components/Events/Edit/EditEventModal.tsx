@@ -160,8 +160,8 @@ export default function EditEventModal({
               border-primary/30
               bg-card
               px-6
-              pb-6
-              pt-6
+              pb-4
+              pt-4
               shadow-[0_0_15px_1px_hsl(43,50%,10%)]
               col-span-2
             "
@@ -182,7 +182,7 @@ export default function EditEventModal({
             </button>
 
             <div className="">
-              <h2 className="font-heading text-center text-2xl mb-2 font-semibold">
+              <h2 className="font-heading text-center text-2xl mb-1 font-semibold">
                 Edytuj Event
               </h2>
             </div>

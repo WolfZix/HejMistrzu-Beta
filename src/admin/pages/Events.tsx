@@ -10,7 +10,7 @@ import ViewEventModal from "../components/Events/ViewEventModal";
 import { MONTHS } from "@/data/months";
 import axios from "axios";
 import EditEventModal from "../components/Events/Edit/EditEventModal";
-import DeleteEventModal from "../components/Events/DeleteEventModal";
+import DeleteModal from "../components/DeleteModal";
 
 const EVENTS_PER_PAGE = 6;
 
@@ -387,14 +387,26 @@ export default function Events() {
             />
           )}
           {isDeleteOpen && (
-            <DeleteEventModal
+            <DeleteModal
               isOpen={isDeleteOpen}
+              title="Usuń wydarzenie"
+              description={
+                <>
+                  Czy na pewno chcesz usunąć wydarzenie:
+                  <br />
+                  <span className="font-medium text-foreground">
+                    {selectedEvent?.title} ?
+                  </span>
+                </>
+              }
               onClose={() => {
-                setIsDeleteOpen(false);
                 setSelectedEvent(null);
+                setIsDeleteOpen(false);
               }}
-              event={selectedEvent}
-              onEventDeleted={fetchEvents}
+              onConfirm={() => {
+                setSelectedEvent(null);
+                setIsDeleteOpen(false);
+              }}
             />
           )}
         </>

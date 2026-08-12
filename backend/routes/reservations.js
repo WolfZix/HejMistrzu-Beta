@@ -11,7 +11,8 @@ const validateReservation = ({
   reservationTime,
   duration,
   peopleCount,
-  notes
+  notes,
+  status,
 }) => {
   if (
     !fullName ||
@@ -20,6 +21,12 @@ const validateReservation = ({
     !reservationTime ||
     (!peopleCount && duration == null)
   )  { return "Brakuje wymaganych pól" }
+
+  if (
+    status !== "Oczekująca" &&
+    status !== "Potwierdzona" &&
+    status !== "Anulowana"
+  ) { return "Wprowadzono niepoprawny status" }
 
   if (
     duration !== null &&
@@ -163,7 +170,7 @@ const openingHours = {
 router.get("/", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, user_id, full_name, email, phone, reservation_date, reservation_time, duration, status, notes, created_at, updated_at, people_count
+      SELECT id, user_id, full_name, email, phone, reservation_date::text AS reservation_date, reservation_time, duration, status, notes, created_at, updated_at, people_count
       FROM reservations
       ORDER BY reservation_date ASC, reservation_time ASC
       `)
@@ -291,6 +298,7 @@ router.put("/:id", async (req, res) => {
       duration,
       peopleCount,
       notes,
+      status,
     } = req.body;
 
     const isRpgReservation = duration !== null;
@@ -319,6 +327,7 @@ router.put("/:id", async (req, res) => {
       duration,
       peopleCount,
       notes,
+      status,
     });
     if (validationError) {
       return res.status(400).json({
@@ -367,10 +376,11 @@ router.put("/:id", async (req, res) => {
       duration = $6,
       people_count = $7,
       notes = $8,
+      status = $9,
       updated_at = CURRENT_TIMESTAMP
-      WHERE id = $9
+      WHERE id = $10
       RETURNING *
-      `, [fullName, email, phone, reservationDate, reservationTime, duration, peopleCount, notes, id])
+      `, [fullName, email, phone, reservationDate, reservationTime, duration, peopleCount, notes, status, id])
     
     res.status(200).json(mapReservation(result.rows[0]));
 
@@ -379,6 +389,46 @@ router.put("/:id", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Nie udało się zaktualizować rezerwacji",
+    });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (isNaN(Number(id))) {
+      return res.status(400).json({
+        success: false,
+        message: "Niepoprawny numer rezerwacji",
+      });
+    }
+
+    const result = await pool.query(
+      `DELETE FROM reservations
+       WHERE id = $1
+       RETURNING *`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Nie znaleziono rezerwacji",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Rezerwacja została usunięta",
+      reservation: mapReservation(result.rows[0]),
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Nie udało się usunąć rezerwacji",
     });
   }
 });

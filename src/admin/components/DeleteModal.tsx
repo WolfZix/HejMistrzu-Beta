@@ -102,6 +102,8 @@ export default function DeleteModal({
                   border
                   border-border
                   hover:bg-muted
+                  transition-all
+                  duration-200
                 "
               >
                 Anuluj
@@ -114,8 +116,10 @@ export default function DeleteModal({
                   py-2
                   rounded-lg
                   bg-red-600
-                  hover:bg-red-700
+                  hover:bg-red-800/70
                   text-white
+                  transition-all
+                  duration-200
                 "
               >
                 Usuń

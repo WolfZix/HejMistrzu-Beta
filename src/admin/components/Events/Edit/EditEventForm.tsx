@@ -97,7 +97,7 @@ export default function EditEventForm({ event, formData, setFormData, closeModal
   return (
     <form
   onSubmit={handleSubmit}
-  className="flex flex-col space-y-4"
+  className="flex flex-col space-y-2"
 >
   <div>
     <label className="mb-1 block">
