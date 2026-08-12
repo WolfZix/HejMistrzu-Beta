@@ -5,69 +5,25 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const page1 = await axios.get(
-      `${process.env.WC_URL}/wp-json/wc/v3/products`,
-      {
-        params: {
-          consumer_key: process.env.WC_CONSUMER_KEY,
-          consumer_secret: process.env.WC_CONSUMER_SECRET,
-          per_page: 100,
-          page: 1,
-        },
-      }
-    );
-    const page2 = await axios.get(
-      `${process.env.WC_URL}/wp-json/wc/v3/products`,
-      {
-        params: {
-          consumer_key: process.env.WC_CONSUMER_KEY,
-          consumer_secret: process.env.WC_CONSUMER_SECRET,
-          per_page: 100,
-          page: 2,
-        },
-      }
-    );
-    const page3 = await axios.get(
-      `${process.env.WC_URL}/wp-json/wc/v3/products`,
-      {
-        params: {
-          consumer_key: process.env.WC_CONSUMER_KEY,
-          consumer_secret: process.env.WC_CONSUMER_SECRET,
-          per_page: 100,
-          page: 3,
-        },
-      }
-    );
-    const page4 = await axios.get(
-      `${process.env.WC_URL}/wp-json/wc/v3/products`,
-      {
-        params: {
-          consumer_key: process.env.WC_CONSUMER_KEY,
-          consumer_secret: process.env.WC_CONSUMER_SECRET,
-          per_page: 100,
-          page: 4,
-        },
-      }
-    );
-    const page5 = await axios.get(
-      `${process.env.WC_URL}/wp-json/wc/v3/products`,
-      {
-        params: {
-          consumer_key: process.env.WC_CONSUMER_KEY,
-          consumer_secret: process.env.WC_CONSUMER_SECRET,
-          per_page: 100,
-          page: 5,
-        },
-      }
-    );
+    const params = {
+      consumer_key: process.env.WC_CONSUMER_KEY,
+      consumer_secret: process.env.WC_CONSUMER_SECRET,
+      per_page: 100,
+      page: 1,
+    };
 
-    const allProducts = [
-      ...page1.data,
-      ...page2.data,
-      ...page3.data,
-      ...page4.data,
-      ...page5.data,
-    ];
+    const firstPage = await axios.get(`${process.env.WC_URL}/wp-json/wc/v3/products`, { params });
+    const totalPages = Number(firstPage.headers["x-wp-totalpages"]);
+    let allProducts = [...firstPage.data];
+    for (let page = 2; page <= totalPages; page++) {
+      const response = await axios.get(`${process.env.WC_URL}/wp-json/wc/v3/products`, { 
+        params: {
+          ...params,
+          page,
+        }
+      });
+      allProducts.push(...response.data);
+    }
 
     const visibleProducts = allProducts.filter((product) => product.status === "publish");
 
