@@ -8,6 +8,7 @@ type EventModalContentProps = {
   months: Months;
   onClose: () => void;
   preview?: boolean;
+  onRegistrationSuccess: () => void;
 };
 
 export default function EventModalContent({
@@ -15,13 +16,13 @@ export default function EventModalContent({
   months,
   onClose,
   preview = false,
+  onRegistrationSuccess,
 }: EventModalContentProps) {
 
   const eventDate = new Date(event.date);
   const eventDay = eventDate.getDate();
   const eventMonthName = months[(eventDate.getMonth() + 1) as keyof typeof months].name;
   const eventYear = eventDate.getFullYear();
-  const freeSlots = event.maxSlots;
 
   const imageSrc = event.image
   ? `http://localhost:3000/uploads/${event.image}`
@@ -32,9 +33,10 @@ export default function EventModalContent({
     className="
       bg-card
       w-full
-      max-w-2xl
+      max-w-3xl
+      h-[24rem]
       max-h-[90vh]
-      overflow-y-auto
+      overflow-y-hidden
       rounded-xl
       relative
       flex
@@ -55,13 +57,13 @@ export default function EventModalContent({
           {event.description}
         </p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 mb-4 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1 mb-4 text-sm">
         <div className="space-y-1">
           <p className="flex gap-2 w-fit">
             <Calendar size={18} className="text-primary" />Data: {eventDay} {eventMonthName} {eventYear}
           </p>
           <p className="flex gap-2 w-fit">
-            <Users size={18} className="text-primary" />Wolne miejsca: {freeSlots}
+            <Users size={18} className="text-primary" />Wolne miejsca: {event.freeSlots}
           </p>
         </div>
         <div className="space-y-1">
@@ -75,9 +77,10 @@ export default function EventModalContent({
       </div> 
       <EventReservationForm
       event={event}
-      freeSlots={freeSlots}
+      freeSlots={event.freeSlots}
       onClose={onClose}
       preview={preview}
+      onRegistrationSuccess={onRegistrationSuccess}
       />
     </div>
     <img

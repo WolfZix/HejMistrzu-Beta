@@ -11,6 +11,7 @@ const usersRouter = require("./routes/users");
 const contactRouter = require("./routes/contact");
 const eventsRouter = require("./routes/events");
 const reservationsRouter = require("./routes/reservations");
+const eventRegistrationsRouter = require("./routes/eventRegistrations");
 
 app.use(cors());
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use("/users", usersRouter);
 app.use("/contact", contactRouter);
 app.use("/events", eventsRouter);
 app.use("/reservations", reservationsRouter);
+app.use("/eventRegistrations", eventRegistrationsRouter);
 
 app.listen(3000, () => {
   console.log("Server działa na porcie 3000");

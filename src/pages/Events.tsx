@@ -17,18 +17,6 @@ export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
 
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const response = await axios.get("http://localhost:3000/events");
-        setEvents(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchEvents();
-  }, []);
-
   const today = new Date();
   today.setHours(0,0,0,0);
 
@@ -63,6 +51,19 @@ export default function Events() {
     }
     setSelectedEvent(event);
   }
+
+  async function fetchEvents() {
+      try {
+        const response = await axios.get("http://localhost:3000/events");
+        setEvents(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   return (
     <div className="pt-20 pb-24">
@@ -107,6 +108,7 @@ export default function Events() {
               key={event.id}
               event={event}
               onClick={() => handleEventClick(event)}
+              onRegistrationSuccess={fetchEvents}
             />
           ))}
         </div>
@@ -122,6 +124,7 @@ export default function Events() {
           months={MONTHS}
           event={selectedEvent}
           onClose={() => setSelectedEvent(null)}
+          onRegistrationSuccess={fetchEvents}
           />
         )}
       </section>

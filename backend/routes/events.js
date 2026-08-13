@@ -22,11 +22,28 @@ const validateEvent = ({ title, description, category, eventDate, eventTime, max
 router.get("/", async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, title, description, image, category, TO_CHAR(event_date, 'YYYY-MM-DD') AS event_date,
-            event_time, max_slots, price, link, location, created_at, updated_at
+      SELECT
+        events.id,
+        events.title,
+        events.description,
+        events.image,
+        events.category,
+        TO_CHAR(events.event_date, 'YYYY-MM-DD') AS event_date,
+        events.event_time,
+        events.max_slots,
+        COALESCE(SUM(event_registrations.slots), 0) AS occupied_slots,
+        events.max_slots - COALESCE(SUM(event_registrations.slots), 0) AS free_slots,
+        events.price,
+        events.link,
+        events.location,
+        events.created_at,
+        events.updated_at
       FROM events
-      ORDER BY event_date ASC, event_time ASC
-      `);
+      LEFT JOIN event_registrations
+        ON event_registrations.event_id = events.id
+      GROUP BY events.id
+      ORDER BY events.event_date ASC, events.event_time ASC
+    `);
       
       const events = result.rows.map((event) => ({
         id: event.id,
@@ -37,6 +54,7 @@ router.get("/", async (req, res) => {
         date: event.event_date,
         startTime: event.event_time,
         maxSlots: event.max_slots,
+        freeSlots: Number(event.free_slots),
         price: event.price,
         link: event.link,
         location: event.location,

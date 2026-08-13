@@ -8,6 +8,7 @@ export type Event = {
   image: string;
   location: string;
   maxSlots: number;
+  freeSlots: number;
   price: number;
   link: string;
 };
