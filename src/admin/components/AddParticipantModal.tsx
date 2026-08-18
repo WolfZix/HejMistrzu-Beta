@@ -1,48 +1,26 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import AddEventForm from "./AddEventForm";
-import type { EventFormData, Event } from "@/types/event";
-import EventCard from "@/components/ui/EventCard";
+import FormInput from "@/components/Forms/FormInput";
 
-type AddEventModalProps = {
+type AddParticipantModalProps = {
   isAddOpen: boolean;
   onClose: () => void;
-  onEventCreated: () => void;
+  onParticipantAdded: () => void;
 };
 
-export default function AddEventModal({
+export default function AddParticipantModal({
   isAddOpen,
   onClose,
-  onEventCreated,
-}: AddEventModalProps) {
-  const [formData, setFormData] = useState<EventFormData>({
-    title: "",
-    description: "",
-    category: "",
-    date: "",
-    time: "",
-    image: null,
-    price: "",
-    totalSlots: "",
-    freeSlots: "",
-    link: "",
-    location: "",
+  onParticipantAdded,
+}: AddParticipantModalProps) {
+  const [formData, setFormData] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    pokemonId: "",
+    nickname: "",
   })
-
-  const [previewImage, setPreviewImage] = useState<string>();
-
-  useEffect(() => {
-    if (!formData.image) {
-      setPreviewImage(undefined);
-      return;
-    }
-    const objectUrl = URL.createObjectURL(formData.image);
-    setPreviewImage(objectUrl);
-    return () => {
-      URL.revokeObjectURL(objectUrl);
-    }
-  }, [formData.image])
 
   useEffect(() => {
     document.body.style.overflow = isAddOpen
@@ -56,35 +34,14 @@ export default function AddEventModal({
 
   function closeModal() {
     setFormData({
-      title: '',
-      description: '',
-      category: '',
-      date: '',
-      time: '',
-      image: null,
-      price: '',
-      totalSlots: '',
-      freeSlots: '',
-      link: '',
-      location: '',
+      name: '',
+      surname: '',
+      email: '',
+      pokemonId: '',
+      nickname: '',
     })
     onClose();
   }
-
-  const previewEvent: Event = {
-    id: 0,
-    title: formData.title || "Nowe wydarzenie",
-    description: formData.description || "Tutaj pojawi się opis wydarzenia",
-    category: formData.category || "Inne",
-    date: formData.date || new Date().toISOString().split("T")[0],
-    startTime: formData.time || "12:00",
-    image: "",
-    location: formData.location || "Hej Mistrzu, Rumia",
-    maxSlots: Number(formData.totalSlots) || 20,
-    freeSlots: Number(formData.totalSlots) || 20,
-    price: Number(formData.price) || 0,
-    link: formData.link,
-  };
 
   return (
     <AnimatePresence>
@@ -155,20 +112,19 @@ export default function AddEventModal({
               <X size={18} />
             </button>
 
-            <div className="">
+            <div>
               <h2 className="font-heading text-center text-2xl mb-2 font-semibold">
                 Dodaj Wydarzenie
               </h2>
             </div>
-
-            <AddEventForm
-              formData={formData}
-              setFormData={setFormData}
-              closeModal={closeModal}
-              onEventCreated={onEventCreated}
-            />
+            <div>
+              <FormInput
+              label="Imię"
+              value={formData.name}
+              onChange={() => ""}
+              />
+            </div>
           </motion.div>
-          <EventCard event={previewEvent} isPreview imageSrc={previewImage} />
         </motion.div>
       )}
     </AnimatePresence>

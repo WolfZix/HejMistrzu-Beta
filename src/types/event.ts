@@ -22,6 +22,7 @@ export type EventFormData = {
   time: string;
   price: string;
   totalSlots: string;
+  freeSlots: string;
   link: string;
   location: string;
 }

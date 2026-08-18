@@ -130,16 +130,16 @@ export default function Events() {
     <div className="space-y-6 min-h-[45rem] relative">
       <div>
         <h1 className="font-heading text-3xl">
-          Eventy
+          Wydarzenia
         </h1>
 
         <p className="text-muted-foreground mt-2">
-          Zarządzaj eventami.
+          Zarządzaj wydarzeniami.
         </p>
       </div>
 
       <TableFilters
-        label="Szukaj eventów"
+        label="Szukaj wydarzeń"
         search={search}
         setSearch={setSearch}
         sortBy={sortBy}
@@ -164,7 +164,7 @@ export default function Events() {
             transition-all duration-200
             "
           >
-            <Plus size={18} /> Dodaj event
+            <Plus size={18} /> Dodaj wydarzenie
           </button>
         }
       />

@@ -26,6 +26,7 @@ const AdminReservations = lazy(() => import("@/admin/pages/Reservations"));
 const AdminUsers = lazy(() => import("@/admin/pages/Users"));
 const AdminProducts = lazy(() => import("@/admin/pages/Products"));
 const AdminEvents = lazy(() => import("@/admin/pages/Events"));
+const EventParticipants = lazy(() => import("@/admin/pages/EventParticipants"));
 
 function App() {
   const isGitHubPages = window.location.hostname.includes("github.io");
@@ -60,6 +61,7 @@ function App() {
                   <Route path="uzytkownicy" element={<AdminUsers />} />
                   <Route path="produkty" element={<AdminProducts />} />
                   <Route path="eventy" element={<AdminEvents />} />
+                  <Route path="uczestnicy" element={<EventParticipants />} />
                 </Route>
               </Routes>
             </Suspense>

@@ -6,6 +6,7 @@ import {
   Package,
   Ticket,
   ArrowLeft,
+  UserPlus,
 } from "lucide-react";
 
 const menuItems = [
@@ -25,9 +26,14 @@ const menuItems = [
     icon: CalendarDays,
   },
   {
-    name: "Eventy",
+    name: "Wydarzenia",
     path: "/admin/eventy",
     icon: Ticket,
+  },
+  {
+    name: "Uczestnicy",
+    path: "/admin/uczestnicy",
+    icon: UserPlus,
   },
   {
     name: "Produkty",

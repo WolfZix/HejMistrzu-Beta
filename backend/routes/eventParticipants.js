@@ -1,0 +1,110 @@
+const express = require("express");
+const router = express.Router();
+const pool = require("../config/db");
+
+const mapParticipant = (participant) => ({
+  id: participant.id,
+  eventId: participant.event_id,
+  userId: participant.user_id,
+  name: participant.name,
+  surname: participant.surname,
+  pokemonId: participant.pokemon_id,
+  nickname: participant.nickname,
+  createdAt: participant.created_at,
+});
+
+function validateParticipant({ name, surname }) {
+  if (
+    !name ||
+    !surname ||
+    name.trim() === "" ||
+    surname.trim() === ""
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+async function doesEventExist(eventId) {
+  const result = await pool.query(
+    `SELECT id FROM events WHERE id = $1`,
+    [eventId]
+  );
+
+  return result.rowCount > 0;
+}
+
+router.get("/", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT *
+      FROM event_participants
+      ORDER BY created_at DESC
+    `);
+
+    const participants = result.rows.map(mapParticipant);
+
+    res.json(participants);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Nie udało się pobrać uczestników",
+    });
+  }
+});
+
+router.post("/", async (req, res) => {
+  const {
+    eventId,
+    userId,
+    name,
+    surname,
+    pokemonId,
+    nickname
+  } = req.body;
+
+  try {
+    if (!(await doesEventExist(eventId))) {
+      return res.status(404).json({
+        message: "Nie znaleziono takiego wydarzenia",
+      });
+    }
+
+    if (!validateParticipant({ name, surname })) {
+      return res.status(400).json({
+        message: "Wprowadzono niepoprawne dane",
+      });
+    }
+
+    const result = await pool.query(`
+      INSERT INTO event_participants (
+        event_id,
+        user_id,
+        name,
+        surname,
+        pokemon_id,
+        nickname
+      )
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *
+    `, [
+      eventId,
+      userId ?? null,
+      name,
+      surname,
+      pokemonId || null,
+      nickname || null
+    ]);
+
+    res.status(201).json(mapParticipant(result.rows[0]));
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Nie udało się dodać uczestnika",
+    });
+  }
+});
+
+module.exports = router;

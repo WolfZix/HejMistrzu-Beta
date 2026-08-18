@@ -1,6 +1,6 @@
 import type { Event } from "@/types/event";
 import { ArrowRight, Calendar, Clock, MapPin } from "lucide-react";
-import { motion, ViewTransitionBuilder } from "framer-motion";
+import { motion } from "framer-motion";
 import { getCategoryStyles } from "@/data/events";
 
 type EventCardProps = {
@@ -8,10 +8,9 @@ type EventCardProps = {
   onClick?: () => void;
   isPreview?: boolean;
   imageSrc?: string;
-  onRegistrationSuccess: () => void;
 }
 
-export default function EventCard({event, onClick, isPreview = false, imageSrc, onRegistrationSuccess}: EventCardProps) {
+export default function EventCard({event, onClick, imageSrc}: EventCardProps) {
   const eventDateTime = new Date(`${event.date}T${event.startTime}`);
   const isPastEvent = eventDateTime < new Date();
   const isFull = event.freeSlots <= 0;

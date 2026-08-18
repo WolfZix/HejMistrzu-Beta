@@ -4,7 +4,8 @@ const pool = require("../config/db");
 
 router.get("/", async (req, res) => {
   try {
-    const result = await pool.query(`
+    const { email } = req.query;
+    let query = `
       SELECT
         id,
         username,
@@ -12,8 +13,16 @@ router.get("/", async (req, res) => {
         role,
         created_at
       FROM users
-      ORDER BY id ASC
-    `);
+    `;
+
+    const values = [];
+    if (email) {
+      query += ` WHERE email ILIKE $1`;
+      values.push(`%${email}%`);
+    }
+
+    query += ` ORDER BY id ASC`;
+    const result = await pool.query(query, values);
 
     const users = result.rows.map((user) => ({
       id: user.id,

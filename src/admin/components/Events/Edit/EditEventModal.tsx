@@ -27,6 +27,7 @@ export default function EditEventModal({
     image: null,
     price: "",
     totalSlots: "",
+    freeSlots: "",
     link: "",
     location: "",
   })
@@ -58,6 +59,7 @@ export default function EditEventModal({
       image: null,
       price: event.price.toString(),
       totalSlots: event.maxSlots.toString(),
+      freeSlots: event.freeSlots.toString(),
       link: event.link,
       location: event.location,
     })
@@ -83,6 +85,7 @@ export default function EditEventModal({
       image: null,
       price: '',
       totalSlots: '',
+      freeSlots: '',
       link: '',
       location: '',
     })
@@ -108,6 +111,7 @@ export default function EditEventModal({
     image: removeImage ? "" : previewImage || event.image,
     location: formData.location || "Hej Mistrzu, Rumia",
     maxSlots: Number(formData.totalSlots) || 20,
+    freeSlots: Number(formData.freeSlots) || 20,
     price: Number(formData.price) || 0,
     link: formData.link,
   };
@@ -183,7 +187,7 @@ export default function EditEventModal({
 
             <div className="">
               <h2 className="font-heading text-center text-2xl mb-1 font-semibold">
-                Edytuj Event
+                Edytuj Wydarzenie
               </h2>
             </div>
 
