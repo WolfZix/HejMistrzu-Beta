@@ -10,6 +10,8 @@ router.get("/", async (req, res) => {
         id,
         username,
         email,
+        name,
+        surname,
         role,
         created_at
       FROM users
@@ -28,6 +30,8 @@ router.get("/", async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
+      name: user.name,
+      surname: user.surname,
       role: user.role,
       createdAt: user.created_at,
     }));

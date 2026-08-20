@@ -5,9 +5,38 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("../middleware/verifyToken");
 
+function validateRegistration({ name, surname, username, email, password }) {
+  if (
+    !name || !surname ||
+    !username || !email ||
+    !password
+  ) {
+    return "Wszystkie pola są wymagane";
+  }
+
+  if (
+    name.trim() === "" ||
+    surname.trim() === "" ||
+    username.trim() === "" ||
+    email.trim() === "" ||
+    password.trim() === ""
+  ) {
+    return "Wszystkie pola są wymagane";
+  }
+  return null;
+}
+
 router.post("/register", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { name, surname, username, email, password } = req.body;
+    const validationError = validateRegistration({ name, surname, username, email, password });
+    if (validationError) {
+      return res.status(400).json({
+        success: false,
+        message: validationError,
+      });
+    }
+    
     const existingUser = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
 
     if (existingUser.rows.length > 0) {
@@ -20,10 +49,10 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
-      `INSERT INTO users (username, email, password_hash)
-      VALUES ($1, $2, $3)
+      `INSERT INTO users (name, surname, username, email, password_hash)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *`,
-      [username, email, hashedPassword]
+      [name, surname, username, email, hashedPassword]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {

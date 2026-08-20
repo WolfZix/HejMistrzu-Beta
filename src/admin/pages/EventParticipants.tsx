@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Plus, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { Event } from "@/types/event";
+import type { EventParticipant } from "@/types/event";
 import type { User } from "@/types/user";
 import { motion, AnimatePresence } from "framer-motion";
 import PageLoader from "@/pages/PageLoader";
@@ -15,9 +16,11 @@ export default function EventParticipants() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchEmail, setSearchEmail] = useState("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [selectedParticipants, setSelectedParticipants] = useState<User[]>([]);
+  const [selectedParticipants, setSelectedParticipants] = useState<EventParticipant[]>([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isButtonTooltipOpen, setIsButtonTooltipOpen] = useState(false);
+  const [userTooltipId, setUserTooltipId] = useState<number | null>(null);
+  const [userTooltipType, setUserTooltipType] = useState<"noEvent" | "aleadyAdded" | null>(null);
 
   const addButtonStyles = `
     w-8 h-8
@@ -32,8 +35,12 @@ export default function EventParticipants() {
     active:scale-95
     transition-all duration-200
     select-none
+    disabled:duration-0
     disabled:opacity-50
     disabled:cursor-not-allowed
+    disabled:hover:scale-100
+    disabled:active:scale-100
+    disabled:hover:bg-primary
   `;
 
   const removeButtonStyles = `
@@ -80,7 +87,6 @@ export default function EventParticipants() {
       setSearchResults([]);
       return
     }
-    setIsSearching(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/users?email=${encodeURIComponent(normalizeText(searchEmail))}`);
       if (!response.ok) {
@@ -90,20 +96,95 @@ export default function EventParticipants() {
       setSearchResults(data);
     } catch(error) {
       console.error(error);
-    } finally {
-      setIsSearching(false);
     }
   }
   searchUsers();
   }, [searchEmail]);
 
-  function addParticipant(user: User) {
-    if (selectedParticipants.some((participant) => participant.id === user.id)) return;
-    setSelectedParticipants((prev) => [...prev, user]);
+  async function addParticipant(user: User) {
+    if (selectedEventId === null) {
+      setUserTooltipId(user.id);
+      setUserTooltipType("noEvent");
+      return;
+    }
+    if (selectedParticipants.some((participant) => participant.userId === user.id)) {
+      setUserTooltipId(user.id);
+      setUserTooltipType("aleadyAdded");
+      return;
+    }
+    const participantData = {
+      eventId: selectedEventId,
+      userId: user.id,
+      name: user.name,
+      surname: user.surname,
+      email: user.email,
+      pokemonId: null,
+      nickname: null,
+    }
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/eventParticipants`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(participantData),
+      })
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Nie udało się dodać uczestnika");
+      }
+      const participant = await response.json();
+      setSelectedParticipants((prev) => [
+        ...prev,
+        {
+          ...participant,
+          username: user.username,
+          email: user.email,
+        },
+      ]);
+    } catch(error) {
+      console.error(error);
+    }
   }
 
-  function fetchParticipants() {
+  async function removeParticipant(participantId: number) {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/eventParticipants/${participantId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Nie udało się usunąć uczestnika");
+      }
+      setSelectedParticipants((prev) => prev.filter((participant) => participant.id !== participantId));
+    } catch(error) {
+      console.error(error);
+    }
+  }
 
+  async function fetchParticipants(eventId: number | null) {
+    try {
+      if (eventId === null) {
+        setSelectedParticipants([]);
+        return;
+      }
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/eventParticipants?eventId=${eventId}`);
+      if (!response.ok) {
+        throw new Error("Nie udało się pobrać uczestników");
+      }
+      const data = await response.json();
+      setSelectedParticipants(data);
+    } catch(error){
+      console.error(error);
+    } 
+  }
+
+  function showButtonTooltip() { selectedEventId === null ? setIsButtonTooltipOpen(true) : "" }
+  function hideButtonTooltip() { setIsButtonTooltipOpen(false) }
+
+  function showUserTooltip(participantId: number) { selectedEventId === null ? setUserTooltipId(participantId) : "" }
+  function hideUserTooltip() { 
+    setUserTooltipId(null);
+    setUserTooltipType(null);
   }
 
   return (
@@ -132,7 +213,7 @@ export default function EventParticipants() {
                 <thead>
                   <tr className="border-b border-border text-primary text-center">
                     <th className="p-4 w-[50px]"></th>
-                    <th className="p-4 text-left w-[350px]">Tytuł</th>
+                    <th className="p-4 text-left w-full">Tytuł</th>
                     <th className="p-4 w-[50px]">Data</th>
                     <th className="p-4 w-[50px]">Godzina</th>
                   </tr>
@@ -152,7 +233,10 @@ export default function EventParticipants() {
                       <div className="flex justify-center">
                         <Checkbox
                         checked={selectedEventId === event.id}
-                        onChange={() => setSelectedEventId(!selectedEventId || selectedEventId !== event.id ? event.id : null)}
+                        onChange={() => {
+                          setSelectedEventId(!selectedEventId || selectedEventId !== event.id ? event.id : null);
+                          fetchParticipants(event.id);
+                        }}
                         />
                       </div>
                     </td>
@@ -171,19 +255,24 @@ export default function EventParticipants() {
               </table>
             </div>
           </div>
-          <div className="glass rounded-2xl overflow-auto h-[26rem] w-full">
+          <div className="glass rounded-2xl h-[26rem] w-full">
             <div className="p-5 border-b border-border flex justify-between items-center">
               <div>
                 <h2 className="text-lg font-semibold">
                   Dodaj uczestnika
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Wyszukaj użytkownika po adresie email.
+                  Wyszukaj konta użytkowników lub dodaj ręcznie osoby bez konta.
                 </p>
               </div>
-              <div>
+              <div
+              className="relative"
+                onMouseEnter={showButtonTooltip}
+                onMouseLeave={hideButtonTooltip}
+              >
                 <button
                 onClick={() => setIsAddOpen(true)}
+                disabled={selectedEventId === null}
                 className="
                 bg-primary
                 text-black
@@ -192,10 +281,25 @@ export default function EventParticipants() {
                 flex gap-2
                 items-center
                 transition-all duration-200
-                hover:shadow-[0_0_8px_2px_hsl(43,50%,30%)]"
+                hover:shadow-[0_0_8px_2px_hsl(43,50%,30%)]
+                disabled:opacity-50
+                disabled:cursor-not-allowed
+                disabled:shadow-none"
                 >
                   <Plus size={16} /> Dodaj ręcznie
                 </button>
+                <AnimatePresence>
+                  {isButtonTooltipOpen && (
+                    <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute bottom-full right-0 mb-2 bg-red-500 text-white px-3 py-1.5 rounded-lg whitespace-nowrap">
+                      Najpierw wybierz wydarzenie
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
             <div className="p-4">
@@ -257,14 +361,30 @@ export default function EventParticipants() {
                         </td>
 
                         <td className="p-3">
-                          <div className="flex justify-center">
+                          <div
+                          onMouseEnter={() => showUserTooltip(user.id)}
+                          onMouseLeave={hideUserTooltip}
+                          className="relative flex justify-center">
                             <button
                               type="button"
+                              disabled={selectedEventId === null}
                               className={addButtonStyles}
                               onClick={() => addParticipant(user)}
                             >
                               +
                             </button>
+                            <AnimatePresence>
+                              {userTooltipId === user.id && (
+                                <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute bottom-full right-0 mb-2 bg-red-500 text-white px-3 py-1.5 rounded-lg whitespace-nowrap">
+                                  {userTooltipType === "noEvent" ? "Najpierw wybierz wydarzenie" : "Użytkownik jest już zapisany na to wydarzenie"}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
                         </td>
                       </tr>
@@ -316,22 +436,24 @@ export default function EventParticipants() {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedParticipants.map((user) => (
-                        <tr className="text-foreground text-center border-b border-border/50 hover:bg-foreground/5 transition-colors">
+                      {selectedParticipants.map((participant) => (
+                        <tr key={participant.id} className="text-foreground text-center border-b border-border/50 hover:bg-foreground/5 transition-colors">
                         <td className="p-3">
-                          {user.username}
+                          {participant.username ?? "Gość"}
                         </td>
                         <td className="p-3">
-                          -
+                          {participant.name} {participant.surname}
                         </td>
                         <td className="p-3 text-muted-foreground">
-                          {user.email}
+                          {participant.email}
                         </td>
                         <td className="p-3">
                           <div className="flex justify-center">
                             <button
                               type="button"
+                              disabled={selectedEventId === null}
                               className={removeButtonStyles}
+                              onClick={() => removeParticipant(participant.id)}
                             >
                               -
                             </button>
@@ -351,8 +473,9 @@ export default function EventParticipants() {
       {isAddOpen && (
         <AddParticipantModal
         isAddOpen={isAddOpen}
+        eventId={selectedEventId}
         onClose={() => setIsAddOpen(false)}
-        onParticipantAdded={() => fetchParticipants()}
+        onParticipantAdded={() => fetchParticipants(selectedEventId)}
         />
       )}
       {isLoading && (

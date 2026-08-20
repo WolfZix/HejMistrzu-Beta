@@ -39,3 +39,16 @@ export type EventFormErrors = {
   link: string;
   location: string;
 }
+
+export type EventParticipant = {
+  id: number;
+  eventId: number;
+  userId: number | null;
+  name: string;
+  surname: string;
+  pokemonId: string | null;
+  nickname: string | null;
+  username: string | null;
+  email: string | null;
+  createdAt: string;
+}

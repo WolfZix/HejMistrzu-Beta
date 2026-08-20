@@ -13,6 +13,8 @@ export default function RegisterModal({
   setIsLoginOpen,
 }: RegisterModalProps) {
 
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -30,6 +32,8 @@ export default function RegisterModal({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          name,
+          surname,
           username,
           email,
           password,
@@ -59,6 +63,8 @@ export default function RegisterModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onMouseDown={() => {
+              setName("");
+              setSurname("");
               setUsername("");
               setEmail("");
               setPassword("");
@@ -112,12 +118,58 @@ export default function RegisterModal({
               </div>
 
               <form
+              autoComplete="off"
               onSubmit={handleRegister}
               className="flex flex-col"
               >
+                <label className="mb-1">Imię</label>
+                  <input
+                    type="text"
+                    autoComplete="new-name"
+                    placeholder="Imię"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="
+                    w-full
+                    bg-background/50
+                    border border-primary/20
+                    rounded-lg
+                    p-3
+                    outline-none
+                    focus:border-primary
+                    focus:ring-2 focus:ring-primary/50
+                    transition-all
+                    duration-300
+                    text-primary
+                    mb-4
+                    "
+                  />
+                  <label className="mb-1">Nazwisko</label>
+                  <input
+                    type="text"
+                    autoComplete="new-surname"
+                    placeholder="Nazwisko"
+                    value={surname}
+                    onChange={(e) => setSurname(e.target.value)}
+                    className="
+                    w-full
+                    bg-background/50
+                    border border-primary/20
+                    rounded-lg
+                    p-3
+                    outline-none
+                    focus:border-primary
+                    focus:ring-2 focus:ring-primary/50
+                    transition-all
+                    duration-300
+                    text-primary
+                    mb-4
+                    "
+                  />
                 <label className="mb-1">Nazwa użytkownika</label>
                   <input
                     type="text"
+                    autoComplete="new-username"
                     placeholder="Nazwa użytkownika"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -139,6 +191,7 @@ export default function RegisterModal({
                 <label className="mb-1">Email</label>
                   <input
                     type="email"
+                    autoComplete="new-email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -160,6 +213,7 @@ export default function RegisterModal({
                 <label className="mb-1">Hasło</label>
                 <input
                   type="password"
+                  autoComplete="new-password"
                   placeholder="Hasło"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
