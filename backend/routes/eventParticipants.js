@@ -115,6 +115,11 @@ router.post("/", async (req, res) => {
 
     res.status(201).json(mapParticipant(result.rows[0]));
   } catch (error) {
+    if (error.code === "23505") {
+      return res.status(409).json({
+        message: "Użytkownik jest już zapisany na to wydarzenie",
+      });
+    }
     console.error(error);
 
     res.status(500).json({
