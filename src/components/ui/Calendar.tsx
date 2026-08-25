@@ -74,20 +74,6 @@ export default function Calendar({ month, months, setMonth, year, setYear, setSe
             <ArrowRight size={18} />
         </button>
     </div>
-    <div className="flex w-fit mx-auto lg:mx-0 gap-3 mb-5">
-        <div className="flex gap-1 items-center">
-            <div className="w-3 h-3 bg-muted-foreground/10 border border-muted-foreground rounded-full"></div>
-            <p className="text-muted-foreground text-sm">Puste</p>
-        </div>
-        <div className="flex gap-1 items-center">
-            <div className="w-3 h-3 bg-primary rounded-full"></div>
-            <p className="text-muted-foreground text-sm">Wolne</p>
-        </div>
-        <div className="flex gap-1 items-center">
-            <div className="w-3 h-3 bg-primary/30 rounded-full"></div>
-            <p className="text-muted-foreground text-sm">Zajęte</p>
-        </div>
-    </div>
     <div className="relative grid grid-cols-7 w-fit mx-auto gap-1 md:gap-2 mb-2">
         {WEEK_DAYS.map((day) => (
             <div
@@ -122,6 +108,10 @@ export default function Calendar({ month, months, setMonth, year, setYear, setSe
         cellDate.setHours(0,0,0,0);
         const isPast = cellDate < today;
         const shouldHighlight = isSelected;
+
+        console.log(isPast);
+        console.log(cellDate);
+        console.log(today);
         
         return (
         <button
@@ -140,8 +130,12 @@ export default function Calendar({ month, months, setMonth, year, setYear, setSe
           h-12 w-12 md:h-16 md:w-16 xl:h-20 xl:w-20
           text-sm md:text-lg
           ${shouldHighlight
-            ? "text-foreground z-10 ring-2 ring-primary shadow-lg shadow-primary/50 scale-105"
+            ? "z-10 border-none text-primary ring-2 ring-primary shadow-lg shadow-primary/50 scale-105"
             : ""
+          }
+          ${isPast
+            ? "text-muted-foreground/50 select-none cursor-not-allowed"
+            : "border-muted-foreground/50"
           }
           `}
         >

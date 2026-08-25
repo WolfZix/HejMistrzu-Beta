@@ -13,6 +13,7 @@ const eventsRouter = require("./routes/events");
 const reservationsRouter = require("./routes/reservations");
 const eventRegistrationsRouter = require("./routes/eventRegistrations");
 const eventParticipantsRouter = require("./routes/eventParticipants");
+const cron = require("node-cron");
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +28,13 @@ app.use("/events", eventsRouter);
 app.use("/reservations", reservationsRouter);
 app.use("/eventRegistrations", eventRegistrationsRouter);
 app.use("/eventParticipants", eventParticipantsRouter);
+
+cron.schedule("*/15 * * * *", async () => {
+  console.log("Rozpoczynam automatyczną synchronizację produktów...");
+  try {
+        //SyncAll()
+  } catch (error) { console.error("Błąd automatycznej synchronizacji:", error) }
+});
 
 app.listen(3000, () => {
   console.log("Server działa na porcie 3000");
