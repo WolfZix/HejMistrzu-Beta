@@ -1,0 +1,81 @@
+import{j as e,o as m,k as c,X as x,g as u}from"./index-Bx_s5XN0.js";import{T as p}from"./triangle-alert-BwC6NDBH.js";import{C as b}from"./chevron-down-CmNb_3Ln.js";import{I as f}from"./input-DiecwIuW.js";import{S as h}from"./search-BdF6ZZDU.js";function k({children:n}){return e.jsx("div",{className:"glass rounded-xl overflow-hidden",children:e.jsx("div",{className:"overflow-hidden",children:e.jsx("table",{className:"w-full table-fixed",children:n})})})}function C({isOpen:n,title:l,description:t,onClose:a,onConfirm:i}){return e.jsx(m,{children:n&&e.jsx(c.div,{initial:{opacity:0},animate:{opacity:1},exit:{opacity:0},onMouseDown:a,className:`\r
+            fixed\r
+            inset-0\r
+            z-50\r
+            flex\r
+            items-center\r
+            justify-center\r
+            bg-black/60\r
+            backdrop-blur-sm\r
+            p-4\r
+          `,children:e.jsxs(c.div,{initial:{scale:.8,opacity:0},animate:{scale:1,opacity:1},exit:{scale:.8,opacity:0},transition:{duration:.2},onMouseDown:r=>r.stopPropagation(),onClick:r=>r.stopPropagation(),className:`\r
+              relative\r
+              w-full\r
+              max-w-md\r
+              rounded-xl\r
+              border\r
+              border-red-500/20\r
+              bg-card\r
+              p-6\r
+            `,children:[e.jsx("button",{onClick:a,className:`\r
+                absolute\r
+                top-3\r
+                right-3\r
+                p-2\r
+                rounded-lg\r
+                hover:bg-muted\r
+              `,children:e.jsx(x,{size:18})}),e.jsx("div",{className:"flex justify-center mb-5",children:e.jsx("div",{className:`\r
+                  p-4\r
+                  rounded-full\r
+                  bg-red-500/10\r
+                `,children:e.jsx(p,{size:36,className:"text-red-500"})})}),e.jsx("h2",{className:"font-heading text-2xl text-center",children:l}),e.jsx("p",{className:"text-center text-muted-foreground mt-3 whitespace-pre-line",children:t}),e.jsxs("div",{className:"flex gap-3 mt-8",children:[e.jsx("button",{onClick:a,className:`\r
+                  flex-1\r
+                  py-2\r
+                  rounded-lg\r
+                  border\r
+                  border-border\r
+                  hover:bg-muted\r
+                  transition-all\r
+                  duration-200\r
+                `,children:"Anuluj"}),e.jsx("button",{onClick:i,className:`\r
+                  flex-1\r
+                  py-2\r
+                  rounded-lg\r
+                  bg-red-600\r
+                  hover:bg-red-800/70\r
+                  text-white\r
+                  transition-all\r
+                  duration-200\r
+                `,children:"Usuń"})]})]})})})}function j({label:n,value:l,options:t,onChange:a,className:i="",containerClassname:r=""}){const[o,d]=u.useState(!1);return e.jsxs("div",{className:`relative flex flex-col gap-2 ${r||"w-52"}`,children:[e.jsx("p",{className:"text-sm",children:n}),e.jsxs("button",{type:"button",onClick:()=>d(!o),className:`
+          w-full
+          border border-primary/20
+          rounded-lg
+          p-3
+          flex
+          items-center
+          justify-between
+          hover:border-primary/50
+          transition-all
+          ${i||"bg-background/50"}
+        `,children:[e.jsx("span",{children:l||"Wybierz..."}),e.jsx(b,{size:18,className:`transition-transform ${o?"rotate-180":""}`})]}),e.jsx(m,{children:o&&e.jsx(c.div,{initial:{opacity:0,y:-10},animate:{opacity:1,y:0},exit:{opacity:0,y:-10},transition:{duration:.2},className:`\r
+              absolute\r
+              top-full\r
+              left-0\r
+              mt-1\r
+              w-full\r
+              z-50\r
+              rounded-lg\r
+              border\r
+              border-primary/20\r
+              bg-card\r
+              shadow-lg\r
+              overflow-hidden\r
+            `,children:t.map(s=>e.jsx("button",{type:"button",onClick:()=>{a(s.value),d(!1)},className:`\r
+                  w-full\r
+                  text-left\r
+                  px-3\r
+                  py-2\r
+                  hover:bg-primary\r
+                  hover:text-black\r
+                  transition-colors\r
+                `,children:s.label},s.label))})})]})}function z({label:n,search:l,setSearch:t,sortBy:a,setSortBy:i,sortOptions:r,button:o}){var d;return e.jsxs("div",{className:"flex flex-col md:flex-row gap-4 items-end justify-between",children:[e.jsxs("div",{className:"flex-1 flex-col gap-2",children:[e.jsx("p",{className:"text-sm mb-2",children:n}),e.jsxs("div",{className:"relative",children:[e.jsx(f,{placeholder:"Szukaj...",value:l,onChange:s=>t(s.target.value),className:"pl-10 glass border-border focus:border-primary/50 py-6 rounded-xl"}),e.jsx(h,{className:"absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none"})]})]}),e.jsx(j,{label:"Sortuj",className:"glass",value:(d=r.find(s=>s.value===a))==null?void 0:d.label,onChange:i,options:r}),o]})}export{k as A,C as D,j as F,z as T};
