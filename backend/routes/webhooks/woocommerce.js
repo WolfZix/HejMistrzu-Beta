@@ -44,10 +44,9 @@ router.post("/", async (req, res) => {
     if (parentId) { console.log(`Webhook WooCommerce: wariant ${productId} → produkt ${parentId}`) }
     else { console.log(`Webhook WooCommerce: produkt ${productId}`) }
 
+    await new Promise(resolve => setTimeout(resolve, 2000));
     await syncFullProduct(syncId);
-    console.log(
-      `✓ Webhook: zsynchronizowano produkt ${syncId}`
-    );
+    console.log(`✓ Webhook: zsynchronizowano produkt ${syncId}`);
     return res.status(200).json({
       success: true,
       message: `Produkt ${syncId} został zsynchronizowany`
