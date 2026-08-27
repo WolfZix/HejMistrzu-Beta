@@ -8,9 +8,10 @@ router.post("/", async (req, res) => {
   try {
     const signature = req.headers["x-wc-webhook-signature"];
     if (!signature) {
-      return res.status(401).json({
-        success: false,
-        message: "Brak podpisu webhooka"
+      console.log("WooCommerce: otrzymano ping weryfikacyjny webhooka");
+      return res.status(200).json({
+        success: true,
+        message: "Webhook ping received"
       });
     }
     const expectedSignature = crypto
