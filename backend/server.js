@@ -31,12 +31,12 @@ app.use("/eventRegistrations", eventRegistrationsRouter);
 app.use("/eventParticipants", eventParticipantsRouter);
 app.use("/webhooks/woocommerce", woocommerceWebhookRouter);
 
-cron.schedule("*/15 * * * *", async () => {
-  console.log("Rozpoczynam automatyczną synchronizację produktów...");
-  try {
-        //SyncAll()
-  } catch (error) { console.error("Błąd automatycznej synchronizacji:", error) }
-});
+// cron.schedule("*/15 * * * *", async () => {
+//   console.log("Rozpoczynam automatyczną synchronizację produktów...");
+//   try {
+//     SyncAll()
+//   } catch (error) { console.error("Błąd automatycznej synchronizacji:", error) }
+// });
 
 app.listen(3000, () => {
   console.log("Server działa na porcie 3000");
