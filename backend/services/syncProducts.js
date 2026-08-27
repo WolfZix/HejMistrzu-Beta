@@ -147,6 +147,9 @@ const syncVariations = async (id) => {
     const attribute = variation.attributes?.[0];
     const price = variation.price !== "" ? Number(variation.price) : null;
     const regularPrice = variation.regular_price !== "" ? Number(variation.regular_price) : null;
+
+    console.log(`Webhook/Sync wariant ${variation.id}: price=${variation.price}, regular_price=${variation.regular_price}`);
+    
     const salePrice = variation.sale_price !== "" ? Number(variation.sale_price) : null;
     const manageStock = variation.manage_stock === true;
     const stockQuantity = variation.stock_quantity !== null ? Number(variation.stock_quantity) : null;
