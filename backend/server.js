@@ -13,10 +13,11 @@ const eventsRouter = require("./routes/events");
 const reservationsRouter = require("./routes/reservations");
 const eventRegistrationsRouter = require("./routes/eventRegistrations");
 const eventParticipantsRouter = require("./routes/eventParticipants");
+const woocommerceWebhookRouter = require("./routes/webhooks/woocommerce");
 const cron = require("node-cron");
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/products", productsRouter);
@@ -28,6 +29,7 @@ app.use("/events", eventsRouter);
 app.use("/reservations", reservationsRouter);
 app.use("/eventRegistrations", eventRegistrationsRouter);
 app.use("/eventParticipants", eventParticipantsRouter);
+app.use("/webhooks/woocommerce", woocommerceWebhookRouter);
 
 cron.schedule("*/15 * * * *", async () => {
   console.log("Rozpoczynam automatyczną synchronizację produktów...");
