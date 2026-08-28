@@ -5,6 +5,7 @@ import { CartProvider } from '@/context/CartContext';
 import Layout from '@/components/layout/Layout';
 import ScrollToTop from '@/components/ScrollToTop';
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AdminRoute from "@/components/AdminRoute";
 
 import { AuthProvider } from "@/context/AuthContext";
 
@@ -55,7 +56,12 @@ function App() {
                     </ProtectedRoute>
                   } />
                 </Route>
-                <Route path="/admin" element={<AdminLayout />}>
+                <Route path="/admin" element={
+                  <AdminRoute>
+                    <AdminLayout />
+                  </AdminRoute>
+                  }
+                >
                   <Route index element={<AdminDashboard />} />
                   <Route path="rezerwacje" element={<AdminReservations />} />
                   <Route path="uzytkownicy" element={<AdminUsers />} />
