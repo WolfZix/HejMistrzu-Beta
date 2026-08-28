@@ -4,10 +4,12 @@ import ProfileStats from "@/components/profile/Left/ProfileStats";
 import BattlepassCard from "@/components/profile/Right/Battlepass/BattlepassCard";
 import ProfileHistory from "@/components/profile/Right/ProfileHistory";
 import ProfileEdit from "@/components/profile/Right/ProfileEdit";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProfilePage() {
-  const role = "admin"
-  const username = "Admin"
+  const { user } = useAuth();
+  const role = user?.role ?? "user";
+  const username = user?.username ?? "User";
   return (
     <section className="container mx-auto max-w-7xl px-4 py-28">
       <div className="grid grid-cols-4 gap-8">
