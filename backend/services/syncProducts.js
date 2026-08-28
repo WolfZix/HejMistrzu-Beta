@@ -18,26 +18,6 @@ const axiosWithRetry = async (url, config, retries = 3) => {
   }
 };
 
-const getLastSync = async () => {
-  const result = await pool.query(
-    `SELECT last_sync_at
-    FROM sync_state
-    WHERE id = 1`
-  );
-  if (result.rows.length === 0) { return null }
-  return result.rows[0].last_sync_at;
-};
-
-const updateLastSync = async () => {
-  await pool.query(
-    `INSERT INTO sync_state (id, last_sync_at)
-    VALUES (1, NOW())
-    ON CONFLICT (id)
-    DO UPDATE SET
-      last_sync_at = NOW()`
-  );
-};
-
 const syncProduct = async (id) => {
   const response = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
     {
