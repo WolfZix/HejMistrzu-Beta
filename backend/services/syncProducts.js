@@ -434,64 +434,6 @@ const syncAllProducts = async () => {
   return results;
 };
 
-const syncChangedProducts = async () => {
-  const lastSync = await getLastSync();
-  if (!lastSync) {
-    const results = await syncAllProducts();
-    if (results.failed === 0) { await updateLastSync() }
-    return results;
-  }
-
-  const modifiedAfter = new Date( new Date(lastSync).getTime() - 2 * 60 * 1000 ).toISOString();
-  const params = {
-    consumer_key: process.env.WC_CONSUMER_KEY,
-    consumer_secret: process.env.WC_CONSUMER_SECRET,
-    modified_after: modifiedAfter,
-    per_page: 100,
-    page: 1
-  };
-
-  const firstPage = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products`, { params });
-  const totalPages = Number(firstPage.headers["x-wp-totalpages"]);
-  let products = [...firstPage.data];
-  for (let page = 2; page <= totalPages; page++) {
-    const response = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products`,
-      {
-        params: {
-          ...params,
-          page
-        }
-      }
-    );
-    products.push(...response.data);
-  }
-
-  const results = {
-    total: products.length,
-    synchronized: 0,
-    failed: 0,
-    errors: []
-  };
-
-  for (const product of products) {
-    try {
-      await syncFullProduct(product.id);
-      results.synchronized++;
-      console.log(`✓ Zsynchronizowano zmieniony produkt ${product.id}: ${product.name}`);
-    } catch (error) {
-      results.failed++;
-      results.errors.push({
-        woocommerce_id: product.id,
-        name: product.name,
-        error: error.message
-      });
-      console.error(`✗ Błąd produktu ${product.id}:`, error.message);
-    }
-  }
-  if (results.failed === 0) { await updateLastSync() }
-  return results;
-};
-
 module.exports = {
   axiosWithRetry,
   syncProduct,
@@ -500,7 +442,4 @@ module.exports = {
   syncImages,
   syncFullProduct,
   syncAllProducts,
-  getLastSync,
-  updateLastSync,
-  syncChangedProducts,
 };

@@ -353,17 +353,6 @@ CREATE SEQUENCE public.reservations_id_seq
 
 ALTER SEQUENCE public.reservations_id_seq OWNED BY public.reservations.id;
 
-
---
--- Name: sync_state; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.sync_state (
-    id integer NOT NULL,
-    last_sync_at timestamp without time zone NOT NULL
-);
-
-
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
@@ -565,15 +554,6 @@ ALTER TABLE ONLY public.products
 
 ALTER TABLE ONLY public.reservations
     ADD CONSTRAINT reservations_pkey PRIMARY KEY (id);
-
-
---
--- Name: sync_state sync_state_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.sync_state
-    ADD CONSTRAINT sync_state_pkey PRIMARY KEY (id);
-
 
 --
 -- Name: event_participants unique_user_event; Type: CONSTRAINT; Schema: public; Owner: -
