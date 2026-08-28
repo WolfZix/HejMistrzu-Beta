@@ -355,7 +355,7 @@ export default function Reservations() {
             </div>
           </div>
         </div>
-        { reservations.length === 0 && (
+        { isLoading && (
           <div className="absolute -top-12 left-0 right-0 bottom-0">
             <PageLoader /> 
           </div>
