@@ -86,7 +86,7 @@ export default function EditEventForm({ event, formData, setFormData, closeModal
       data.append('link', formData.link);
       data.append('location', formData.location.trim() || "Hej Mistrzu, Rumia");
       data.append('removeImage', String(removeImage));
-      await axios.put(`http://localhost:3000/events/${event.id}`, data);
+      await axios.put(`${import.meta.env.VITE_API_URL}/events/${event.id}`, data);
       onEventUpdated();
       closeModal();
     } catch (error) {

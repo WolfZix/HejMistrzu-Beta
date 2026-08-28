@@ -114,7 +114,7 @@ export default function EditReservationForm({
     setServerError("");
     if (!validateForm(formData)) { return }
     try {
-      await axios.put(`http://localhost:3000/reservations/${reservation.id}`, formData);
+      await axios.put(`${import.meta.env.VITE_API_URL}/reservations/${reservation.id}`, formData);
       onReservationUpdated();
       closeModal();
     } catch (error) {

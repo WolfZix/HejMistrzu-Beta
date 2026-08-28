@@ -108,7 +108,7 @@ export default function Events() {
   async function fetchEvents() {
     try {
       setIsLoading(true);
-      const response = await axios.get("http://localhost:3000/events");
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/events`);
       setEvents(response.data);
     } catch (error) {
       console.error(error);

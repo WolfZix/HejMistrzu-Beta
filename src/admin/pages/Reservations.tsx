@@ -106,7 +106,7 @@ export default function Reservations() {
   async function fetchReservations() {
     try {
       setIsLoading(true);
-      const response = await axios.get("http://localhost:3000/reservations");
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/reservations`);
       setReservations(response.data);
     } catch(error) {
       console.error(error);
@@ -131,7 +131,7 @@ export default function Reservations() {
   async function handleDeleteReservation() {
     if (!selectedReservation) return;
     try {
-      await axios.delete(`http://localhost:3000/reservations/${selectedReservation.id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/reservations/${selectedReservation.id}`);
       setIsDeleteOpen(false);
       setSelectedReservation(null);
       fetchReservations();

@@ -26,9 +26,9 @@ export default function EventCard({event, onClick, imageSrc}: EventCardProps) {
     >
       <div className="aspect-[16/9] overflow-hidden relative shrink-0">
         <img
-        src={imageSrc ?? `http://localhost:3000/uploads/${event.image || "EventPlaceholder.webp"}`}
+        src={imageSrc ?? `${import.meta.env.VITE_API_URL}/uploads/${event.image || "EventPlaceholder.webp"}`}
         onError={(e) => {
-          e.currentTarget.src = "http://localhost:3000/uploads/EventPlaceholder.webp";
+          e.currentTarget.src = `${import.meta.env.VITE_API_URL}/uploads/EventPlaceholder.webp`;
         }}
         alt={event.title}
         loading="lazy"

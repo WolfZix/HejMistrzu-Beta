@@ -47,17 +47,21 @@ const [events, setEvents] = useState<Event[]>([]);
   )
   .slice(0, 3);
 
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        const response = await axios.get("http://localhost:3000/events");
-        setEvents(response.data);
-      } catch(error) {
-        console.error(error);
-      }
-    }
-    fetchEvents();
-  }, [])
+const fetchEvents = async () => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/events`
+    );
+
+    setEvents(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+useEffect(() => {
+  fetchEvents();
+}, []);
 
   return (
     <section className="py-24 lg:py-32 px-4 sm:px-6 lg:px-8 bg-card/30 relative overflow-hidden">
@@ -121,6 +125,7 @@ const [events, setEvents] = useState<Event[]>([]);
               months={MONTHS}
               event={selectedEvent}
               onClose={() => setSelectedEvent(null)}
+              onRegistrationSuccess={fetchEvents}
             />
           )}
         </motion.div>

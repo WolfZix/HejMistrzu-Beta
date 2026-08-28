@@ -25,8 +25,8 @@ export default function EventModalContent({
   const eventYear = eventDate.getFullYear();
 
   const imageSrc = event.image
-  ? `http://localhost:3000/uploads/${event.image}`
-  : "http://localhost:3000/uploads/EventPlaceholder.webp";
+  ? `${import.meta.env.VITE_API_URL}/uploads/${event.image}`
+  : `${import.meta.env.VITE_API_URL}/uploads/EventPlaceholder.webp`;
 
   return (
   <div

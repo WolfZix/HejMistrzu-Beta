@@ -83,7 +83,7 @@ export default function AddEventForm({ formData, setFormData, closeModal, onEven
       data.append('price', formData.price);
       data.append('link', formData.link);
       data.append('location', formData.location || "Hej Mistrzu, Rumia");
-      await axios.post("http://localhost:3000/events", data);
+      await axios.post(`${import.meta.env.VITE_API_URL}/events`, data);
       onEventCreated();
       closeModal();
     } catch (error) {
