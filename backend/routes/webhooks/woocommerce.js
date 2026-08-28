@@ -2,11 +2,14 @@ const express = require("express");
 const crypto = require("crypto");
 
 const router = express.Router();
+const pool = require("../../config/db");
 const { syncFullProduct } = require("../../services/syncProducts");
+const pool = require("../../config/db");
 
 router.post("/", async (req, res) => {
   try {
     const signature = req.headers["x-wc-webhook-signature"];
+    const topic = req.headers["x-wc-webbhook-topic"];
     if (!signature) {
       console.log("WooCommerce: otrzymano ping weryfikacyjny webhooka");
       return res.status(200).json({
@@ -34,6 +37,21 @@ router.post("/", async (req, res) => {
     }
     const productId = req.body.id;
     const parentId = req.body.parent_id;
+    if (topic === "product.deleted") {
+      const productId = req.body.id;
+      if (!productId) {
+        return res.status(400).json({
+          success: false,
+          message: "Brak ID usuniętego produktu w webhooku"
+        });
+      }
+      await pool.query("DELETE FROM products WHERE woocommerce_id = $1", [productId])
+      console.log(`✓ Webhook: usunięto produkt ${productId} z PostgreSQL`);
+      return res.status(200).json({
+        success: true,
+        message: `Produkt ${productId} został usunięty z PostgreSQL`
+      });
+    }
     if (!productId) {
       return res.status(400).json({
         success: false,
