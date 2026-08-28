@@ -4,12 +4,11 @@ const crypto = require("crypto");
 const router = express.Router();
 const pool = require("../../config/db");
 const { syncFullProduct } = require("../../services/syncProducts");
-const pool = require("../../config/db");
 
 router.post("/", async (req, res) => {
   try {
     const signature = req.headers["x-wc-webhook-signature"];
-    const topic = req.headers["x-wc-webbhook-topic"];
+    const topic = req.headers["x-wc-webhook-topic"];
     if (!signature) {
       console.log("WooCommerce: otrzymano ping weryfikacyjny webhooka");
       return res.status(200).json({
@@ -38,7 +37,6 @@ router.post("/", async (req, res) => {
     const productId = req.body.id;
     const parentId = req.body.parent_id;
     if (topic === "product.deleted") {
-      const productId = req.body.id;
       if (!productId) {
         return res.status(400).json({
           success: false,
