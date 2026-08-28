@@ -2,6 +2,8 @@ require("dotenv").config();
 const axios = require("axios");
 const express = require("express");
 const router = express.Router();
+const verifyToken = require("../middleware/verifyToken");
+const requireAdmin = require("../middleware/requireAdmin");
 const {
   syncProduct,
   syncVariations,
@@ -9,8 +11,6 @@ const {
   syncImages,
   syncFullProduct,
   syncAllProducts,
-  getLastSync,
-  updateLastSync,
   syncChangedProducts,
 } = require("../services/syncProducts");
 
@@ -64,7 +64,41 @@ router.get("/", async (_req, res) => {
   }
 });
 
-router.get("/sync/:id", async (req, res) => {
+router.get("/sync-all", verifyToken, requireAdmin, async (_req, res) => {
+  try {
+    const results = await syncAllProducts();
+    res.json({
+      success: results.failed === 0,
+      message: "Synchronizacja zakończona",
+      ...results
+    });
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res.status(error.response?.status || 500).json({
+      success: false,
+      message: "Nie udało się rozpocząć synchronizacji",
+    });
+  }
+});
+
+router.get("/sync-changed", verifyToken, requireAdmin, async (_req, res) => {
+  try {
+    const results = await syncChangedProducts();
+    res.json({
+      success: results.failed === 0,
+      message: "Synchronizacja zmienionych produktów zakończona",
+      ...results
+    });
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res.status(error.response?.status || 500).json({
+      success: false,
+      message: "Nie udało się wykonać synchronizacji",
+    });
+  }
+});
+
+router.get("/sync/:id", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const product = await syncProduct(id);
@@ -84,7 +118,7 @@ router.get("/sync/:id", async (req, res) => {
   }
 });
 
-router.get("/sync/:id/variations", async (req, res) => {
+router.get("/sync/:id/variations", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const variations = await syncVariations(id);
@@ -108,7 +142,7 @@ router.get("/sync/:id/variations", async (req, res) => {
   }
 });
 
-router.get("/sync/:id/categories", async (req, res) => {
+router.get("/sync/:id/categories", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const categories = await syncCategories(id);
@@ -130,7 +164,7 @@ router.get("/sync/:id/categories", async (req, res) => {
   }
 });
 
-router.get("/sync/:id/images", async (req, res) => {
+router.get("/sync/:id/images", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const images = await syncImages(id);
@@ -152,7 +186,7 @@ router.get("/sync/:id/images", async (req, res) => {
   }
 });
 
-router.get("/sync/:id/full", async (req, res) => {
+router.get("/sync/:id/full", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { product, variations, categories, images } = await syncFullProduct(id);
@@ -173,42 +207,6 @@ router.get("/sync/:id/full", async (req, res) => {
     res.status(error.response?.status || 500).json({
       success: false,
       message: error.message || "Nie udało się zsynchronizować produktu"
-    });
-  }
-});
-
-router.get("/sync-all", async (_req, res) => {
-  try {
-    const results = await syncAllProducts();
-    res.json({
-      success: results.failed === 0,
-      message: "Synchronizacja zakończona",
-      ...results
-    });
-  } catch (error) {
-    console.error(error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({
-      success: false,
-      message: "Nie udało się rozpocząć synchronizacji",
-      error: error.response?.data || error.message
-    });
-  }
-});
-
-router.get("/sync-changed", async (_req, res) => {
-  try {
-    const results = await syncChangedProducts();
-    res.json({
-      success: results.failed === 0,
-      message: "Synchronizacja zmienionych produktów zakończona",
-      ...results
-    });
-  } catch (error) {
-    console.error(error.response?.data || error.message);
-    res.status(error.response?.status || 500).json({
-      success: false,
-      message: "Nie udało się wykonać synchronizacji",
-      error: error.response?.data || error.message
     });
   }
 });

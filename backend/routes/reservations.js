@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
 const jwt = require("jsonwebtoken");
+const verifyToken = require("../middleware/verifyToken");
+const requireAdmin = require("../middleware/requireAdmin");
 
 const validateReservation = ({
   fullName,
@@ -167,7 +169,7 @@ const openingHours = {
   6: { open: 12, close: 19 }, // Sobota
 }
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT id, user_id, full_name, email, phone, reservation_date::text AS reservation_date, reservation_time, duration, status, notes, created_at, updated_at, people_count
@@ -185,7 +187,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     if (isNaN(Number(id))) {
@@ -286,7 +288,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -393,7 +395,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 

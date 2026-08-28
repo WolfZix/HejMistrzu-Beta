@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
+const verifyToken = require("../middleware/verifyToken");
+const requireAdmin = require("../middleware/requireAdmin");
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { email } = req.query;
     let query = `

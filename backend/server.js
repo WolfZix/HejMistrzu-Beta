@@ -1,7 +1,6 @@
 const cors = require("cors");
 const express = require("express");
 const path = require("path");
-const pool = require("./config/db");
 const app = express();
 
 const productsRouter = require("./routes/products");
@@ -14,7 +13,6 @@ const reservationsRouter = require("./routes/reservations");
 const eventRegistrationsRouter = require("./routes/eventRegistrations");
 const eventParticipantsRouter = require("./routes/eventParticipants");
 const woocommerceWebhookRouter = require("./routes/webhooks/woocommerce");
-const cron = require("node-cron");
 
 app.use(cors());
 app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
@@ -30,13 +28,6 @@ app.use("/reservations", reservationsRouter);
 app.use("/eventRegistrations", eventRegistrationsRouter);
 app.use("/eventParticipants", eventParticipantsRouter);
 app.use("/webhooks/woocommerce", woocommerceWebhookRouter);
-
-// cron.schedule("*/15 * * * *", async () => {
-//   console.log("Rozpoczynam automatyczną synchronizację produktów...");
-//   try {
-//     SyncAll()
-//   } catch (error) { console.error("Błąd automatycznej synchronizacji:", error) }
-// });
 
 app.listen(3000, () => {
   console.log("Server działa na porcie 3000");

@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
+const verifyToken = require("../middleware/verifyToken");
+const requireAdmin = require("../middleware/requireAdmin");
 
 const mapRegistration = (registration) => ({
   id: registration.id,
@@ -44,7 +46,7 @@ async function getFreeSlots(eventId) {
   return Number(result.rows[0].free_slots);
 }
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`SELECT * FROM event_registrations`);
     const registrations = result.rows.map(mapRegistration)

@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
 const upload = require("../config/multer");
+const verifyToken = require("../middleware/verifyToken");
+const requireAdmin = require("../middleware/requireAdmin");
 const fs = require("fs/promises");
 const path = require("path");
 
@@ -97,7 +99,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", verifyToken, requireAdmin, upload.single("image"), async (req, res) => {
   const badRequest = (message) =>
     res.status(400).json({
       success: false,
@@ -131,7 +133,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-router.put("/:id", upload.single("image"), async (req, res) => {
+router.put("/:id", verifyToken, requireAdmin, upload.single("image"), async (req, res) => {
   const badRequest = (message) =>
     res.status(400).json({
       success: false,
@@ -192,7 +194,7 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     if (isNaN(Number(id))) {
