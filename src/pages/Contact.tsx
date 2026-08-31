@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { MapPin, Mail, Clock, Car, Send, CheckCircle2, Phone, MessageSquare, LoaderCircle } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
 import Facebook from "@/assets/facebook.webp";
 import Instagram from "@/assets/instagram.webp";
@@ -64,7 +64,7 @@ export default function Contact() {
       });
       setTimeout(() => {
         setSubmitted(false);
-      }, 3000);
+      }, 1500);
     } catch (error) {
       console.error(error);
     } finally {
@@ -152,10 +152,12 @@ export default function Contact() {
           >
             <h4 className="font-heading text-lg font-bold tracking-wide mb-6">Napisz do nas</h4>
 
+          <AnimatePresence>
             {submitted ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
                 className="text-center py-14"
               >
                 <div className="p-4 rounded-full bg-green-500/10 w-fit mx-auto mb-5 border border-green-500/20">
@@ -251,6 +253,7 @@ export default function Contact() {
                 </Button>
               </form>
             )}
+          </AnimatePresence>
           </motion.div>
         </div>
 
