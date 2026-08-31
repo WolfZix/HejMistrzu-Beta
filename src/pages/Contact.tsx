@@ -64,7 +64,7 @@ export default function Contact() {
       });
       setTimeout(() => {
         setSubmitted(false);
-      }, 2000);
+      }, 3000);
     } catch (error) {
       console.error(error);
     } finally {
@@ -157,8 +157,8 @@ export default function Contact() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.7 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
                 key="success"
                 className="text-center py-14"
               >
