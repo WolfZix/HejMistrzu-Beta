@@ -43,31 +43,31 @@ export default function Contact() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/contact`,
+        {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await response.json();
       if (!response.ok) {
         console.error(data.message);
         return;
       }
-
       setSubmitted(true);
-      setIsLoading(false);
       setFormData({
         fullName: "",
         email: "",
         subject: "",
         message: "",
       });
-
-    } catch (error) { 
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 3000);
+    } catch (error) {
       console.error(error);
+    } finally {
       setIsLoading(false);
     }
   };
