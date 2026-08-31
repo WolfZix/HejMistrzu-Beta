@@ -64,7 +64,7 @@ export default function Contact() {
       });
       setTimeout(() => {
         setSubmitted(false);
-      }, 1000);
+      }, 2000);
     } catch (error) {
       console.error(error);
     } finally {
@@ -152,12 +152,12 @@ export default function Contact() {
           >
             <h4 className="font-heading text-lg font-bold tracking-wide mb-6">Napisz do nas</h4>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             {submitted ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
+                exit={{ opacity: 0, scale: 0.7 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 key="success"
                 className="text-center py-14"
