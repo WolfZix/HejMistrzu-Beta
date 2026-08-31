@@ -1,6 +1,6 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
-const contactHtml = require("../services/contact");
+const contactHtml = require("../services/contactHtml");
 
 const router = express.Router();
 
