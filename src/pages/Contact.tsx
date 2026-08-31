@@ -152,13 +152,14 @@ export default function Contact() {
           >
             <h4 className="font-heading text-lg font-bold tracking-wide mb-6">Napisz do nas</h4>
 
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {submitted ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                key="success"
                 className="text-center py-14"
               >
                 <div className="p-4 rounded-full bg-green-500/10 w-fit mx-auto mb-5 border border-green-500/20">
@@ -168,7 +169,7 @@ export default function Contact() {
                 <p className="text-muted-foreground text-sm max-w-xs mx-auto">Odpowiemy najszybciej jak to możliwe.</p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5" key="form">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Imię i nazwisko</Label>
