@@ -12,13 +12,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-function validateContactForm({ name, email, subject, message }) {
+function validateContactForm({ fullName, email, subject, message }) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-  if (!name || !email || !subject || !message) return "Wszystkie pola są wymagane";
-  if (typeof name !== "string" || typeof email !== "string" || typeof subject !== "string" || typeof message !== "string") return "Nieprawidłowe dane";
-  if (name.trim() === "" || email.trim() === "" || subject.trim() === "" || message.trim() === "") return "Wszystkie pola są wymagane";
-  if (name.trim().length > 100) return "Imię jest za długie"
+  if (typeof fullName !== "string" || typeof email !== "string" || typeof subject !== "string" || typeof message !== "string") return "Nieprawidłowe dane";
+  if (!fullName || !email || !subject || !message) return "Wszystkie pola są wymagane";
+  if (fullName.trim() === "" || email.trim() === "" || subject.trim() === "" || message.trim() === "") return "Wszystkie pola są wymagane";
+  if (fullName.trim().length > 100) return "Imię i nazwisko jest za długie"
   if (email.trim().length > 254) return "Email jest za długi"
   if (subject.trim().length > 200) return "Temat jest za długi"
   if (message.trim().length > 5000) return "Wiadomość jest za długa"
@@ -36,8 +36,8 @@ function escapeHtml(value) {
 }
 
 router.post("/", async (req, res) => {
-  const { name, email, subject, message } = req.body;
-  const validationError = validateContactForm({ name, email, subject, message });
+  const { fullName, email, subject, message } = req.body;
+  const validationError = validateContactForm({ fullName, email, subject, message });
   if (validationError) {
     return res.status(400).json({
       success: false,
@@ -45,7 +45,7 @@ router.post("/", async (req, res) => {
     });
   }
   try {
-    const safeName = escapeHtml(name);
+    const safeFullName = escapeHtml(fullName);
     const safeEmail = escapeHtml(email);
     const safeSubject = escapeHtml(subject);
     const safeMessage = escapeHtml(message);
@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
       to: process.env.MAIL_USER,
       replyTo: email,
       subject: `📩 ${subject}`,
-      html: contactHtml(safeName, safeEmail, safeSubject, safeMessage),
+      html: contactHtml(safeFullName, safeEmail, safeSubject, safeMessage),
     });
 
     res.json({

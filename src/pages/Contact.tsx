@@ -33,7 +33,7 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
     subject: '',
     message: '',
@@ -60,7 +60,7 @@ export default function Contact() {
       setSubmitted(true);
       setIsLoading(false);
       setFormData({
-        name: "",
+        fullName: "",
         email: "",
         subject: "",
         message: "",
@@ -168,14 +168,14 @@ export default function Contact() {
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Imię</Label>
+                    <Label className="text-sm font-medium">Imię i nazwisko</Label>
                     <Input
                     required
-                    placeholder="Imię"
-                    value={formData.name}
+                    placeholder="Imię i nazwisko"
+                    value={formData.fullName}
                     onChange={(e) => setFormData((prev) => ({
                       ...prev,
-                      name: e.target.value,
+                      fullName: e.target.value,
                     }))}
                     className="bg-card border-border focus:border-primary/50 h-11 rounded-xl" />
                   </div>

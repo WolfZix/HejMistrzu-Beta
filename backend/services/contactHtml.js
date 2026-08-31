@@ -1,4 +1,4 @@
-function contactHtml(name, email, subject, message) {
+function contactHtml(fullName, email, subject, message) {
   return `
   <!DOCTYPE html>
     <html lang="pl">
@@ -116,17 +116,16 @@ function contactHtml(name, email, subject, message) {
                         width:120px;
                         vertical-align:top;
                       ">
-                        Imię
+                        Imię i nazwisko
                       </td>
                       <td style="
                         padding:10px 0;
                         color:#f5f5f5;
                         font-size:14px;
                         line-height:1.5;
-                        font-weight:bold;
                         word-break:break-word;
                       ">
-                        ${name}
+                        ${fullName}
                       </td>
                     </tr>
                     <tr>
@@ -193,7 +192,7 @@ function contactHtml(name, email, subject, message) {
                         font-size:14px;
                         line-height:1.5;
                       ">
-                        ${new Date().toLocaleString("pl-PL")}
+                        ${new Date().toLocaleString("pl-PL", { timeZone: "Europe/Warsaw" })}
                       </td>
                     </tr>
                   </table>
