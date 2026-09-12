@@ -25,7 +25,7 @@ export default function ProfileReservations({
           </h1>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto py-2">
+        <div className="custom-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto py-2">
           {reservations.map((reservation) => (
             <div
               key={reservation.id}
