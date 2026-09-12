@@ -46,7 +46,7 @@ export default function StoreSidebar({
 
   return (
     <aside className="hidden lg:block w-56 shrink-0">
-      <div className="glass rounded-xl p-5 sticky top-28">
+      <div className="glass rounded-xl p-5 lg:sticky top-28">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-heading text-base tracking-wider text-primary">Kategorie</h3>
           <AnimatePresence>
