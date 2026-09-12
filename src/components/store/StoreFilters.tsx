@@ -122,7 +122,7 @@ export default function StoreFilters({
           )}
         </AnimatePresence>
       </div>
-      <div className="flex flex-wrap justify-center gap-2 lg:hidden">
+      <div className="flex flex-wrap justify-center gap-2 md:hidden">
         <button
             onClick={() => {
               setSelectedCategory(null);
