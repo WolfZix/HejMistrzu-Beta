@@ -108,10 +108,6 @@ export default function Calendar({ month, months, setMonth, year, setYear, setSe
         cellDate.setHours(0,0,0,0);
         const isPast = cellDate < today;
         const shouldHighlight = isSelected;
-
-        console.log(isPast);
-        console.log(cellDate);
-        console.log(today);
         
         return (
         <button

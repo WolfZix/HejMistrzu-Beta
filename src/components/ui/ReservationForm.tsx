@@ -39,6 +39,9 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
     "13:00",
     "14:00",
     "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
   ]
   const requiresDuration = reservationType === "Sesja RPG";
 
@@ -166,7 +169,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
   (!requiresDuration || duration);
 
   const formattedDate = new Intl.DateTimeFormat("pl-PL", {
-    weekday: "long",
+    weekday: "short",
     day: "numeric",
     month: "long",
     year: "numeric",

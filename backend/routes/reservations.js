@@ -14,7 +14,6 @@ const validateReservation = ({
   duration,
   peopleCount,
   notes,
-  status,
 }) => {
   if (
     !fullName ||
@@ -23,12 +22,6 @@ const validateReservation = ({
     !reservationTime ||
     (!peopleCount && duration == null)
   )  { return "Brakuje wymaganych pól" }
-
-  if (
-    status !== "Oczekująca" &&
-    status !== "Potwierdzona" &&
-    status !== "Anulowana"
-  ) { return "Wprowadzono niepoprawny status" }
 
   if (
     duration !== null &&
