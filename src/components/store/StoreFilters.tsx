@@ -122,21 +122,33 @@ export default function StoreFilters({
           )}
         </AnimatePresence>
       </div>
-              <div className="flex flex-wrap justify-center gap-2 lg:hidden">
-                {rootCategories.map((entry, index) => (
-                  <button
-                    key={`${entry.id}-${index}`}
-                    onClick={() => {
-                      setSelectedCategory(entry.id)
-                    }}
-                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
-                      selectedCategory === entry.id ? "bg-primary/10 text-primary border border-primary/20" : "bg-card text-muted-foreground border border-border"
-                    }`}
-                  >
-                    {entry.name}
-                  </button>
-                ))}
-              </div>
-            </div>
+      <div className="flex flex-wrap justify-center gap-2 lg:hidden">
+        <button
+            onClick={() => {
+              setSelectedCategory(null);
+            }}
+            className={`px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
+              selectedCategory === null ? "bg-primary/10 text-primary border border-primary/20" : "bg-card text-muted-foreground border border-border"
+            }`}
+          >
+            <span>
+              Wszystkie  
+            </span>
+          </button>
+        {rootCategories.map((entry, index) => (
+          <button
+            key={`${entry.id}-${index}`}
+            onClick={() => {
+              setSelectedCategory(entry.id)
+            }}
+            className={`px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
+              selectedCategory === entry.id ? "bg-primary/10 text-primary border border-primary/20" : "bg-card text-muted-foreground border border-border"
+            }`}
+          >
+            {entry.name}
+          </button>
+        ))}
+      </div>
+    </div>
   )
 }
