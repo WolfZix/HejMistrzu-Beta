@@ -142,10 +142,12 @@ export default function ProfileEdit() {
 
         {/* Przyciski */}
 
-        <div className="flex justify-between border-t border-border pt-6">
+        <div className="flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
           <button
             type="button"
             className="
+              w-full
+              sm:w-auto
               rounded-lg
               border
               border-red-500/30
@@ -161,7 +163,7 @@ export default function ProfileEdit() {
           >
             Usuń konto
           </button>
-          <div className="flex justify-end gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
             <button
               type="button"
               className="
