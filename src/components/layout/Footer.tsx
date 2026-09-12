@@ -30,7 +30,7 @@ export default function Footer() {
                 Hej <span className="text-primary">Mistrzu</span>
               </span>
             </Link>
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+            <p className="text-muted-foreground text-sm leading-relaxed mb-6 max-w-[18rem] lg:max-w-none">
               Planszówki, RPG, TCG i więcej — Twoja przystań dla fanów fantastyki w Rumi.
             </p>
             <div className="flex gap-2">
@@ -57,7 +57,7 @@ export default function Footer() {
           {/* Nav */}
           <div>
             <h2 className="font-heading text-sm tracking-wider text-primary mb-5">Nawigacja</h2>
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 max-w-[18rem] lg:max-w-none">
               {footerLinks.map((link) => (
                 <Link
                   key={link.path}
