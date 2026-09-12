@@ -8,7 +8,7 @@ type ProfileButtonsProps = {
 const buttons = [
   {
     icon: Ticket,
-    title: "Złóż rezerwacje",
+    title: "Złóż rezerwację",
     to: "/rezerwacje",
   },
   {
@@ -24,6 +24,7 @@ const buttons = [
 ];
 
 const buttonClass = `
+  min-w-0
   text-left
   border
   border-border
@@ -39,7 +40,6 @@ const buttonClass = `
   gap-3
   transition-all
   duration-300
-  min-w-0
 `;
 
 export default function ProfileButtons({ role }: ProfileButtonsProps) {
@@ -69,14 +69,12 @@ export default function ProfileButtons({ role }: ProfileButtonsProps) {
               gap-3
               transition-all
               duration-300
-              min-w-0
             "
           >
             <Shield size={16} className="text-red-500 shrink-0" />
-            <span className="truncate">Panel administratora</span>
+            <span>Panel administratora</span>
           </Link>
         )}
-
         <button
           className={buttonClass}
           onClick={() => {
@@ -89,22 +87,22 @@ export default function ProfileButtons({ role }: ProfileButtonsProps) {
           }}
         >
           <Pencil size={16} className="text-primary shrink-0" />
-          <span className="truncate">Edytuj profil</span>
+          <span>Edytuj profil</span>
         </button>
-
         {buttons.map((button, index) => {
           const Icon = button.icon;
+
           return (
             <Link
               to={button.to}
               key={button.title}
               className={`
                 ${buttonClass}
-                ${index === buttons.length - 1 ? "col-span-2 lg:col-span-1" : ""}
+                ${index > 0 ? "col-span-2 lg:col-span-1" : ""}
               `}
             >
               <Icon size={16} className="text-primary shrink-0" />
-              <span className="truncate">{button.title}</span>
+              <span>{button.title}</span>
             </Link>
           );
         })}
