@@ -4,46 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Users, Clock, Baby, Dice5, Swords, BookOpen } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionHeader from "@/components/shared/SectionHeader";
-
-const boardGames = [
-  { name: "Catan", players: "3-4", age: "10+", duration: "60-90 min", category: "Strategiczne" },
-  { name: "Azul", players: "2-4", age: "8+", duration: "30-45 min", category: "Abstrakcyjne" },
-  { name: "Pandemic", players: "2-4", age: "8+", duration: "45 min", category: "Kooperacyjne" },
-  { name: "Gloomhaven", players: "1-4", age: "14+", duration: "120+ min", category: "Przygodowe" },
-  { name: "Wingspan", players: "1-5", age: "10+", duration: "40-70 min", category: "Strategiczne" },
-  { name: "Ticket to Ride", players: "2-5", age: "8+", duration: "30-60 min", category: "Rodzinne" },
-  { name: "Arkham Horror", players: "1-6", age: "14+", duration: "120-180 min", category: "Przygodowe" },
-  { name: "7 Wonders", players: "3-7", age: "10+", duration: "30 min", category: "Strategiczne" },
-  { name: "Dixit", players: "3-8", age: "8+", duration: "30 min", category: "Imprezowe" },
-  { name: "Splendor", players: "2-4", age: "10+", duration: "30 min", category: "Strategiczne" },
-  { name: "Everdell", players: "1-4", age: "13+", duration: "40-80 min", category: "Strategiczne" },
-  { name: "Terraforming Mars", players: "1-5", age: "12+", duration: "120 min", category: "Strategiczne" },
-];
-
-const rpgSystems = [
-  { name: "Dungeons & Dragons 5e", players: "3-6", description: "Klasyczny system fantasy RPG — idealny na start." },
-  { name: "Warhammer Fantasy RPG", players: "3-5", description: "Mroczne fantasy w Starym Świecie. Dla szukających głębi." },
-  { name: "Call of Cthulhu", players: "3-5", description: "Horror kosmiczny Lovecrafta — tajemnice i obłęd." },
-  { name: "Pathfinder 2e", players: "3-6", description: "Zaawansowany system z ogromną customizacją postaci." },
-  { name: "Mausritter", players: "2-5", description: "Lekki system RPG — graj jako odważna myszka w wielkim świecie." },
-  { name: "Savage Worlds", players: "3-6", description: "Uniwersalny system do każdego settingu i konwencji." },
-];
-
-const gamebooks = [
-  { name: "Samotny Wilk", description: "Legendarny cykl gamebooków fantasy — klasyka gatunku." },
-  { name: "Fighting Fantasy", description: "Kultowe przygody od Jacksona i Livingstone'a." },
-  { name: "Linia Czasu", description: "Polskie gamebooki z elementami historii i wyborów." },
-  { name: "Destynacje", description: "Nowoczesne paragrafówki w różnorodnych światach." },
-];
-
-const categoryColors = {
-  Strategiczne: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  Kooperacyjne: "bg-green-500/10 text-green-400 border-green-500/20",
-  Przygodowe: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  Rodzinne: "bg-pink-500/10 text-pink-400 border-pink-500/20",
-  Abstrakcyjne: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-  Imprezowe: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-};
+import { boardGames, rpgSystems, gamebooks, categoryColors } from "@/data/playArea";
 
 export default function PlayArea() {
   const [search, setSearch] = useState("");
@@ -76,7 +37,7 @@ export default function PlayArea() {
               <Swords className="w-4 h-4 mr-1.5" />RPG
             </TabsTrigger>
             <TabsTrigger value="gamebooks" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md rounded-lg py-2.5 font-heading text-xs tracking-wider transition-all">
-              <BookOpen className="w-4 h-4 mr-1.5" />Gamebooki
+              <BookOpen className="w-4 h-4 mr-1.5" />Paragrafówki
             </TabsTrigger>
           </TabsList>
 
