@@ -17,7 +17,13 @@ export default function Dashboard() {
   const SECTION_INVENTORY = "Magazyn"
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/users`)
+    const token = localStorage.getItem("token");
+
+    fetch(`${import.meta.env.VITE_API_URL}/users`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data: User[]) => setUsers(data))
       .catch(console.error);
