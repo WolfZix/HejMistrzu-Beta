@@ -122,7 +122,7 @@ export default function PlayArea() {
           </TabsContent>
 
           <TabsContent value="gamebooks">
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
+            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 max-w-3xl md:max-w-6xl mx-auto">
               <AnimatePresence mode="popLayout">
                 {gamebooks
                   .filter((g) => g.name.toLowerCase().includes(search.toLowerCase()))
