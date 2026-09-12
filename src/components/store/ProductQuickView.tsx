@@ -21,7 +21,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl h-[90vh] p-0 gap-0 bg-card border-border rounded-2xl overflow-y-auto lg:overflow-hidden">
+      <DialogContent className="max-w-4xl lg:max-w-6xl h-[90vh] p-0 gap-0 bg-card border-border rounded-2xl overflow-y-auto lg:overflow-hidden">
         <DialogClose className="
         absolute
         top-4
