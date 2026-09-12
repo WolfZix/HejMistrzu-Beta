@@ -32,7 +32,7 @@ export default function SectionHeader({
       </h2>
 
       {subtitle && (
-        <p className="mt-4 sm:mt-5 text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-4 sm:mt-5 text-muted-foreground text-base sm:text-lg max-w-2xl lg:max-w-4xl mx-auto leading-relaxed">
           {subtitle}
         </p>
       )}
