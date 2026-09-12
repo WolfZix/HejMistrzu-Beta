@@ -44,8 +44,8 @@ export default function Calendar({ month, months, setMonth, year, setYear, setSe
   ];
 
   return (
-    <div className="mb-10 h-[24rem] md:h-[32rem]">
-    <div className="flex gap-2 items-center justify-center lg:justify-start mb-3 select-none">
+    <div className="mb-10 h-[20rem] md:h-[32rem] border border-red-500">
+    <div className="flex gap-2 items-center justify-center lg:justify-start md:mb-3 select-none">
         <button
             onClick={() => {
               if (month === 1) {
