@@ -45,12 +45,13 @@ const buttonClass = `
 export default function ProfileButtons({ role }: ProfileButtonsProps) {
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-2 lg:flex lg:flex-col">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:flex lg:flex-col">
         {role === "admin" && (
           <Link
             to="/admin"
             className="
-              col-span-2
+              col-span-1
+              sm:col-span-2
               lg:col-span-1
               text-left
               border
@@ -98,7 +99,7 @@ export default function ProfileButtons({ role }: ProfileButtonsProps) {
               key={button.title}
               className={`
                 ${buttonClass}
-                ${index > 0 ? "col-span-2 lg:col-span-1" : ""}
+                ${index > 0 ? "col-span-1 sm:col-span-2 lg:col-span-1" : ""}
               `}
             >
               <Icon size={16} className="text-primary shrink-0" />
