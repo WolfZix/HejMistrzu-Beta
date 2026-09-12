@@ -15,7 +15,7 @@ export default function ProfileReservations({
   buttonClass,
 }: ProfileReservationsProps) {
   return (
-    <div className="flex h-[350px] flex-col rounded-lg glass py-4">
+    <div className="flex h-auto flex-col rounded-lg glass py-4 lg:h-[350px]">
       <div className="border-b">
         <div className="flex items-center gap-4 border-b px-4 pb-4">
           <Ticket size={24} className="text-primary shrink-0" />
