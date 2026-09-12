@@ -114,7 +114,7 @@ export default function Pricing() {
         <SectionHeader
           badge="Cennik"
           title="Oferta Hej Mistrzu"
-          subtitle="Zarezerwuj stolik, wynajmij pokój RPG lub sesje z Game Masterem."
+          subtitle="Zarezerwuj stolik, wynajmij pokój RPG lub umów się na sesje z Game Masterem."
         />
 
         <div className="mb-20 mt-20">
@@ -138,7 +138,7 @@ export default function Pricing() {
             <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto mb-5">
               <Crown className="w-6 h-6 text-primary" />
             </div>
-            <h3 className="font-heading text-xl font-bold tracking-wide">Sesje z Game Masterem</h3>
+            <h3 className="font-heading text-xl font-bold tracking-wide">Sesja z Game Masterem</h3>
             <p className="text-muted-foreground text-sm opacity-50 mb-3">(max 8 os.)</p>
             <p className="text-muted-foreground text-sm leading-relaxed mb-8 max-w-md mx-auto">
               Chcesz przeżyć sesję RPG z doświadczonym Game Masterem? Skontaktuj się z nami, a przygotujemy dla Ciebie indywidualną wycenę.
