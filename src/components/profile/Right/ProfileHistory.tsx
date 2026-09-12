@@ -74,7 +74,7 @@ export default function ProfileHistory() {
   ]
   return (
     <div className="py-8">
-      <div className="grid md:grid-cols-[55%_45%]">
+      <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,55fr)_minmax(0,45fr)]">
         <ProfileOrders orders={orders} buttonClass={downloadButtonClass} />
         <ProfileReservations reservations={reservations} buttonClass={downloadButtonClass} />
       </div>

@@ -15,7 +15,7 @@ export default function ProfileOrders({
   buttonClass,
 }: ProfileOrdersProps) {
   return (
-    <div className="flex h-auto flex-col rounded-lg glass py-4 mr-5 lg:h-[350px]">
+    <div className="flex h-auto flex-col rounded-lg glass py-4 lg:h-[350px]">
       <div className="border-b">
         <div className="flex items-center gap-4 border-b px-4 pb-4">
           <ShoppingBag size={24} className="text-primary shrink-0" />
@@ -36,7 +36,7 @@ export default function ProfileOrders({
                 gap-y-1
                 px-4
                 py-2
-                sm:grid-cols-[20%_45%_35%]
+                sm:grid-cols-[minmax(0,20%)_minmax(0,45%)_minmax(0,35%)]
                 sm:items-center
               "
             >
