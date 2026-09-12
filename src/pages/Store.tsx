@@ -146,7 +146,7 @@ useEffect(() => {
     <div className="pt-20 pb-24">
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col md:flex-row gap-8">
           <StoreSidebar
             categories={categories}
             rootCategories={rootCategories}
@@ -176,7 +176,7 @@ useEffect(() => {
               setSelectedCategory={setSelectedCategory}
               selectedCategory={selectedCategory}
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
                 {filtered.slice(0, visibleProducts).map((product) => (
                   <ProductCard
                     key={product.id}
