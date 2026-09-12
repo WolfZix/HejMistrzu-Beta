@@ -31,7 +31,7 @@ export default function Reservations() {
             animate={{ opacity: 1, y: 0}}
             exit={{ opacity: 0, y: -20}}
             transition={{ duration: 0.2}}
-            className="flex flex-col items-center xl:items-start lg:flex-row lg:justify-between gap-5 w-full max-w-7xl"
+            className="flex flex-col items-center xl:items-start lg:flex-row lg:justify-between gap-2 md:gap-5 w-full max-w-7xl"
             >
                 <Calendar
                   setSelectedDate={setSelectedDate}
