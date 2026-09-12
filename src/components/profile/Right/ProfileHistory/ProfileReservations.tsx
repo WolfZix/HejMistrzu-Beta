@@ -15,7 +15,7 @@ export default function ProfileReservations({
   buttonClass,
 }: ProfileReservationsProps) {
   return (
-    <div className="flex h-auto min-w-0 flex-col rounded-lg glass py-4 lg:min-h-[350px]">
+    <div className="flex h-auto min-w-0 flex-col rounded-lg glass py-4 lg:h-[350px]">
       <div className="border-b">
         <div className="flex items-center gap-4 border-b px-4 pb-4">
           <Ticket size={24} className="text-primary shrink-0" />
@@ -25,7 +25,7 @@ export default function ProfileReservations({
           </h1>
         </div>
 
-        <div className="flex flex-col gap-2 py-2">
+        <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto py-2">
           {reservations.map((reservation) => (
             <div
               key={reservation.id}
