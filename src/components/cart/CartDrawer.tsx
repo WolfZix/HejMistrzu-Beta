@@ -94,7 +94,6 @@ export default function CartDrawer() {
                     <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
                   </Button>
 
-
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -167,15 +166,22 @@ export default function CartDrawer() {
                   >
                     Kontynuuj zakupy
                   </Button>
-                  <Link
+
+                  {/* USUNĄĆ POTEM */}
+                  <Button
                     size="sm"
                     className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider text-xs"
-                    onClick={() => setIsOpen(false)}
-                    to="/zamowienie"
+                    onClick={() => {
+                      setIsOpen(false);
+                      requestAnimationFrame(() => {
+                        navigate("/zamowienie");
+                      });
+                    }}
                   >
                     Do kasy
                     <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-                  </Link>
+                  </Button>
+                  
                 </div>
               </div>
             )}
