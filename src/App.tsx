@@ -13,6 +13,7 @@ import PageLoader from "@/pages/PageLoader";
 const Home = lazy(() => import("@/pages/Home"));
 const Events = lazy(() => import("@/pages/Events"));
 const Store = lazy(() => import("@/pages/Store"));
+const Order = lazy(() => import("@/pages/Order"));
 const PlayArea = lazy(() => import("@/pages/PlayArea"));
 const Pricing = lazy(() => import("@/pages/Pricing"));
 const Reservations = lazy(() => import("@/pages/Reservations"));
@@ -44,12 +45,12 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/wydarzenia" element={<Events />} />
                   <Route path="/sklep" element={<Store />} />
+                  <Route path="/zamowienie" element={<Order />} />
                   <Route path="/strefa-gier" element={<PlayArea />} />
                   <Route path="/cennik" element={<Pricing />} />
                   <Route path="/rezerwacje" element={<Reservations />} />
                   <Route path="/o-nas" element={<About />} />
                   <Route path="/kontakt" element={<Contact />} />
-
                   <Route path="/profil/:username" element={
                     <ProtectedRoute>
                       <ProfilePage />

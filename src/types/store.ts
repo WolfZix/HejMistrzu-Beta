@@ -58,3 +58,18 @@ export type ProductFormData = {
   price: string;
   salePrice: string;
 }
+
+export type DeliveryMethod = 
+  "InPost Paczkomat 24/7" |
+  "InPost Kurier" |
+  "InPost Paczkomat Pobranie" |
+  "InPost Kurier Pobranie" |
+  "Odbiór Osobisty" |
+  null;
+
+export type PaymentMethod = 
+  "Przelewy24" |
+  "Karta Kredytowa" |
+  "Google Pay" |
+  "BLIK" |
+  null;

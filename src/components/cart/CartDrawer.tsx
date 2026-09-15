@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Minus, Plus, ShoppingCart, Trash2, ArrowRight } from "lucide-react";
+import { X, Minus, Plus, ShoppingCart, Trash2, ArrowRight, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useNavigate } from "react-router-dom";
@@ -78,6 +78,23 @@ export default function CartDrawer() {
                   >
                     Przeglądaj sklep
                   </Button>
+
+                  {/* USUNĄĆ POTEM */}
+                  <Button
+                    size="sm"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider text-xs"
+                    onClick={() => {
+                      setIsOpen(false);
+                      requestAnimationFrame(() => {
+                        navigate("/zamowienie");
+                      });
+                    }}
+                  >
+                    Do kasy
+                    <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                  </Button>
+
+
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -150,13 +167,15 @@ export default function CartDrawer() {
                   >
                     Kontynuuj zakupy
                   </Button>
-                  <Button
+                  <Link
                     size="sm"
                     className="bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider text-xs"
+                    onClick={() => setIsOpen(false)}
+                    to="/zamowienie"
                   >
                     Do kasy
                     <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-                  </Button>
+                  </Link>
                 </div>
               </div>
             )}
