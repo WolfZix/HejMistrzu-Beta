@@ -2,6 +2,11 @@ import { CreditCard, MapPin, Package, ShoppingBag, Truck, User } from "lucide-re
 import type { PaymentMethod, DeliveryMethod } from "@/types/store";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
+import przelewy24 from "@/assets/przelewy24.png";
+import mastercard from "@/assets/mastercard.webp";
+import visa from "@/assets/visa.webp";
+import googlePay from "@/assets/googlePay.webp";
+import blik from "@/assets/blik.png";
 
 const inputClasses = "h-11 rounded-lg bg-muted/30 border border-border px-4 text-primary outline-none focus:ring-2 focus:ring-primary";
 const logoClasses = "h-10 bg-white p-1";
@@ -153,7 +158,7 @@ export default function Order() {
                 className={optionClasses + " " + (paymentMethod === "Przelewy24" ? pickedOptionClasses : "")}
                 onClick={() => setPaymentMethod("Przelewy24")}
                 >
-                  Przelewy24 <img className={logoClasses} src="/src/assets/przelewy24.png" alt="Przelewy24" />
+                  Przelewy24 <img className={logoClasses} src={przelewy24} alt="Przelewy24" />
                 </div>
                 <div
                   className={optionClasses + " " + (paymentMethod === "Karta Kredytowa" ? pickedOptionClasses : "")}
@@ -161,21 +166,21 @@ export default function Order() {
                 >
                   Karta Kredytowa
                   <div className="flex gap-2 items-center h-full">
-                  <img className={logoClasses} src="/src/assets/mastercard.webp" alt="mastercard" />
-                  <img className={logoClasses} src="/src/assets/visa.webp" alt="visa" />
+                  <img className={logoClasses} src={mastercard} alt="mastercard" />
+                  <img className={logoClasses} src={visa} alt="visa" />
                   </div>
                 </div>
                 <div
                 className={optionClasses + " " + (paymentMethod === "Google Pay" ? pickedOptionClasses : "")}
                 onClick={() => setPaymentMethod("Google Pay")}
                 >
-                  Google Pay <img className={logoClasses} src="/src/assets/googlePay.webp" alt="Google Pay" />
+                  Google Pay <img className={logoClasses} src={googlePay} alt="Google Pay" />
                 </div>
                 <div
                 className={optionClasses + " " + (paymentMethod === "BLIK" ? pickedOptionClasses : "")}
                 onClick={() => setPaymentMethod("BLIK")}
                 >
-                  BLIK <img className={logoClasses} src="/src/assets/blik.png" alt="Blik" />
+                  BLIK <img className={logoClasses} src={blik} alt="Blik" />
                 </div>
               </div>
             </section>
