@@ -1,5 +1,5 @@
 import { optionClasses, buttonClasses, pickedOptionClasses } from "@/data/order";
-import { Package, Truck, User } from "lucide-react";
+import { CircleCheck, Package, Truck, User } from "lucide-react";
 import { ValidationErrorsType, DeliveryMethodType, OrderData } from "@/types/order";
 import { useState, useEffect } from "react";
 import InPostWidget from "@/components/InPostWidget";
@@ -57,13 +57,20 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
           </div>
           {deliveryMethod === "InPost Paczkomat 24/7" && (
             <button
-            className={buttonClasses}
+            className={`${buttonClasses} ${selectedInPostPoint != null ? "bg-lime-500 hover:bg-lime-500/90" : "bg-primary hover:bg-primary/90"}`}
             onClick={(e) => {
               e.stopPropagation();
               setIsInPostOpen(true);
             }}
             >
-              Wybierz punkt odbioru
+              {selectedInPostPoint != null 
+              ? (
+                <>
+                Wybrano punkt odbioru
+                <CircleCheck size={16} />
+                </>
+              ) 
+              : "Wybierz punkt odbioru"}
             </button>
           )}
         </div>
@@ -87,13 +94,20 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
           </div>
           {deliveryMethod === "InPost Paczkomat Pobranie" && (
             <button
-            className={buttonClasses}
+            className={`${buttonClasses} ${selectedInPostPoint != null ? "bg-lime-500 hover:bg-lime-500/90" : "bg-primary hover:bg-primary/90"}`}
             onClick={(e) => {
               e.stopPropagation();
               setIsInPostOpen(true);
             }}
             >
-              Wybierz punkt odbioru
+              {selectedInPostPoint != null 
+              ? (
+                <>
+                Wybrano punkt odbioru
+                <CircleCheck size={16} />
+                </>
+              ) 
+              : "Wybierz punkt odbioru"}
             </button>
           )}
         </div>
