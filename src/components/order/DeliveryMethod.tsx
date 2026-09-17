@@ -1,7 +1,7 @@
 import { optionClasses, buttonClasses, pickedOptionClasses } from "@/data/order";
 import { Package, Truck, User } from "lucide-react";
 import { ValidationErrorsType, DeliveryMethodType, OrderData } from "@/types/order";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InPostWidget from "@/components/InPostWidget";
 import { createPortal } from "react-dom";
 
@@ -15,6 +15,12 @@ type DeliveryMethodProps = {
 
 export default function DeliveryMethod({ deliveryMethod, formData, setFormData, validationErrors, setValidationErrors }: DeliveryMethodProps) {
   const [isInPostOpen, setIsInPostOpen] = useState(false);
+  useEffect(() => {
+    isInPostOpen
+    ? document.body.style.overflow = "hidden"
+    : document.body.style.overflow = ""
+    return () => { document.body.style.overflow = "" }
+  }, [isInPostOpen])
   return (
     <>
       <div className="flex items-center gap-3 border-b border-border pb-4 mb-6">
