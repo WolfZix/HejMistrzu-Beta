@@ -5,7 +5,8 @@ import { inputClasses, buttonClasses } from "@/data/order";
 import DeliveryData from "@/components/order/DeliveryData";
 import DeliveryMethod from "@/components/order/DeliveryMethod";
 import PaymentMethod from "@/components/order/PaymentMethod";
-import type { OrderData, PaymentMethodType, DeliveryMethodType } from "@/types/order";
+import type { OrderData } from "@/types/order";
+import InPostWidget from "@/components/InPostWidget";
 
 export default function Order() {
   const { items, totalPrice } = useCart();
@@ -220,6 +221,7 @@ export default function Order() {
           </aside>
         </div>
       </section>
+      <InPostWidget />
     </div>
   );
 }
