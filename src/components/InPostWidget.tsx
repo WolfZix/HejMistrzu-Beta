@@ -20,7 +20,7 @@ const InPostWidget = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-[150px] h-[350px] flex flex-col" />
+    <div ref={containerRef} className="w-full h-full" />
   );
 };
 
