@@ -1,6 +1,8 @@
 import { optionClasses, buttonClasses, pickedOptionClasses } from "@/data/order";
 import { Package, Truck, User } from "lucide-react";
 import { ValidationErrorsType, DeliveryMethodType, OrderData } from "@/types/order";
+import { useState } from "react";
+import InPostWidget from "@/components/InPostWidget";
 
 type DeliveryMethodProps = {
   deliveryMethod: DeliveryMethodType;
@@ -11,6 +13,7 @@ type DeliveryMethodProps = {
 }
 
 export default function DeliveryMethod({ deliveryMethod, formData, setFormData, validationErrors, setValidationErrors }: DeliveryMethodProps) {
+  const [isInPostOpen, setIsInPostOpen] = useState(false);
   return (
     <>
       <div className="flex items-center gap-3 border-b border-border pb-4 mb-6">
@@ -45,7 +48,15 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             <span className="text-sm font-medium text-fuchsia-500 text-nowrap"> 16,99 zł </span>
           </div>
           {deliveryMethod === "InPost Paczkomat 24/7" && (
-            <button className={buttonClasses}> Wybierz punkt odbioru </button>
+            <button
+            className={buttonClasses}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsInPostOpen(true);
+            }}
+            >
+              Wybierz punkt odbioru
+            </button>
           )}
         </div>
         <div
@@ -67,7 +78,15 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             <span className="text-sm font-medium text-fuchsia-500 text-nowrap"> 20,66 zł </span>
           </div>
           {deliveryMethod === "InPost Paczkomat Pobranie" && (
-            <button className={buttonClasses}> Wybierz punkt odbioru </button>
+            <button
+            className={buttonClasses}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsInPostOpen(true);
+            }}
+            >
+              Wybierz punkt odbioru
+            </button>
           )}
         </div>
         <div
@@ -127,6 +146,22 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
           </div>
         </div>
       </div>
+      {isInPostOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="relative w-full max-w-6xl h-[90vh] rounded-xl bg-background overflow-hidden">
+            
+            <button
+              onClick={() => setIsInPostOpen(false)}
+              className="absolute right-4 top-4 z-10 text-2xl text-foreground hover:text-primary"
+            >
+              x
+            </button>
+
+            <InPostWidget />
+
+          </div>
+        </div>
+      )}
     </>
   )
 }
