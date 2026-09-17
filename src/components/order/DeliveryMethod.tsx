@@ -42,6 +42,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
           setFormData({
             ...formData,
             deliveryMethod: "InPost Paczkomat 24/7",
+            paymentMethod: null,
           });
           setValidationErrors({
             ...validationErrors,
@@ -104,10 +105,12 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "InPost Kurier",
+              paymentMethod: null,
             });
             setValidationErrors({
               ...validationErrors,
               deliveryMethod: "",
+              paymentMethod: "",
             });
           }}
         >
@@ -144,10 +147,12 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "Odbiór Osobisty",
+              paymentMethod: null,
             });
             setValidationErrors({
               ...validationErrors,
               deliveryMethod: "",
+              paymentMethod: "",
             });
           }}
         >

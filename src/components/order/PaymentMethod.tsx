@@ -28,7 +28,7 @@ export default function PaymentMethod({ deliveryMethod, paymentMethod,formData, 
       </div>
 
       {deliveryMethod === "InPost Paczkomat Pobranie" || deliveryMethod === "InPost Kurier Pobranie" ? (
-        <div className={optionClasses}>
+        <div className={optionClasses + " " + pickedOptionClasses}>
           Płatność przy odbiorze
           <HandCoins size={24} />
         </div>
@@ -100,21 +100,6 @@ export default function PaymentMethod({ deliveryMethod, paymentMethod,formData, 
         }}
         >
           BLIK <img className={logoClasses} src={blik} alt="Blik" />
-        </div>
-        <div
-        className={optionClasses + " " + (paymentMethod === "Płatność przy odbiorze" ? pickedOptionClasses : "")}
-        onClick={() => {
-          setFormData({
-            ...formData,
-            paymentMethod: "Płatność przy odbiorze",
-          });
-          setValidationErrors({
-            ...validationErrors,
-            paymentMethod: "",
-          });
-        }}
-        >
-          Płatnośc przy odbiorze <HandCoins size={24} />
         </div>
       </div>
       )}
