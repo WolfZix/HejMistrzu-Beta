@@ -8,7 +8,7 @@ const InPostWidget = () => {
 
     const widget = document.createElement("inpost-geowidget");
 
-    widget.setAttribute("token", process.env.INPOST_GEOWIDGET_TOKEN || "");
+    widget.setAttribute("token", import.meta.env.VITE_INPOST_TOKEN || "");
     widget.setAttribute("config", "parcelCollect");
     widget.setAttribute("language", "pl");
 
