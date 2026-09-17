@@ -6,4 +6,4 @@ export const optionClasses = "min-h-12 sm:min-h-16 rounded-xl border border-bord
 
 export const pickedOptionClasses = "ring-2 ring-primary bg-primary/10 text-primary";
 
-export const buttonClasses = "h-11 text-sm rounded-lg text-primary-foreground focus:ring-2 px-2 transition-all duration-200";
+export const buttonClasses = "h-11 text-sm rounded-lg text-primary-foreground focus:ring-2 px-2 transition-all duration-200 flex items-center justify-center gap-2";
