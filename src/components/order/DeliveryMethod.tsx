@@ -57,20 +57,13 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
           </div>
           {deliveryMethod === "InPost Paczkomat 24/7" && (
             <button
-            className={`${buttonClasses} ${selectedInPostPoint != null ? "bg-lime-500 hover:bg-lime-500/90" : "bg-primary hover:bg-primary/90"}`}
+            className={buttonClasses}
             onClick={(e) => {
               e.stopPropagation();
               setIsInPostOpen(true);
             }}
             >
-              {selectedInPostPoint != null 
-              ? (
-                <>
-                Wybrano punkt odbioru
-                <CircleCheck size={16} />
-                </>
-              ) 
-              : "Wybierz punkt odbioru"}
+              {selectedInPostPoint != null ? selectedInPostPoint.name : "Wybierz punkt odbioru"}
             </button>
           )}
         </div>
@@ -94,20 +87,13 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
           </div>
           {deliveryMethod === "InPost Paczkomat Pobranie" && (
             <button
-            className={`${buttonClasses} ${selectedInPostPoint != null ? "bg-lime-500 hover:bg-lime-500/90" : "bg-primary hover:bg-primary/90"}`}
+            className={buttonClasses}
             onClick={(e) => {
               e.stopPropagation();
               setIsInPostOpen(true);
             }}
             >
-              {selectedInPostPoint != null 
-              ? (
-                <>
-                Wybrano punkt odbioru
-                <CircleCheck size={16} />
-                </>
-              ) 
-              : "Wybierz punkt odbioru"}
+              {selectedInPostPoint != null ? selectedInPostPoint.name : "Wybierz punkt odbioru"}
             </button>
           )}
         </div>
