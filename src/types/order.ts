@@ -31,6 +31,7 @@ export type PaymentMethodType =
   "Karta Kredytowa" |
   "Google Pay" |
   "BLIK" |
+  "Płatność przy odbiorze" |
   null;
 
 export interface Order {

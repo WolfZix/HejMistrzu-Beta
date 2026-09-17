@@ -1,13 +1,14 @@
 import { optionClasses, pickedOptionClasses, logoClasses } from "@/data/order";
-import { CreditCard } from "lucide-react";
+import { CreditCard, HandCoins } from "lucide-react";
 import przelewy24 from "@/assets/przelewy24.png";
 import mastercard from "@/assets/mastercard.webp";
 import visa from "@/assets/visa.webp";
 import googlePay from "@/assets/googlePay.webp";
 import blik from "@/assets/blik.png";
-import { ValidationErrorsType, PaymentMethodType, OrderData } from "@/types/order";
+import { ValidationErrorsType, PaymentMethodType, DeliveryMethodType, OrderData } from "@/types/order";
 
 type PaymentMethodProps = {
+  deliveryMethod: DeliveryMethodType;
   paymentMethod: PaymentMethodType;
   formData: OrderData;
   setFormData: React.Dispatch<React.SetStateAction<OrderData>>;
@@ -15,7 +16,7 @@ type PaymentMethodProps = {
   setValidationErrors: React.Dispatch<React.SetStateAction<ValidationErrorsType>>;
 }
 
-export default function PaymentMethod({ paymentMethod,formData, setFormData, validationErrors, setValidationErrors }: PaymentMethodProps) {
+export default function PaymentMethod({ deliveryMethod, paymentMethod,formData, setFormData, validationErrors, setValidationErrors }: PaymentMethodProps) {
   return (
     <>
       <div className="flex items-center gap-3 border-b border-border pb-4 mb-6">
@@ -26,7 +27,13 @@ export default function PaymentMethod({ paymentMethod,formData, setFormData, val
         </div>
       </div>
 
-      <div className="space-y-3">
+      {deliveryMethod === "InPost Paczkomat Pobranie" || deliveryMethod === "InPost Kurier Pobranie" ? (
+        <div className={optionClasses}>
+          Płatność przy odbiorze
+          <HandCoins size={24} />
+        </div>
+      ) : (
+        <div className="space-y-3">
         {validationErrors.paymentMethod && (
           <p className="text-red-500 text-sm mt-1"> {validationErrors.paymentMethod} </p>
         )}
@@ -94,7 +101,23 @@ export default function PaymentMethod({ paymentMethod,formData, setFormData, val
         >
           BLIK <img className={logoClasses} src={blik} alt="Blik" />
         </div>
+        <div
+        className={optionClasses + " " + (paymentMethod === "Płatność przy odbiorze" ? pickedOptionClasses : "")}
+        onClick={() => {
+          setFormData({
+            ...formData,
+            paymentMethod: "Płatność przy odbiorze",
+          });
+          setValidationErrors({
+            ...validationErrors,
+            paymentMethod: "",
+          });
+        }}
+        >
+          Płatnośc przy odbiorze <HandCoins size={24} />
+        </div>
       </div>
+      )}
     </>
   )
 }

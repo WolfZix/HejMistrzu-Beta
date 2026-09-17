@@ -142,6 +142,7 @@ export default function Order() {
             </section>
             <section className="glass rounded-2xl p-5 md:p-6">
               <PaymentMethod
+              deliveryMethod={formData.deliveryMethod}
               paymentMethod={formData.paymentMethod}
               formData={formData}
               setFormData={setFormData}

@@ -15,7 +15,6 @@ type DeliveryMethodProps = {
 
 export default function DeliveryMethod({ deliveryMethod, formData, setFormData, validationErrors, setValidationErrors }: DeliveryMethodProps) {
   const [isInPostOpen, setIsInPostOpen] = useState(false);
-  const [selectedInPostPoint, setSelectedInPostPoint] = useState<any>(null);
   useEffect(() => {
     isInPostOpen
     ? document.body.style.overflow = "hidden"
@@ -73,10 +72,12 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "InPost Paczkomat Pobranie",
+              paymentMethod: "Płatność przy odbiorze",
             });
             setValidationErrors({
               ...validationErrors,
               deliveryMethod: "",
+              paymentMethod: "",
             });
           }}
         >
@@ -122,10 +123,12 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "InPost Kurier Pobranie",
+              paymentMethod: "Płatność przy odbiorze",
             });
             setValidationErrors({
               ...validationErrors,
               deliveryMethod: "",
+              paymentMethod: "",
             });
           }}
         >
