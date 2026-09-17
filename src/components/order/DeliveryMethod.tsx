@@ -63,7 +63,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
               setIsInPostOpen(true);
             }}
             >
-              {selectedInPostPoint != null ? `Wybrano: ${selectedInPostPoint.name}` : "Wybierz punkt odbioru"}
+              {formData.inPostPoint?.name ? `Wybrano: ${selectedInPostPoint.name}` : "Wybierz punkt odbioru"}
             </button>
           )}
         </div>
@@ -93,7 +93,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
               setIsInPostOpen(true);
             }}
             >
-              {selectedInPostPoint != null ? `Wybrano: ${selectedInPostPoint.name}` : "Wybierz punkt odbioru"}
+              {formData.inPostPoint?.name ? `Wybrano: ${selectedInPostPoint.name}` : "Wybierz punkt odbioru"}
             </button>
           )}
         </div>
