@@ -26,17 +26,8 @@ export default function PaymentMethod({ deliveryMethod, paymentMethod,formData, 
           <p className="text-sm text-muted-foreground mt-1"> Wybierz preferowaną metodę płatności </p>
         </div>
       </div>
-
-      {deliveryMethod === "InPost Paczkomat Pobranie" || deliveryMethod === "InPost Kurier Pobranie" ? (
-        <div className={optionClasses + " " + pickedOptionClasses}>
-          Płatność przy odbiorze
-          <HandCoins size={24} />
-        </div>
-      ) : (
-        <div className="space-y-3">
-        {validationErrors.paymentMethod && (
-          <p className="text-red-500 text-sm mt-1"> {validationErrors.paymentMethod} </p>
-        )}
+      <div className="space-y-3">
+        {validationErrors.paymentMethod && ( <p className="text-red-500 text-sm mt-1"> {validationErrors.paymentMethod} </p> )}
         <div
         className={optionClasses + " " + (paymentMethod === "Przelewy24" ? pickedOptionClasses : "")}
         onClick={() => {
@@ -101,8 +92,24 @@ export default function PaymentMethod({ deliveryMethod, paymentMethod,formData, 
         >
           BLIK <img className={logoClasses} src={blik} alt="Blik" />
         </div>
+        {deliveryMethod !== "InPost Paczkomat 24/7" && deliveryMethod !== "InPost Kurier" && (
+          <div
+          className={optionClasses + " " + (paymentMethod === "Płatność przy odbiorze" ? pickedOptionClasses : "")}
+          onClick={() => {
+            setFormData({
+              ...formData,
+              paymentMethod: "Płatność przy odbiorze",
+            });
+            setValidationErrors({
+              ...validationErrors,
+              paymentMethod: "",
+            });
+          }}
+          >
+            Płatnośc przy odbiorze <HandCoins size={24} />
+          </div>
+        )}
       </div>
-      )}
     </>
   )
 }

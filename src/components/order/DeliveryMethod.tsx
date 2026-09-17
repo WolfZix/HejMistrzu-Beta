@@ -42,7 +42,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
           setFormData({
             ...formData,
             deliveryMethod: "InPost Paczkomat 24/7",
-            paymentMethod: null,
+            paymentMethod: "Przelewy24",
           });
           setValidationErrors({
             ...validationErrors,
@@ -73,12 +73,11 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "InPost Paczkomat Pobranie",
-              paymentMethod: "Płatność przy odbiorze",
+              paymentMethod: "Przelewy24",
             });
             setValidationErrors({
               ...validationErrors,
               deliveryMethod: "",
-              paymentMethod: "",
             });
           }}
         >
@@ -105,12 +104,12 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "InPost Kurier",
-              paymentMethod: null,
+              paymentMethod: "Przelewy24",
+              inPostPoint: null,
             });
             setValidationErrors({
               ...validationErrors,
               deliveryMethod: "",
-              paymentMethod: "",
             });
           }}
         >
@@ -126,12 +125,12 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "InPost Kurier Pobranie",
-              paymentMethod: "Płatność przy odbiorze",
+              paymentMethod: "Przelewy24",
+              inPostPoint: null,
             });
             setValidationErrors({
               ...validationErrors,
               deliveryMethod: "",
-              paymentMethod: "",
             });
           }}
         >
@@ -147,12 +146,12 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "Odbiór Osobisty",
-              paymentMethod: null,
+              paymentMethod: "Przelewy24",
+              inPostPoint: null,
             });
             setValidationErrors({
               ...validationErrors,
               deliveryMethod: "",
-              paymentMethod: "",
             });
           }}
         >

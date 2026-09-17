@@ -21,6 +21,7 @@ export default function Order() {
     postalCode: "",
     deliveryMethod: "",
     paymentMethod: "",
+    inPostPoint: "",
   });
 
   const [formData, setFormData] = useState<OrderData>({
@@ -34,8 +35,8 @@ export default function Order() {
     address: "",
     city: "",
     postalCode: "",
-    deliveryMethod: null,
-    paymentMethod: null,
+    deliveryMethod: "InPost Paczkomat 24/7",
+    paymentMethod: "Przelewy24",
     inPostPoint: null,
   });
 
@@ -66,6 +67,7 @@ export default function Order() {
       postalCode: "",
       deliveryMethod: "",
       paymentMethod: "",
+      inPostPoint: "",
     };
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const postalCodeRegex = /^\d{2}-\d{3}$/;
@@ -82,8 +84,6 @@ export default function Order() {
     if (!formData.city.trim()) errors.city = "Miasto jest wymagane";
     if (!formData.postalCode.trim()) errors.postalCode = "Kod pocztowy jest wymagany";
     if (formData.postalCode.trim() && !postalCodeRegex.test(formData.postalCode.trim())) errors.postalCode = "Nieprawidłowy kod pocztowy";
-    if (!formData.deliveryMethod) errors.deliveryMethod = "Wybierz metodę dostawy";
-    if (!formData.paymentMethod) errors.paymentMethod = "Wybierz metodę płatności";
 
     if (formData.name.trim().length > 50) errors.name = "Imię jest za długie";
     if (formData.surname.trim().length > 50) errors.surname = "Nazwisko jest za długie";

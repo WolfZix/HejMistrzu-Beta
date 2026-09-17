@@ -23,16 +23,14 @@ export type DeliveryMethodType =
   "InPost Kurier" |
   "InPost Paczkomat Pobranie" |
   "InPost Kurier Pobranie" |
-  "Odbiór Osobisty" |
-  null;
+  "Odbiór Osobisty";
 
 export type PaymentMethodType = 
   "Przelewy24" |
   "Karta Kredytowa" |
   "Google Pay" |
   "BLIK" |
-  "Płatność przy odbiorze" |
-  null;
+  "Płatność przy odbiorze";
 
 export interface Order {
   id: number;
@@ -70,6 +68,7 @@ export type ValidationErrorsType = {
   postalCode: string;
   deliveryMethod: string;
   paymentMethod: string;
+  inPostPoint: string;
 }
 
 export interface InPostPoint {
