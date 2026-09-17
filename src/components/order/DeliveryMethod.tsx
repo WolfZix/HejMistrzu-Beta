@@ -15,6 +15,7 @@ type DeliveryMethodProps = {
 
 export default function DeliveryMethod({ deliveryMethod, formData, setFormData, validationErrors, setValidationErrors }: DeliveryMethodProps) {
   const [isInPostOpen, setIsInPostOpen] = useState(false);
+  const [selectedInPostPoint, setSelectedInPostPoint] = useState<any>(null);
   useEffect(() => {
     isInPostOpen
     ? document.body.style.overflow = "hidden"
@@ -155,19 +156,31 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
       </div>
       {isInPostOpen &&
         createPortal(
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="relative w-full max-w-6xl h-[90vh] rounded-2xl bg-background overflow-hidden shadow-2xl">
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={() => setIsInPostOpen(false)}
+          >
+            <div
+              className="relative w-full max-w-6xl h-[90vh] rounded-2xl bg-background overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button
                 onClick={() => setIsInPostOpen(false)}
                 className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-background/90 text-2xl text-foreground shadow-md transition hover:bg-primary hover:text-primary-foreground"
               >
                 x
               </button>
-              <InPostWidget />
+              <InPostWidget
+                onPointSelect={(point) => {
+                  console.log("Punkt odebrany w DeliveryMethod:", point);
+                  setSelectedInPostPoint(point);
+                  setIsInPostOpen(false);
+                }}
+              />
             </div>
           </div>,
-          document.body
-        )}
+        document.body
+      )}
     </>
   )
 }

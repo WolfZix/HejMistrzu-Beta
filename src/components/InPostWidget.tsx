@@ -1,6 +1,10 @@
 import { useEffect, useRef } from "react";
 
-const InPostWidget = () => {
+type InPostWidgetProps = {
+  onPointSelect: (point: any) => void;
+}
+
+const InPostWidget = ({ onPointSelect }: InPostWidgetProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -14,7 +18,9 @@ const InPostWidget = () => {
     widget.setAttribute("onpoint", "onpointselect");
 
     const handlePointSelect = (event: Event) => {
-      console.log("Wybrany Paczkomat:", (event as CustomEvent).detail);
+      const point = (event as CustomEvent).detail;
+      onPointSelect(point);
+      console.log("Paczkomat wybrany z InPostWidget.tsx"); 
     };
     document.addEventListener("onpointselect", handlePointSelect);
 
@@ -24,7 +30,7 @@ const InPostWidget = () => {
       document.removeEventListener("onpointselect", handlePointSelect);
       widget.remove();
     };
-  }, []);
+  }, [onPointSelect]);
 
   return (
     <div ref={containerRef} className="w-full h-full" />
