@@ -20,7 +20,6 @@ const InPostWidget = ({ onPointSelect }: InPostWidgetProps) => {
     const handlePointSelect = (event: Event) => {
       const point = (event as CustomEvent).detail;
       onPointSelect(point);
-      console.log("Paczkomat wybrany z InPostWidget.tsx"); 
     };
     document.addEventListener("onpointselect", handlePointSelect);
 

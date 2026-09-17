@@ -1,5 +1,5 @@
 import { optionClasses, buttonClasses, pickedOptionClasses } from "@/data/order";
-import { CircleCheck, Package, Truck, User } from "lucide-react";
+import { Package, Truck, User } from "lucide-react";
 import { ValidationErrorsType, DeliveryMethodType, OrderData } from "@/types/order";
 import { useState, useEffect } from "react";
 import InPostWidget from "@/components/InPostWidget";
@@ -63,7 +63,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
               setIsInPostOpen(true);
             }}
             >
-              {selectedInPostPoint != null ? selectedInPostPoint.name : "Wybierz punkt odbioru"}
+              {selectedInPostPoint != null ? `Wybrano: ${selectedInPostPoint.name}` : "Wybierz punkt odbioru"}
             </button>
           )}
         </div>
@@ -93,7 +93,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
               setIsInPostOpen(true);
             }}
             >
-              {selectedInPostPoint != null ? selectedInPostPoint.name : "Wybierz punkt odbioru"}
+              {selectedInPostPoint != null ? `Wybrano: ${selectedInPostPoint.name}` : "Wybierz punkt odbioru"}
             </button>
           )}
         </div>
@@ -172,8 +172,15 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
               </button>
               <InPostWidget
                 onPointSelect={(point) => {
-                  console.log("Punkt odebrany w DeliveryMethod:", point);
-                  setSelectedInPostPoint(point);
+                  setFormData({
+                    ...formData,
+                    inPostPoint: {
+                      name: point.name,
+                      address: point.address.line1,
+                      city: point.address_details.city,
+                      postalCode: point.address_details.post_code,
+                    },
+                  });
                   setIsInPostOpen(false);
                 }}
               />

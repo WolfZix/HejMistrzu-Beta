@@ -36,6 +36,7 @@ export default function Order() {
     postalCode: "",
     deliveryMethod: null,
     paymentMethod: null,
+    inPostPoint: null,
   });
 
   const deliveryPrice =
@@ -99,8 +100,7 @@ export default function Order() {
     setValidationErrors(errors);
 
     if (hasErrors) return;
-
-    console.log("Origin: Order.tsx | Line 103 \nForm submitted successfully:", formData);
+    console.log(formData);
   }
 
   return (

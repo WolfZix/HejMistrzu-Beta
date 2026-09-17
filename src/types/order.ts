@@ -55,6 +55,7 @@ export interface OrderData {
   postalCode: string;
   deliveryMethod: DeliveryMethodType;
   paymentMethod: PaymentMethodType;
+  inPostPoint: InPostPoint | null;
 }
 
 export type ValidationErrorsType = {
@@ -68,4 +69,11 @@ export type ValidationErrorsType = {
   postalCode: string;
   deliveryMethod: string;
   paymentMethod: string;
+}
+
+export interface InPostPoint {
+  name: string;
+  address: string;
+  city: string;
+  postalCode: string;
 }
