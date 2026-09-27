@@ -13,6 +13,7 @@ const reservationsRouter = require("./routes/reservations");
 const eventRegistrationsRouter = require("./routes/eventRegistrations");
 const eventParticipantsRouter = require("./routes/eventParticipants");
 const woocommerceWebhookRouter = require("./routes/webhooks/woocommerce");
+const orderRouter = require("./routes/order");
 
 app.use(cors());
 app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
@@ -28,6 +29,7 @@ app.use("/reservations", reservationsRouter);
 app.use("/eventRegistrations", eventRegistrationsRouter);
 app.use("/eventParticipants", eventParticipantsRouter);
 app.use("/webhooks/woocommerce", woocommerceWebhookRouter);
+app.use("/order", orderRouter);
 
 app.listen(3000, () => {
   console.log("Server działa na porcie 3000");
