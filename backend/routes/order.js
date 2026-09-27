@@ -48,7 +48,6 @@ const validateOrder = (name, surname, email, phone, country, address, city, post
   };
 
 router.post("/", (req, res) => {
-  console.log("POST /order - nowy request")
   const {
     name,
     surname,
@@ -78,7 +77,6 @@ router.post("/", (req, res) => {
     inPostPoint,
     items
   );
-  console.log("Produkty:",items);
   if (!isValid) {
     return res.status(400).json({
       message: "Nieprawidłowe dane zamówienia"

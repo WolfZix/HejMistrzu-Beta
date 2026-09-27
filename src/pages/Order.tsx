@@ -101,6 +101,9 @@ const handleSubmit = async () => {
   if (hasErrors) return;
 
   try {
+    console.log("Produkty:",items);
+    console.log("Dane zamówienia:", {...formData, items});
+    
     const response = await fetch(`${import.meta.env.VITE_API_URL}/order`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
