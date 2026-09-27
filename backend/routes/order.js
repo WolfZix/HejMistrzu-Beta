@@ -187,6 +187,7 @@ router.post("/", async (req, res) => {
           item.quantity
         ]
       );
+      await pool.query(`UPDATE products SET stock_quantity = stock_quantity - $1 WHERE id = $2;`, [item.quantity,product.id]);
     }
     await pool.query("COMMIT");
     console.log("Utworzono zamówienie:", order.rows[0]);
