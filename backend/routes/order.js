@@ -87,13 +87,14 @@ router.post("/", async (req, res) => {
     inPostPoint,
     items
   );
-
+  
   if (!isValid) {
     return res.status(400).json({
       message: "Nieprawidłowe dane zamówienia"
     });
   }
-
+  
+  const shippingPrice = deliveryPrice(deliveryMethod);
   let subtotal = 0;
 
   for (const item of items) {
@@ -116,13 +117,48 @@ router.post("/", async (req, res) => {
     if (product.rows[0].stock_quantity < item.quantity) return res.status(400).json({
       message: "Niewystarczająca ilość produktu na stanie magazynowym sklepu"
     });
-    console.log("Produkty z bazy:", product.rows[0]);
     subtotal += Number(product.rows[0].price) * item.quantity;
   }
-  const shippingPrice = deliveryPrice(deliveryMethod);
-  const total = subtotal + deliveryPrice(deliveryMethod);
-  console.log(`Total: ${subtotal} + ${shippingPrice} = ${total}`);
+  const total = subtotal + shippingPrice;
+  const inPostPointName = inPostPoint === null ? null : inPostPoint.name;
+  const inPostPointAddress = inPostPoint === null ? null : inPostPoint.address;
+  const inPostPointCity = inPostPoint === null ? null : inPostPoint.city;
+  const inPostPointPostalCode = inPostPoint === null ? null : inPostPoint.postalCode;
 
+  const order = await pool.query(
+  `
+    INSERT INTO orders (
+      customer_name,
+      customer_surname,
+      email,
+      phone,
+      country,
+      address,
+      city,
+      postal_code,
+      delivery_method,
+      payment_method,
+      inpost_point_name,
+      inpost_point_address,
+      inpost_point_city,
+      inpost_point_postal_code,
+      subtotal,
+      shipping_price,
+      total
+    )
+    VALUES (
+      $1, $2, $3, $4, $5, $6, $7, $8, $9,
+      $10, $11, $12, $13, $14, $15, $16, $17
+    )
+    RETURNING id
+  `,
+  [
+    name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, 
+    inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total
+  ]
+);
+
+  console.log("Utworzono zamówienie:", order.rows[0]);
   res.status(201).json({
     message: "Zamówienie otrzymane",
   });
