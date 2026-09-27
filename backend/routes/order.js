@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const validateOrder = (name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPoint) => {
+const validateOrder = (name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPoint, items) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const postalCodeRegex = /^\d{2}-\d{3}$/;
     const phoneRegex = /^\d{3} \d{3} \d{3}$/;
@@ -74,7 +74,8 @@ router.post("/", (req, res) => {
     postalCode,
     deliveryMethod,
     paymentMethod,
-    inPostPoint
+    inPostPoint,
+    items
   );
   console.log("Produkty:",items);
   if (!isValid) {
