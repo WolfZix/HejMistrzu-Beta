@@ -94,14 +94,23 @@ export default function Order() {
     return errors;
   };
 
-  const handleSubmit = () => {
-    const errors = validateFormData();
-    const hasErrors = Object.values(errors).some((error) => error !== "");
-    setValidationErrors(errors);
+const handleSubmit = async () => {
+  const errors = validateFormData();
+  const hasErrors = Object.values(errors).some((error) => error !== "");
 
-    if (hasErrors) return;
-    console.log(formData);
-  }
+  setValidationErrors(errors);
+  if (hasErrors) return;
+
+  try {
+    const response = await fetch("https://serwer.hejmistrzu.pl/orders", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(formData),
+    });
+    const data = await response.json();
+    console.log(data);
+  } catch (error) { console.error(error) }
+};
 
   return (
     <div className="pt-20 pb-24">
