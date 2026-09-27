@@ -188,6 +188,7 @@ router.post("/", async (req, res) => {
         ]
       );
     }
+    throw new Error("TEST ROLLBACK");
     await pool.query("COMMIT");
     console.log("Utworzono zamówienie:", order.rows[0]);
     res.status(201).json({
