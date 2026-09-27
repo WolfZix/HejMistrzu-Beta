@@ -45,6 +45,7 @@ const validateOrder = (name, surname, email, phone, country, address, city, post
     if (country.length > 100) return false;
     if (address.length > 150) return false;
     if (city.length > 100) return false;
+    if (items.length === 0) return false;
     return true;
   };
 
@@ -70,7 +71,9 @@ router.post("/", async (req, res) => {
       "SELECT id, woocommerce_id, name, price, stock_quantity, stock_status FROM products WHERE woocommerce_id = $1",
       [item.id]
     );
-    if (product.rows.length === 0) return console.log(`Produkt ${item.id} nie istnieje w bazie danych`);
+    if (product.rows.length === 0) return res.status(400).json({
+      message: `Produkt ${item.id} nie istnieje w bazie danych`
+    });
     console.log("Produkty z bazy:", product.rows[0]);
   }
   
