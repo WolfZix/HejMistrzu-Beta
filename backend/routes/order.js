@@ -2,6 +2,14 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
 
+const deliveryPrice = (deliveryMethod) => {
+  return deliveryMethod === "InPost Paczkomat 24/7" ? 16.99
+  : deliveryMethod === "InPost Paczkomat Pobranie" ? 20.66
+  : deliveryMethod === "InPost Kurier" ? 19.99
+  : deliveryMethod === "InPost Kurier Pobranie" ? 27.07
+  : deliveryMethod === "Odbiór Osobisty" ? 0 : null
+}
+
 const validateOrder = (name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPoint, items) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const postalCodeRegex = /^\d{2}-\d{3}$/;
@@ -79,9 +87,15 @@ router.post("/", async (req, res) => {
     inPostPoint,
     items
   );
+
+  if (!isValid) {
+    return res.status(400).json({
+      message: "Nieprawidłowe dane zamówienia"
+    });
+  }
+
   let subtotal = 0;
 
-  console.log("Produkty:", items);
   for (const item of items) {
     const product = await pool.query(
       "SELECT id, woocommerce_id, name, price, stock_quantity, stock_status FROM products WHERE woocommerce_id = $1",
@@ -105,18 +119,12 @@ router.post("/", async (req, res) => {
     console.log("Produkty z bazy:", product.rows[0]);
     subtotal += Number(product.rows[0].price) * item.quantity;
   }
+  const total = subtotal + deliveryPrice(deliveryMethod);
+  console.log(`Total: ${subtotal} + ${deliveryPrice} = ${total}`);
 
-  console.log(`Subtotal: ${subtotal}`);
-
-  if (!isValid) {
-    return res.status(400).json({
-      message: "Nieprawidłowe dane zamówienia"
-    });
-  } else {
-    res.status(201).json({
-      message: "Zamówienie otrzymane",
-    });
-  }
+  res.status(201).json({
+    message: "Zamówienie otrzymane",
+  });
 });
 
 module.exports = router;
