@@ -96,6 +96,7 @@ router.post("/", async (req, res) => {
   
   const shippingPrice = deliveryPrice(deliveryMethod);
   let subtotal = 0;
+  const products = [];
 
   for (const item of items) {
     const product = await pool.query(
@@ -117,6 +118,10 @@ router.post("/", async (req, res) => {
     if (product.rows[0].stock_quantity < item.quantity) return res.status(400).json({
       message: "Niewystarczająca ilość produktu na stanie magazynowym sklepu"
     });
+    products.push({
+      item,
+      product: product.rows[0]
+    });
     subtotal += Number(product.rows[0].price) * item.quantity;
   }
   const total = subtotal + shippingPrice;
@@ -125,42 +130,62 @@ router.post("/", async (req, res) => {
   const inPostPointCity = inPostPoint === null ? null : inPostPoint.city;
   const inPostPointPostalCode = inPostPoint === null ? null : inPostPoint.postalCode;
 
-  const dbUser = await pool.query("SELECT current_user, current_database()");
-  console.log("Backend DB:", dbUser.rows[0]);
-
   const order = await pool.query(
-  `
-    INSERT INTO orders (
-      customer_name,
-      customer_surname,
-      email,
-      phone,
-      country,
-      address,
-      city,
-      postal_code,
-      delivery_method,
-      payment_method,
-      inpost_point_name,
-      inpost_point_address,
-      inpost_point_city,
-      inpost_point_postal_code,
-      subtotal,
-      shipping_price,
-      total
-    )
-    VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9,
-      $10, $11, $12, $13, $14, $15, $16, $17
-    )
-    RETURNING id
-  `,
-  [
-    name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, 
-    inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total
-  ]
-);
-
+    `
+      INSERT INTO orders (
+        customer_name,
+        customer_surname,
+        email,
+        phone,
+        country,
+        address,
+        city,
+        postal_code,
+        delivery_method,
+        payment_method,
+        inpost_point_name,
+        inpost_point_address,
+        inpost_point_city,
+        inpost_point_postal_code,
+        subtotal,
+        shipping_price,
+        total
+      )
+      VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9,
+        $10, $11, $12, $13, $14, $15, $16, $17
+      )
+      RETURNING id
+    `,
+    [
+      name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, 
+      inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total
+    ]
+  );
+  for (const { item, product } of products) {
+  const orderItem = await pool.query(
+    `
+      INSERT INTO order_items (
+        order_id,
+        product_id,
+        woocommerce_id,
+        product_name,
+        price,
+        quantity
+      )
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id
+    `,
+    [
+      order.rows[0].id,
+      product.id,
+      product.woocommerce_id,
+      product.name,
+      product.price,
+      item.quantity
+    ]
+  );
+}
   console.log("Utworzono zamówienie:", order.rows[0]);
   res.status(201).json({
     message: "Zamówienie otrzymane",
