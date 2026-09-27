@@ -45,7 +45,7 @@ const validateOrder = (name, surname, email, phone, country, address, city, post
     if (country.length > 100) return false;
     if (address.length > 150) return false;
     if (city.length > 100) return false;
-    if (items.length === 0) return false;
+    if (!Array.isArray(items) || items.length === 0) return false;
     return true;
   };
 
@@ -64,18 +64,6 @@ router.post("/", async (req, res) => {
     inPostPoint,
     items,
   } = req.body;
-
-  console.log("Produkty:", items);
-  for (const item of items) {
-    const product = await pool.query(
-      "SELECT id, woocommerce_id, name, price, stock_quantity, stock_status FROM products WHERE woocommerce_id = $1",
-      [item.id]
-    );
-    if (product.rows.length === 0) return res.status(400).json({
-      message: `Produkt ${item.id} nie istnieje w bazie danych`
-    });
-    console.log("Produkty z bazy:", product.rows[0]);
-  }
   
   const isValid = validateOrder(
     name,
@@ -91,6 +79,35 @@ router.post("/", async (req, res) => {
     inPostPoint,
     items
   );
+  let subtotal = 0;
+
+  console.log("Produkty:", items);
+  for (const item of items) {
+    const product = await pool.query(
+      "SELECT id, woocommerce_id, name, price, stock_quantity, stock_status FROM products WHERE woocommerce_id = $1",
+      [item.id]
+    );
+    if (product.rows.length === 0) return res.status(400).json({
+      message: `Produkt ${item.id} nie istnieje w bazie danych`
+    });
+    if (
+      typeof item.quantity !== "number" ||
+      !Number.isInteger(item.quantity) ||
+      item.quantity <= 0
+    ) {
+      return res.status(400).json({
+        message: "Nieprawidłowa ilość produktu"
+      });
+    }
+    if (product.rows[0].stock_quantity < item.quantity) return res.status(400).json({
+      message: "Niewystarczająca ilość produktu na stanie magazynowym sklepu"
+    });
+    console.log("Produkty z bazy:", product.rows[0]);
+    subtotal += Number(product.rows[0].price) * item.quantity;
+  }
+
+  console.log(`Subtotal: ${subtotal}`);
+
   if (!isValid) {
     return res.status(400).json({
       message: "Nieprawidłowe dane zamówienia"
