@@ -119,8 +119,9 @@ router.post("/", async (req, res) => {
     console.log("Produkty z bazy:", product.rows[0]);
     subtotal += Number(product.rows[0].price) * item.quantity;
   }
+  const shippingPrice = deliveryPrice(deliveryMethod);
   const total = subtotal + deliveryPrice(deliveryMethod);
-  console.log(`Total: ${subtotal} + ${deliveryPrice} = ${total}`);
+  console.log(`Total: ${subtotal} + ${shippingPrice} = ${total}`);
 
   res.status(201).json({
     message: "Zamówienie otrzymane",
