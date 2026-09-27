@@ -60,6 +60,7 @@ router.post("/", (req, res) => {
     deliveryMethod,
     paymentMethod,
     inPostPoint,
+    items,
   } = req.body;
   
   const isValid = validateOrder(
@@ -75,6 +76,7 @@ router.post("/", (req, res) => {
     paymentMethod,
     inPostPoint
   );
+  console.log("Produkty:",items);
   if (!isValid) {
     return res.status(400).json({
       message: "Nieprawidłowe dane zamówienia"

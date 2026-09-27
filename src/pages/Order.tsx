@@ -9,7 +9,6 @@ import type { OrderData } from "@/types/order";
 
 export default function Order() {
   const { items, totalPrice } = useCart();
-
   const [validationErrors, setValidationErrors] = useState({
     name: "",
     surname: "",
@@ -105,7 +104,10 @@ const handleSubmit = async () => {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/order`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(formData),
+      body: JSON.stringify(({
+        ...formData,
+        items,
+      })),
     });
     const data = await response.json();
     console.log(data);
