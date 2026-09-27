@@ -102,7 +102,7 @@ const handleSubmit = async () => {
   if (hasErrors) return;
 
   try {
-    const response = await fetch("https://serwer.hejmistrzu.pl/orders", {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/orders`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(formData),
