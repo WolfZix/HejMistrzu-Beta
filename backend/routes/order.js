@@ -84,6 +84,7 @@ router.post("/", (req, res) => {
   } else {
     res.status(201).json({
       message: "Zamówienie otrzymane",
+      items,
     });
   }
 });
