@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const pool = require("../config/db");
 
 const validateOrder = (name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPoint, items) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,7 +48,7 @@ const validateOrder = (name, surname, email, phone, country, address, city, post
     return true;
   };
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const {
     name,
     surname,
@@ -62,6 +63,15 @@ router.post("/", (req, res) => {
     inPostPoint,
     items,
   } = req.body;
+
+  console.log("Produkty:", items);
+
+  const result = await pool.query(
+    "SELECT id, woocommerce_id, name, price, stock_quantity, stock_status FROM products WHERE woocommerce_id = $1",
+    [items[0].id]
+  );
+
+  console.log("Produkt z bazy:", result.rows);
   
   const isValid = validateOrder(
     name,
@@ -84,7 +94,6 @@ router.post("/", (req, res) => {
   } else {
     res.status(201).json({
       message: "Zamówienie otrzymane",
-      items,
     });
   }
 });
