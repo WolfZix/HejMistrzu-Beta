@@ -125,6 +125,9 @@ router.post("/", async (req, res) => {
   const inPostPointCity = inPostPoint === null ? null : inPostPoint.city;
   const inPostPointPostalCode = inPostPoint === null ? null : inPostPoint.postalCode;
 
+  const dbUser = await pool.query("SELECT current_user, current_database()");
+  console.log("Backend DB:", dbUser.rows[0]);
+
   const order = await pool.query(
   `
     INSERT INTO orders (
