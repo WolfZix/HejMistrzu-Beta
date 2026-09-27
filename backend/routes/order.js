@@ -65,13 +65,14 @@ router.post("/", async (req, res) => {
   } = req.body;
 
   console.log("Produkty:", items);
-
-  const result = await pool.query(
-    "SELECT id, woocommerce_id, name, price, stock_quantity, stock_status FROM products WHERE woocommerce_id = $1",
-    [items[0].id]
-  );
-
-  console.log("Produkt z bazy:", result.rows);
+  for (const item of items) {
+    const product = await pool.query(
+      "SELECT id, woocommerce_id, name, price, stock_quantity, stock_status FROM products WHERE woocommerce_id = $1",
+      [item.id]
+    );
+    if (product.rows.length === 0) return console.log(`Produkt ${item.id} nie istnieje w bazie danych`);
+    console.log("Produkty z bazy:", product.rows[0]);
+  }
   
   const isValid = validateOrder(
     name,
