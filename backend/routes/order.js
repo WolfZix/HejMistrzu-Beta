@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-
 const validateOrder = (name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPoint) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const postalCodeRegex = /^\d{2}-\d{3}$/;
@@ -80,10 +79,11 @@ router.post("/", (req, res) => {
     return res.status(400).json({
       message: "Nieprawidłowe dane zamówienia"
     });
+  } else {
+    res.status(201).json({
+      message: "Zamówienie otrzymane",
+    });
   }
-  res.status(201).json({
-    message: "Zamówienie otrzymane",
-  });
 });
 
 module.exports = router;
