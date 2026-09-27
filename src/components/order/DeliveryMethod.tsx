@@ -42,7 +42,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
           setFormData({
             ...formData,
             deliveryMethod: "InPost Paczkomat 24/7",
-            paymentMethod: "Przelewy24",
+            paymentMethod: formData.paymentMethod === "Płatność przy odbiorze" ? "Przelewy24" : formData.paymentMethod,
           });
           setValidationErrors({
             ...validationErrors,
@@ -73,7 +73,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "InPost Paczkomat Pobranie",
-              paymentMethod: "Przelewy24",
+              paymentMethod: formData.paymentMethod,
             });
             setValidationErrors({
               ...validationErrors,
@@ -104,7 +104,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "InPost Kurier",
-              paymentMethod: "Przelewy24",
+              paymentMethod: formData.paymentMethod === "Płatność przy odbiorze" ? "Przelewy24" : formData.paymentMethod,
               inPostPoint: null,
             });
             setValidationErrors({
@@ -125,7 +125,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "InPost Kurier Pobranie",
-              paymentMethod: "Przelewy24",
+              paymentMethod: formData.paymentMethod,
               inPostPoint: null,
             });
             setValidationErrors({
@@ -146,7 +146,7 @@ export default function DeliveryMethod({ deliveryMethod, formData, setFormData, 
             setFormData({
               ...formData,
               deliveryMethod: "Odbiór Osobisty",
-              paymentMethod: "Przelewy24",
+              paymentMethod: formData.paymentMethod,
               inPostPoint: null,
             });
             setValidationErrors({
