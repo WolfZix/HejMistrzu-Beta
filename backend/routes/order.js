@@ -48,6 +48,7 @@ const validateOrder = (name, surname, email, phone, country, address, city, post
   };
 
 router.post("/", (req, res) => {
+  console.log("POST /order - nowy request")
   const {
     name,
     surname,
