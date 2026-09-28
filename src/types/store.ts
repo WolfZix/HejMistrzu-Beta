@@ -23,6 +23,14 @@ export interface StoreProduct {
   description: string;
 }
 
+export interface StoreProductVariation {
+  id: number;
+  name: string;
+  price: number;
+  stock: number;
+  inStock: boolean;
+}
+
 export interface ProductQuickViewProps {
   product: StoreProduct | null;
   open: boolean;

@@ -88,7 +88,15 @@ router.get("/:id/variations", async (req, res) => {
       [id]
     );
 
-    res.json(result.rows);
+    res.json(
+      result.rows.map((variation) => ({
+        id: variation.woocommerce_id,
+        name: variation.name,
+        price: Number(variation.price),
+        stock: variation.stock_quantity ?? 0,
+        inStock: variation.stock_status === "instock",
+      }))
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({
