@@ -18,6 +18,7 @@ export interface StoreProduct {
   badge?: BadgeKind;
   inStock: boolean;
   stock: number;
+  hasVariations: boolean;
   rating?: number | null;
   description: string;
 }

@@ -52,6 +52,7 @@ router.get("/", async (_req, res) => {
       image: product.images?.[0]?.src || "",
       inStock: product.stock_status === "instock",
       stock: product.stock_quantity ?? 0,
+      hasVariations: product.type === "variable",
       description: product.short_description || "",
     }));
     res.json(products);
