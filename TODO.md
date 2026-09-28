@@ -22,3 +22,4 @@ Sklep:
 
 - Powiedzieć im, żeby naprawili nazwy wariantów tak, aby nie zawierały nazwy produktu głównego
 - Ujednolicić opisy produktów
+- Naprawić kategorie
