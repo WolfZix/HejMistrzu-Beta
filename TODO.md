@@ -14,9 +14,13 @@ Dashboard:
 - najpopularniejsze produkty
 - laczna liczba zamowien
 
+---
+
 Backend:
 
 - Płatności
+
+---
 
 Sklep:
 

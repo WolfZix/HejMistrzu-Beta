@@ -130,14 +130,9 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                           ${
                             selectedVariation?.id === variation.id
                               ? "border-primary bg-primary/10 text-primary"
-                              : selectedVariation?.stock !== 0 
+                              : variation.stock !== 0 
                                 ? "border-border hover:border-primary/50"
-                                : "border-border"
-                          }
-                          ${
-                            !variation.inStock
-                              ? "opacity-50 cursor-not-allowed"
-                              : ""
+                                : "opacity-50 cursor-not-allowed"
                           }
                         `}
                       >
