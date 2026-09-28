@@ -91,6 +91,10 @@ export default function Store() {
 
   const handleAddToCart = (product: StoreProduct, event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+    if (product.hasVariations) {
+      setSelectedProduct(product);
+      return;
+    }
     addItem(product);
     setNotified((prev) => ({ ...prev, [product.id]: true }));
     window.setTimeout(() => setNotified((prev) => ({ ...prev, [product.id]: false })), 1500);
