@@ -29,9 +29,28 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
   if (!product) return null;
 
   const handleAddToCart = () => {
-    for (let index = 0; index < qty; index += 1) {
-      addItem(product);
+    if (product.hasVariations) {
+      if (!selectedVariation) return;
+
+      for (let index = 0; index < qty; index += 1) {
+        addItem({
+          id: selectedVariation.id,
+          productId: product.id,
+          variationId: selectedVariation.id,
+          name: selectedVariation.name,
+          price: selectedVariation.price,
+          image: product.image,
+        });
+      }
+    } else {
+      for (let index = 0; index < qty; index += 1) {
+        addItem({
+          ...product,
+          productId: product.id,
+        });
+      }
     }
+
     setQty(1);
     onClose(false);
   };
@@ -166,7 +185,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                 <span className="text-muted-foreground line-through">{product.regularPrice * qty} zł</span>
                 )}
               </div>
-              {product.inStock ? (
+              {(product.inStock && product.stock !== 0) ? (
                 <>
                   <div className="flex items-center gap-1 mb-2">
                     <Check className="w-3.5 h-3.5 text-green-400" />
@@ -192,12 +211,13 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                     </div>
                     <Button
                       className={`
-                        flex-1 font-heading tracking-wider text-xs font-semibold ${selectedVariation 
-                        ? "bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
-                        : "bg-muted text-muted-foreground hover:bg-muted/90 cursor-not-allowed"}
+                        flex-1 font-heading tracking-wider text-xs font-semibold ${
+                        !product.hasVariations || selectedVariation 
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
+                          : "bg-muted text-muted-foreground hover:bg-muted/90 cursor-not-allowed"}
                       `}
                       onClick={handleAddToCart}
-                      disabled={!selectedVariation}
+                      disabled={product.hasVariations && !selectedVariation}
                     >
                       {selectedVariation ? (
                         <>
@@ -213,10 +233,15 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                     </Button>
                   </div>
                 </>
-              ) : (
+              ) : (product.inStock && product.stock === 0) ? (
                 <div className="flex items-center gap-2 text-muted-foreground text-sm py-3">
                   <Package className="w-4 h-4" />
                   <span>Produkt niedostępny</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 text-muted-foreground text-sm py-3">
+                  <Package className="w-4 h-4" />
+                  <span>Produkt niedostępny - Premiera w którce</span>
                 </div>
               )}
               <div className="flex items-center gap-4 pt-4 text-muted-foreground text-xs">

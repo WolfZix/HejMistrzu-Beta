@@ -2,15 +2,26 @@ import React, { createContext, ReactNode } from "react";
 
 interface CartItem {
   id: string | number;
+  productId: number;
+  variationId?: number;
   name: string;
   price: number;
   quantity: number;
   image?: string;
 }
 
+interface AddItemData {
+  id: string | number;
+  productId: number;
+  variationId?: number;
+  name: string;
+  price: number;
+  image?: string;
+}
+
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Omit<CartItem, "quantity">) => void;
+  addItem: (product: AddItemData) => void;
   removeItem: (id: string | number) => void;
   updateQuantity: (id: string | number, qty: number) => void;
   clearCart: () => void;
@@ -49,12 +60,13 @@ export function CartProvider({ children }: CartProviderProps) {
     saveCart(items);
   }, [items]);
 
-  const addItem = (product: Omit<CartItem, "quantity">) => {
+  const addItem = (product: AddItemData) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.id === product.id);
+      const existing = prev.find((item) => item.productId === product.productId && item.variationId === product.variationId);
       if (existing) {
-        return prev.map((i) =>
-          i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
+        return prev.map((item) => item.productId === product.productId && item.variationId === product.variationId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
         );
       }
       return [...prev, { ...product, quantity: 1 }];

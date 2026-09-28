@@ -95,7 +95,10 @@ export default function Store() {
       setSelectedProduct(product);
       return;
     }
-    addItem(product);
+    addItem({
+      ...product,
+      productId: product.id,
+    });
     setNotified((prev) => ({ ...prev, [product.id]: true }));
     window.setTimeout(() => setNotified((prev) => ({ ...prev, [product.id]: false })), 1500);
   };
