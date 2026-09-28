@@ -140,9 +140,9 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                       >
                         {variation.name}<br />
                         {variation.inStock ? (
-                          <div className="flex items-center gap-1 mb-2">
+                          <div className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-green-400" />
-                            <span className="text-xs text-green-400">Dostępny {variation.stock}</span>
+                            <span className="text-xs text-green-400">Dostępny ({variation.stock})</span>
                           </div>
                         ) : (
                           <div className="flex items-center gap-2 text-muted-foreground text-sm py-3">
