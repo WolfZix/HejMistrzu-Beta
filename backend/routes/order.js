@@ -100,13 +100,51 @@ router.post("/", async (req, res) => {
   const products = [];
 
   for (const item of items) {
-    const product = await pool.query(
-      "SELECT id, woocommerce_id, name, price, stock_quantity, stock_status FROM products WHERE woocommerce_id = $1",
+    let product;
+
+  if (item.variationId) {
+    product = await pool.query(
+      `
+        SELECT
+          pv.id,
+          pv.woocommerce_id,
+          pv.product_id,
+          pv.name,
+          pv.price,
+          pv.stock_quantity,
+          pv.stock_status
+        FROM product_variations pv
+        WHERE pv.woocommerce_id = $1
+      `,
+      [item.variationId]
+    );
+  } else {
+    product = await pool.query(
+      `
+        SELECT
+          id,
+          woocommerce_id,
+          id AS product_id,
+          name,
+          price,
+          stock_quantity,
+          stock_status
+        FROM products
+        WHERE woocommerce_id = $1
+      `,
       [item.id]
     );
-    if (product.rows.length === 0) return res.status(400).json({
-      message: `Produkt ${item.id} nie istnieje w bazie danych`
+  }
+
+  if (product.rows.length === 0) {
+    return res.status(400).json({
+      message: `${
+        item.variationId
+          ? `Wariant ${item.variationId}`
+          : `Produkt ${item.id}`
+      } nie istnieje w bazie danych`
     });
+  }
     if (
       typeof item.quantity !== "number" ||
       !Number.isInteger(item.quantity) ||
@@ -175,24 +213,44 @@ router.post("/", async (req, res) => {
           INSERT INTO order_items (
             order_id,
             product_id,
+            variation_id,
             woocommerce_id,
             product_name,
             price,
             quantity
           )
-          VALUES ($1, $2, $3, $4, $5, $6)
+          VALUES ($1, $2, $3, $4, $5, $6, $7)
           RETURNING id
         `,
         [
           order.rows[0].id,
-          product.id,
+          item.variationId ? product.product_id : product.id,
+          item.variationId ? product.id : null,
           product.woocommerce_id,
           product.name,
           product.price,
           item.quantity
         ]
       );
-      await pool.query(`UPDATE products SET stock_quantity = stock_quantity - $1 WHERE id = $2;`, [item.quantity,product.id]);
+      if (item.variationId) {
+        await pool.query(
+          `
+            UPDATE product_variations
+            SET stock_quantity = stock_quantity - $1
+            WHERE id = $2
+          `,
+          [item.quantity, product.id]
+        );
+      } else {
+        await pool.query(
+          `
+            UPDATE products
+            SET stock_quantity = stock_quantity - $1
+            WHERE id = $2
+          `,
+          [item.quantity, product.id]
+        );
+      }
     }
     await pool.query("COMMIT");
     res.status(201).json({

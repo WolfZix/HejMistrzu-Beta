@@ -1,3 +1,7 @@
+Admin Panel:
+
+- Dodać możliwość dodawania wariantów do produktu
+
 Dashboard:
 
 - SEKCJA WYDARZEN:
