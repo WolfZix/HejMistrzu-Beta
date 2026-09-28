@@ -161,12 +161,12 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="font-heading text-2xl font-bold text-gold-gradient">
                   {product.hasVariations 
-                    ? (selectedVariation ? (`${selectedVariation.price} zł`) : ("Wybierz wariant")) 
-                    : (`${product.onSale ? product.salePrice : product.price} zł`)
+                    ? (selectedVariation ? (`${selectedVariation.price * qty} zł`) : ("Wybierz wariant")) 
+                    : (`${product.onSale ? (product.salePrice !== null ? product.salePrice * qty : "") : product.price * qty} zł`)
                   }
                 </span>
                 {product.regularPrice && product.onSale && (
-                <span className="text-muted-foreground line-through">{product.regularPrice} zł</span>
+                <span className="text-muted-foreground line-through">{product.regularPrice * qty} zł</span>
                 )}
               </div>
               {product.inStock ? (
