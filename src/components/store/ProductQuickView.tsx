@@ -161,7 +161,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="font-heading text-2xl font-bold text-gold-gradient">
                   {product.hasVariations 
-                    ? (selectedVariation ? (`${selectedVariation.price * qty} zł`) : ("Wybierz wariant")) 
+                    ? (selectedVariation ? (`${selectedVariation.price * qty} zł`) : product.inStock ? ("Wybierz wariant") : "") 
                     : (`${product.onSale ? (product.salePrice !== null ? product.salePrice * qty : "") : product.price * qty} zł`)
                   }
                 </span>
@@ -219,18 +219,22 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
               ) : (
                 <div className="flex items-center gap-2 text-muted-foreground text-sm py-3">
                   <Package className="w-4 h-4" />
-                  <span>Niedostępny — data premiery wkrótce</span>
+                  <span>Produkt niedostępny</span>
                 </div>
               )}
               <div className="flex items-center gap-4 pt-4 text-muted-foreground text-xs">
-                <div className="flex items-center gap-1.5">
-                  <Truck className="w-3.5 h-3.5" />
-                  Darmowa dostawa od 299zł
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  Gwarancja jakości
-                </div>
+                {product.inStock && (
+                  <>
+                    <div className="flex items-center gap-1.5">
+                      <Truck className="w-3.5 h-3.5" />
+                      Darmowa dostawa od 299zł
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      Gwarancja jakości
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
