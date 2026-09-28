@@ -128,7 +128,7 @@ router.post("/", async (req, res) => {
   const total = subtotal + shippingPrice;
   const expiresAt = paymentMethod === "Płatność przy odbiorze" ? null : new Date(Date.now() + 15 * 60 * 1000);
   const sessionId = uuidv4();
-  
+
   const inPostPointName = inPostPoint === null ? null : inPostPoint.name;
   const inPostPointAddress = inPostPoint === null ? null : inPostPoint.address;
   const inPostPointCity = inPostPoint === null ? null : inPostPoint.city;
@@ -156,18 +156,17 @@ router.post("/", async (req, res) => {
           subtotal,
           shipping_price,
           total,
-          expires_at
+          expires_at,
+          payment_session_id
         )
         VALUES (
           $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-          $11, $12, $13, $14, $15, $16, $17, $18
+          $11, $12, $13, $14, $15, $16, $17, $18, $19
         )
         RETURNING id
       `,
       [
-        name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, 
-        inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total,
-        expiresAt
+        name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total, expiresAt, sessionId
       ]
     );
     for (const { item, product } of products) {
@@ -198,6 +197,7 @@ router.post("/", async (req, res) => {
     await pool.query("COMMIT");
     res.status(201).json({
       message: `Zamówienie #${order.rows[0].id} otrzymane`,
+      sessionId,
     });
   } catch (error) {
     await pool.query("ROLLBACK");
