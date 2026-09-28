@@ -151,17 +151,19 @@ router.post("/", async (req, res) => {
           inpost_point_postal_code,
           subtotal,
           shipping_price,
-          total
+          total,
+          expires_at
         )
         VALUES (
-          $1, $2, $3, $4, $5, $6, $7, $8, $9,
-          $10, $11, $12, $13, $14, $15, $16, $17
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+          $11, $12, $13, $14, $15, $16, $17, $18
         )
         RETURNING id
       `,
       [
         name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, 
-        inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total
+        inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total,
+        new Date(Date.now() + 15 * 60 * 1000)
       ]
     );
     for (const { item, product } of products) {
