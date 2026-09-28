@@ -190,11 +190,25 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                       </button>
                     </div>
                     <Button
-                      className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 font-heading tracking-wider text-xs font-semibold"
+                      className={`
+                        flex-1 font-heading tracking-wider text-xs font-semibold ${selectedVariation 
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
+                        : "bg-muted text-muted-foreground hover:bg-muted/90 cursor-not-allowed"}
+                      `}
                       onClick={handleAddToCart}
+                      disabled={!selectedVariation}
                     >
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      Dodaj do koszyka
+                      {selectedVariation ? (
+                        <>
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        <span>Dodaj do koszyka</span>
+                        </>
+                      ) : (
+                        <>
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        <span>Wybierz wariant</span>
+                        </>
+                      )}
                     </Button>
                   </div>
                 </>
