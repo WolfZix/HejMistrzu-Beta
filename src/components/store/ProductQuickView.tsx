@@ -13,6 +13,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
 
   useEffect(() => {
     setSelectedVariation(null);
+    setQty(1);
     if (!open || !product?.hasVariations) {
       setVariations([]);
       return;
@@ -29,6 +30,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
   if (!product) return null;
   
   const hasAvailableVariation = variations.some((variation) => variation.stock > 0);
+  const maxQty = product.hasVariations ? selectedVariation?.stock ?? 1 : product.stock;
 
   const handleAddToCart = () => {
     if (product.hasVariations) {
@@ -144,7 +146,10 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                       <button
                         key={variation.id}
                         type="button"
-                        onClick={() => setSelectedVariation(variation)}
+                        onClick={() => {
+                          setSelectedVariation(variation);
+                          setQty(1);
+                        }}
                         disabled={variation.stock === 0}
                         className={`
                           px-3 py-2 rounded-lg border text-sm transition-colors
@@ -212,7 +217,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                       </span>
 
                       <button
-                        onClick={() => setQty((current) => current + 1)}
+                        onClick={() => setQty((current) => Math.min(maxQty, current + 1))}
                         className="p-2.5 hover:bg-muted/30 transition-colors"
                       >
                         <Plus className="w-4 h-4" />
