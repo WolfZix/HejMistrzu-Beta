@@ -125,6 +125,7 @@ router.post("/", async (req, res) => {
     subtotal += Number(product.rows[0].price) * item.quantity;
   }
   const total = subtotal + shippingPrice;
+  const expiresAt = paymentMethod === "Płatność przy odbiorze" ? null : new Date(Date.now() + 15 * 60 * 1000);
   const inPostPointName = inPostPoint === null ? null : inPostPoint.name;
   const inPostPointAddress = inPostPoint === null ? null : inPostPoint.address;
   const inPostPointCity = inPostPoint === null ? null : inPostPoint.city;
