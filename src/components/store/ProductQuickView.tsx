@@ -27,6 +27,8 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
   }, [open, product]);
 
   if (!product) return null;
+  
+  const hasAvailableVariation = variations.some((variation) => variation.stock > 0);
 
   const handleAddToCart = () => {
     if (product.hasVariations) {
@@ -185,12 +187,17 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                 <span className="text-muted-foreground line-through">{product.regularPrice * qty} zł</span>
                 )}
               </div>
-              {(product.inStock && product.stock !== 0) ? (
+              {(product.hasVariations ? hasAvailableVariation : product.inStock && product.stock !== 0)
+              ? (
                 <>
                   <div className="flex items-center gap-1 mb-2">
                     <Check className="w-3.5 h-3.5 text-green-400" />
-                    <span className="text-xs text-green-400">Dostępny {!product.hasVariations && `(${product.stock})`}</span>
+                    <span className="text-xs text-green-400">
+                      Dostępny{" "}
+                      {!product.hasVariations && `(${product.stock})`}
+                    </span>
                   </div>
+
                   <div className="flex items-center gap-3">
                     <div className="flex items-center border border-border rounded-lg">
                       <button
@@ -199,9 +206,11 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                       >
                         <Minus className="w-4 h-4" />
                       </button>
+
                       <span className="w-10 text-center text-sm font-medium">
                         {qty}
                       </span>
+
                       <button
                         onClick={() => setQty((current) => current + 1)}
                         className="p-2.5 hover:bg-muted/30 transition-colors"
@@ -209,31 +218,38 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
+
                     <Button
                       className={`
                         flex-1 font-heading tracking-wider text-xs font-semibold ${
-                        !product.hasVariations || selectedVariation 
-                          ? "bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
-                          : "bg-muted text-muted-foreground hover:bg-muted/90 cursor-not-allowed"}
+                          !product.hasVariations || selectedVariation
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
+                            : "bg-muted text-muted-foreground hover:bg-muted/90 cursor-not-allowed"
+                        }
                       `}
                       onClick={handleAddToCart}
                       disabled={product.hasVariations && !selectedVariation}
                     >
-                      {selectedVariation ? (
+                      {product.hasVariations && !selectedVariation ? (
                         <>
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        <span>Dodaj do koszyka</span>
+                          <ShoppingCart className="w-4 h-4 mr-2" />
+                          <span>Wybierz wariant</span>
                         </>
                       ) : (
                         <>
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        <span>Wybierz wariant</span>
+                          <ShoppingCart className="w-4 h-4 mr-2" />
+                          <span>Dodaj do koszyka</span>
                         </>
                       )}
                     </Button>
                   </div>
                 </>
-              ) : (product.inStock && product.stock === 0) ? (
+              ) : product.hasVariations ? (
+                <div className="flex items-center gap-2 text-muted-foreground text-sm py-3">
+                  <Package className="w-4 h-4" />
+                  <span>Produkt niedostępny</span>
+                </div>
+              ) : product.inStock && product.stock === 0 ? (
                 <div className="flex items-center gap-2 text-muted-foreground text-sm py-3">
                   <Package className="w-4 h-4" />
                   <span>Produkt niedostępny</span>
@@ -241,7 +257,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
               ) : (
                 <div className="flex items-center gap-2 text-muted-foreground text-sm py-3">
                   <Package className="w-4 h-4" />
-                  <span>Produkt niedostępny - Premiera w którce</span>
+                  <span>Produkt niedostępny - Premiera wkrótce</span>
                 </div>
               )}
               <div className="flex items-center gap-4 pt-4 text-muted-foreground text-xs">
