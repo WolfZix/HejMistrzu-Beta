@@ -14,10 +14,12 @@ const eventRegistrationsRouter = require("./routes/eventRegistrations");
 const eventParticipantsRouter = require("./routes/eventParticipants");
 const woocommerceWebhookRouter = require("./routes/webhooks/woocommerce");
 const orderRouter = require("./routes/order");
+const expireOrders = require("./jobs/expireOrders");
 
 app.use(cors());
 app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+setInterval(expireOrders, 60*1000);
 
 app.use("/products", productsRouter);
 app.use("/categories", categoriesRouter);
