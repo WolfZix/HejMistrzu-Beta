@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, Minus, Package, Plus, ShieldCheck, ShoppingCart, Tag, Truck, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart } from "@/context/CartContext";
-import type { ProductQuickViewProps } from "@/types/store";
+import type { ProductQuickViewProps, StoreProductVariation } from "@/types/store";
 
 export function ProductQuickView({ product, open, onClose }: ProductQuickViewProps) {
   const { addItem } = useCart();
   const [qty, setQty] = useState(1);
+  const [variations, setVariations] = useState<StoreProductVariation[]>([]);
+
+  useEffect(() => {
+    if (!open || !product?.hasVariations) {
+      setVariations([]);
+      return;
+    }
+    const productId = product.id;
+    async function fetchVariations() {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/products/${productId}/variations`);
+      const data: StoreProductVariation[] = await response.json();
+      setVariations(data);
+    }
+    fetchVariations();
+  }, [open, product]);
 
   if (!product) return null;
 
