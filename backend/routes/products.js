@@ -1,6 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
 const express = require("express");
+const pool = require("../config/db");
 const router = express.Router();
 const verifyToken = require("../middleware/verifyToken");
 const requireAdmin = require("../middleware/requireAdmin");
@@ -61,6 +62,38 @@ router.get("/", async (_req, res) => {
     res.status(500).json({
       success: false,
       message: "Nie udało się pobrać produktów",
+    });
+  }
+});
+
+router.get("/:id/variations", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      `
+        SELECT
+          woocommerce_id,
+          name,
+          price,
+          stock_quantity,
+          stock_status
+        FROM product_variations
+        WHERE product_id = (
+          SELECT id
+          FROM products
+          WHERE woocommerce_id = $1
+        )
+        ORDER BY woocommerce_id
+      `,
+      [id]
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Nie udało się pobrać wariantów produktu",
     });
   }
 });
