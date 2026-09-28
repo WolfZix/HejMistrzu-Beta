@@ -5,29 +5,6 @@ import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } fr
 import { useCart } from "@/context/CartContext";
 import type { ProductQuickViewProps, StoreProductVariation } from "@/types/store";
 
-const getVariationDisplayName = (
-  productName: string,
-  variationName: string
-) => {
-  const productWords = productName.split(" ");
-  const variationWords = variationName.split(" ");
-
-  let commonWords = 0;
-
-  while (
-    commonWords < productWords.length &&
-    commonWords < variationWords.length &&
-    productWords[commonWords].toLowerCase() ===
-      variationWords[commonWords].toLowerCase()
-  ) {
-    commonWords++;
-  }
-
-  const difference = variationWords.slice(commonWords).join(" ");
-
-  return difference || variationName;
-};
-
 export function ProductQuickView({ product, open, onClose }: ProductQuickViewProps) {
   const { addItem } = useCart();
   const [qty, setQty] = useState(1);
@@ -147,7 +124,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                         key={variation.id}
                         type="button"
                         onClick={() => setSelectedVariation(variation)}
-                        disabled={!variation.inStock}
+                        disabled={variation.stock === 0}
                         className={`
                           px-3 py-2 rounded-lg border text-sm transition-colors
                           ${
@@ -162,8 +139,8 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                           }
                         `}
                       >
-                        {getVariationDisplayName(product.name, variation.name)}<br />
-                        {variation.inStock ? (
+                        {variation.name}<br />
+                        {variation.stock > 0 ? (
                           <div className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-green-400" />
                             <span className="text-xs text-green-400">Dostępny ({variation.stock})</span>
