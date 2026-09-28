@@ -37,7 +37,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl h-[90vh] p-0 gap-0 bg-card border-border rounded-2xl overflow-y-auto lg:overflow-hidden">
+      <DialogContent className="max-w-6xl h-[90vh] p-0 gap-0 bg-card border-border rounded-2xl overflow-y-auto">
         <DialogClose className="
         absolute
         top-4
@@ -145,9 +145,9 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                             <span className="text-xs text-green-400">Dostępny ({variation.stock})</span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2 text-muted-foreground text-sm py-3">
-                            <Package className="w-4 h-4" />
-                            <span>Niedostępny</span>
+                          <div className="flex items-center gap-1">
+                            <Package className="w-3.5 h-3.5" />
+                            <span className="text-xs">Niedostępny</span>
                           </div>
                         )}
                       </button>
@@ -159,7 +159,10 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
             <div className="shrink-0 pt-4 border-t border-border mt-4">
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="font-heading text-2xl font-bold text-gold-gradient">
-                  {product.onSale ? product.salePrice : product.price} zł
+                  {product.hasVariations 
+                    ? (selectedVariation ? (`${selectedVariation.price} zł`) : ("Wybierz wariant")) 
+                    : (`${product.onSale ? product.salePrice : product.price} zł`)
+                  }
                 </span>
                 {product.regularPrice && product.onSale && (
                 <span className="text-muted-foreground line-through">{product.regularPrice} zł</span>
