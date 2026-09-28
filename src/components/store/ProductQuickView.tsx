@@ -5,6 +5,29 @@ import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } fr
 import { useCart } from "@/context/CartContext";
 import type { ProductQuickViewProps, StoreProductVariation } from "@/types/store";
 
+const getVariationDisplayName = (
+  productName: string,
+  variationName: string
+) => {
+  const productWords = productName.split(" ");
+  const variationWords = variationName.split(" ");
+
+  let commonWords = 0;
+
+  while (
+    commonWords < productWords.length &&
+    commonWords < variationWords.length &&
+    productWords[commonWords].toLowerCase() ===
+      variationWords[commonWords].toLowerCase()
+  ) {
+    commonWords++;
+  }
+
+  const difference = variationWords.slice(commonWords).join(" ");
+
+  return difference || variationName;
+};
+
 export function ProductQuickView({ product, open, onClose }: ProductQuickViewProps) {
   const { addItem } = useCart();
   const [qty, setQty] = useState(1);
@@ -12,6 +35,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
   const [selectedVariation, setSelectedVariation] = useState<StoreProductVariation | null>(null);
 
   useEffect(() => {
+    setSelectedVariation(null);
     if (!open || !product?.hasVariations) {
       setVariations([]);
       return;
@@ -138,7 +162,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                           }
                         `}
                       >
-                        {variation.name}<br />
+                        {getVariationDisplayName(product.name, variation.name)}<br />
                         {variation.inStock ? (
                           <div className="flex items-center gap-1">
                             <Check className="w-3.5 h-3.5 text-green-400" />
