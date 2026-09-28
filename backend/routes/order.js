@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
+const { v4: uuidv4 } = require("uuid");
 
 const deliveryPrice = (deliveryMethod) => {
   return deliveryMethod === "InPost Paczkomat 24/7" ? 16.99
@@ -126,6 +127,8 @@ router.post("/", async (req, res) => {
   }
   const total = subtotal + shippingPrice;
   const expiresAt = paymentMethod === "Płatność przy odbiorze" ? null : new Date(Date.now() + 15 * 60 * 1000);
+  const sessionId = uuidv4();
+  
   const inPostPointName = inPostPoint === null ? null : inPostPoint.name;
   const inPostPointAddress = inPostPoint === null ? null : inPostPoint.address;
   const inPostPointCity = inPostPoint === null ? null : inPostPoint.city;
@@ -164,7 +167,7 @@ router.post("/", async (req, res) => {
       [
         name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, 
         inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total,
-        new Date(Date.now() + 15 * 60 * 1000)
+        expiresAt
       ]
     );
     for (const { item, product } of products) {
@@ -193,9 +196,8 @@ router.post("/", async (req, res) => {
       await pool.query(`UPDATE products SET stock_quantity = stock_quantity - $1 WHERE id = $2;`, [item.quantity,product.id]);
     }
     await pool.query("COMMIT");
-    console.log("Utworzono zamówienie:", order.rows[0]);
     res.status(201).json({
-      message: "Zamówienie otrzymane",
+      message: `Zamówienie #${order.rows[0].id} otrzymane`,
     });
   } catch (error) {
     await pool.query("ROLLBACK");
