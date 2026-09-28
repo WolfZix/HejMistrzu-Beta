@@ -9,6 +9,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
   const { addItem } = useCart();
   const [qty, setQty] = useState(1);
   const [variations, setVariations] = useState<StoreProductVariation[]>([]);
+  const [selectedVariation, setSelectedVariation] = useState<StoreProductVariation | null>(null);
 
   useEffect(() => {
     if (!open || !product?.hasVariations) {
@@ -110,6 +111,39 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                 "
                 dangerouslySetInnerHTML={{ __html: product.description }}
               />
+              {product.hasVariations && variations.length > 0 && (
+                <div className="mt-6">
+                  <p className="text-sm font-medium mb-3">
+                    Wybierz wariant:
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {variations.map((variation) => (
+                      <button
+                        key={variation.id}
+                        type="button"
+                        onClick={() => setSelectedVariation(variation)}
+                        disabled={!variation.inStock}
+                        className={`
+                          px-3 py-2 rounded-lg border text-sm transition-colors
+                          ${
+                            selectedVariation?.id === variation.id
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-border hover:border-primary/50"
+                          }
+                          ${
+                            !variation.inStock
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }
+                        `}
+                      >
+                        {variation.name}({variation.stock})
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             <div className="shrink-0 pt-4 border-t border-border mt-4">
               <div className="flex items-baseline gap-2 mb-4">
