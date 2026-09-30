@@ -55,7 +55,7 @@ export default function AddVariationModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onMouseDown={closeModal}
+          onMouseDown={(e) => { e.target === e.currentTarget ? closeModal() : "" }}
           className="
             fixed inset-0 z-[60]
             flex items-center justify-center

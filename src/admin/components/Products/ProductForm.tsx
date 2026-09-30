@@ -121,7 +121,7 @@ export default function ProductForm({
               }
             />
           </div>
-          <div className="col-span-3 flex justify-between gap-4">
+          <div className="col-span-3 grid grid-cols-3 gap-4">
             <FormToggle
               label="Preorder"
               value={formData.preorder}
