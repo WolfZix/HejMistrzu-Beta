@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import ProductForm from "./ProductForm";
+import ProductPreview from "./ProductPreview";
 import type { ProductFormData } from "@/types/store";
 
 type AddProductModalProps = {
@@ -17,6 +18,19 @@ export default function AddProductModal({
   formData,
   setFormData,
 }: AddProductModalProps) {
+  const [previewImage, setPreviewImage] = useState<string>();
+
+  useEffect(() => {
+  if (!formData.image) {
+    setPreviewImage(undefined);
+    return;
+  }
+  const objectUrl = URL.createObjectURL(formData.image);
+  setPreviewImage(objectUrl);
+  return () => {
+    URL.revokeObjectURL(objectUrl);
+  };
+}, [formData.image]);
 
   useEffect(() => {
     document.body.style.overflow = isOpen
@@ -29,15 +43,16 @@ export default function AddProductModal({
   }, [isOpen]);
 
   function closeModal() {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       name: "",
       category: "",
       stock: "",
       description: "",
       price: "",
       salePrice: "",
-    })
+      image: null,
+    }));
 
     onClose();
   }
@@ -55,17 +70,7 @@ export default function AddProductModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onMouseDown={closeModal}
-          className="
-            fixed
-            inset-0
-            z-50
-            flex
-            items-center
-            justify-center
-            bg-black/60
-            backdrop-blur-sm
-            p-4
-          "
+          className="fixed inset-0 z-50 flex items-center justify-center gap-40 bg-black/60 backdrop-blur-sm p-4"
         >
           <motion.div
             initial={{
@@ -90,16 +95,9 @@ export default function AddProductModal({
               e.stopPropagation()
             }
             className="
-              w-full
-              max-w-7xl
-              relative
-              rounded-xl
-              border
-              border-primary/30
-              bg-card
-              px-6
-              pb-6
-              pt-10
+              w-full max-w-2xl relative rounded-xl
+              border border-primary/30 bg-card
+              px-6 pb-6 pt-10
               shadow-[0_0_15px_1px_hsl(43,50%,10%)]
             "
           >
@@ -138,6 +136,10 @@ export default function AddProductModal({
               closeModal={closeModal}
             />
           </motion.div>
+          <ProductPreview
+            formData={formData}
+            imageSrc={previewImage}
+          />
         </motion.div>
       )}
     </AnimatePresence>

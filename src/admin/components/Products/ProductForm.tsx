@@ -109,6 +109,12 @@ export default function ProductForm({
             <FormFileInput
               label="Zdjęcie"
               required
+              onChange={(file) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  image: file,
+                }))
+              }
             />
           </div>
           <div className="col-span-3 flex justify-between gap-4">

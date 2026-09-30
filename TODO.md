@@ -1,3 +1,10 @@
+Backend:
+
+- Płatności
+- Obsługa zamówień
+
+---
+
 Admin Panel:
 
 - Dodać możliwość dodawania wariantów do produktu
@@ -20,15 +27,10 @@ Dashboard:
 
 ---
 
-Backend:
-
-- Płatności
-
----
-
 Sklep:
 
 - Powiedzieć im, żeby naprawili nazwy wariantów tak, aby nie zawierały nazwy produktu głównego
 - Ujednolicić opisy produktów
 - Naprawić kategorie
 - Jeśli ktoś jest na stronie zamówienia to po usunięciu wszystkiego z koszyka przeniosło go automatycznie na stronę sklepu
+- Galeria zdjęć w produktach i wariantach

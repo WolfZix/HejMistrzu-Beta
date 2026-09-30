@@ -66,4 +66,5 @@ export type ProductFormData = {
   description: string;
   price: string;
   salePrice: string;
-}
+  image: File | null;
+};
