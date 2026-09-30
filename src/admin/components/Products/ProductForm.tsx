@@ -36,7 +36,6 @@ export default function ProductForm({
   handleSubmit,
   closeModal,
 }: ProductFormProps) {
-  const [subcategory, setSubcategory] = useState("");
 
   return (
     <form
@@ -75,8 +74,13 @@ export default function ProductForm({
           <FormSelect
             label="Podkategoria"
             containerClassname="w-full"
-            value={subcategory}
-            onChange={setSubcategory}
+            value={formData.subcategory}
+            onChange={(value) =>
+              setFormData((prev) => ({
+                ...prev,
+                subcategory: value,
+              }))
+            }
             options={subcategories.map(subcategory => ({
               value: subcategory,
               label: subcategory,

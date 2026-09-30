@@ -97,7 +97,7 @@ export default function ProductPreview({
         </div>
 
         {/* PRODUCT INFO */}
-        <div className="flex flex-col p-6">
+        <div className="flex min-h-0 flex-col p-6">
           {/* CATEGORY */}
           <div className="mb-3">
             <span
@@ -144,7 +144,7 @@ export default function ProductPreview({
           {/* FUTURE VARIANTS */}
           {/* Tutaj później pojawi się sekcja wariantów */}
 
-          <div className="mt-auto">
+          <div>
             {/* SEPARATOR */}
             <div className="mb-4 mt-6 border-t border-primary/10" />
 

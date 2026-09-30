@@ -47,6 +47,7 @@ export default function AddProductModal({
       ...prev,
       name: "",
       category: "",
+      subcategory: "",
       stock: "",
       description: "",
       price: "",
