@@ -42,7 +42,7 @@ export default function ProductPreview({
         shadow-[0_0_15px_1px_hsl(43,50%,10%)]
       "
     >
-      <div className="grid grid-cols-2 min-h-[560px]">
+      <div className="grid h-[560px] grid-cols-2">
         {/* IMAGE */}
         <div className="relative flex items-center justify-center bg-background/30">
           {imageSrc ? (
@@ -128,18 +128,18 @@ export default function ProductPreview({
           </h3>
 
           {/* DESCRIPTION */}
-          <p
-            className="
-              mt-4
-              line-clamp-7
-              text-sm
-              leading-relaxed
-              text-muted-foreground
-              [overflow-wrap:anywhere]
-            "
-          >
-            {description}
-          </p>
+          <div className="mt-4 min-h-0 flex-1 overflow-y-auto pr-2">
+            <p
+              className="
+                text-sm
+                leading-relaxed
+                text-muted-foreground
+                [overflow-wrap:anywhere]
+              "
+            >
+              {description}
+            </p>
+          </div>
 
           {/* FUTURE VARIANTS */}
           {/* Tutaj później pojawi się sekcja wariantów */}
