@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Trash2, Pencil, Plus, AlertTriangle } from "lucide-react";
 import AdminTable from "../components/AdminTable";
-import { StoreProduct } from "@/types/store";
+import { StoreProduct, ProductFormData } from "@/types/store";
 import PageLoader from "@/pages/PageLoader";
 import AddProductModal from "../components/Products/AddProductModal";
 import EditProductModal from "../components/Products/EditProductModal";
@@ -86,14 +86,20 @@ export default function Products() {
     },
   ];
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     category: "",
+    subcategory: "",
     stock: "",
     description: "",
     price: "",
     salePrice: "",
-  })
+    image: null,
+    preorder: false,
+    onSale: false,
+    visible: true,
+    variations: [],
+  });
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/products`)

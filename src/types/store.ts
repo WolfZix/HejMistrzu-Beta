@@ -29,6 +29,7 @@ export interface StoreProductVariation {
   price: number;
   stock: number;
   inStock: boolean;
+  image: string | null;
 }
 
 export interface ProductQuickViewProps {
@@ -71,4 +72,13 @@ export type ProductFormData = {
   preorder: boolean;
   onSale: boolean;
   visible: boolean;
+  variations: ProductVariationFormData[];
+};
+
+export type ProductVariationFormData = {
+  name: string;
+  price: string;
+  salePrice: string;
+  stock: string;
+  image: File | null;
 };

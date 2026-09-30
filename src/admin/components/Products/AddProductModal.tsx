@@ -3,7 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import ProductForm from "./ProductForm";
 import ProductPreview from "./ProductPreview";
-import type { ProductFormData } from "@/types/store";
+import AddVariationModal from "./AddVariationModal";
+import type { ProductFormData, ProductVariationFormData } from "@/types/store";
 
 type AddProductModalProps = {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export default function AddProductModal({
   setFormData,
 }: AddProductModalProps) {
   const [previewImage, setPreviewImage] = useState<string>();
+  const [isVariationOpen, setIsVariationOpen] = useState(false);
 
   useEffect(() => {
   if (!formData.image) {
@@ -41,6 +43,17 @@ export default function AddProductModal({
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+
+  function handleAddVariation(
+    variation: ProductVariationFormData
+  ) {
+    setFormData((prev) => ({
+      ...prev,
+      variations: [...prev.variations, variation],
+    }));
+
+    setIsVariationOpen(false);
+  }
 
   function closeModal() {
     setFormData((prev) => ({
@@ -115,11 +128,17 @@ export default function AddProductModal({
               setFormData={setFormData}
               handleSubmit={handleSubmit}
               closeModal={closeModal}
+              onAddVariation={() => setIsVariationOpen(true)}
             />
           </motion.div>
           <ProductPreview
             formData={formData}
             imageSrc={previewImage}
+          />
+          <AddVariationModal
+            isOpen={isVariationOpen}
+            onClose={() => setIsVariationOpen(false)}
+            onAdd={handleAddVariation}
           />
         </motion.div>
       )}

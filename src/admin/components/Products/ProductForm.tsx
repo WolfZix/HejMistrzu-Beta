@@ -11,6 +11,7 @@ type ProductFormProps = {
   setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
   handleSubmit: (e: React.FormEvent) => void;
   closeModal: () => void;
+  onAddVariation: () => void;
 };
 
 const categories = [
@@ -35,6 +36,7 @@ export default function ProductForm({
   setFormData,
   handleSubmit,
   closeModal,
+  onAddVariation,
 }: ProductFormProps) {
 
   return (
