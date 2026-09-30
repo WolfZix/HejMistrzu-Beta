@@ -5,6 +5,7 @@ import FormToggle from "@/components/Forms/FormToggle";
 import FormSelect from "@/components/Forms/FormSelect";
 import FormFileInput from "@/components/Forms/FormFileInput";
 import type { ProductFormData } from "@/types/store";
+import { Plus, X } from "lucide-react";
 
 type ProductFormProps = {
   formData: ProductFormData;
@@ -194,6 +195,88 @@ export default function ProductForm({
             placeholder="9999"
             required
           />
+      </div>
+
+      {/* VARIATIONS */}
+      <div className="mt-6 border-t border-primary/10 pt-5">
+        <div className="mb-3 flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-medium">
+              Warianty produktu
+            </h3>
+
+            <p className="text-xs text-muted-foreground">
+              Opcjonalne warianty z własną ceną, stanem i zdjęciem.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onAddVariation}
+            className="
+              flex items-center gap-2
+              rounded-lg
+              border border-primary/30
+              px-3 py-2
+              text-sm
+              text-primary
+              hover:bg-primary/10
+              transition-colors
+            "
+          >
+            <Plus size={16} />
+            Dodaj wariant
+          </button>
+        </div>
+
+        {formData.variations.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {formData.variations.map((variation, index) => (
+              <div
+                key={index}
+                className="
+                  flex items-center gap-2
+                  rounded-full
+                  border border-primary/30
+                  bg-primary/10
+                  px-3 py-1.5
+                  text-sm
+                "
+              >
+                <span>{variation.name}</span>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      variations: prev.variations.filter(
+                        (_, variationIndex) => variationIndex !== index
+                      ),
+                    }));
+                  }}
+                  className="
+                    rounded-full
+                    p-0.5
+                    text-muted-foreground
+                    hover:bg-destructive/10
+                    hover:text-destructive
+                    transition-colors
+                  "
+                  aria-label={`Usuń wariant ${variation.name}`}
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {formData.variations.length === 0 && (
+          <p className="text-sm text-muted-foreground">
+            Brak wariantów.
+          </p>
+        )}
       </div>
 
       {/* BUTTONS */}
