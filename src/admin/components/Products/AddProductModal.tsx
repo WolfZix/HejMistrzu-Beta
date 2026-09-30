@@ -55,19 +55,25 @@ export default function AddProductModal({
     setIsVariationOpen(false);
   }
 
-  function closeModal() {
-    setFormData((prev) => ({
-      ...prev,
-      name: "",
-      category: "",
-      subcategory: "",
-      stock: "",
-      description: "",
-      price: "",
-      salePrice: "",
-      image: null,
-    }));
+  function resetForm() {
+  setFormData({
+    name: "",
+    category: "",
+    subcategory: "",
+    stock: "",
+    description: "",
+    price: "",
+    salePrice: "",
+    image: null,
+    preorder: false,
+    onSale: false,
+    visible: true,
+    variations: [],
+  });
+}
 
+  function closeModal() {
+    resetForm();
     onClose();
   }
 

@@ -10,6 +10,20 @@ import TableFilters from "../components/TableFilters";
 import DeleteModal from "../components/DeleteModal";
 
 const PRODUCTS_PER_PAGE = 6;
+const initialProductFormData: ProductFormData = {
+  name: "",
+  category: "",
+  subcategory: "",
+  stock: "",
+  description: "",
+  price: "",
+  salePrice: "",
+  image: null,
+  preorder: false,
+  onSale: false,
+  visible: true,
+  variations: [],
+};
 
 export default function Products() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
@@ -86,20 +100,7 @@ export default function Products() {
     },
   ];
 
-  const [formData, setFormData] = useState<ProductFormData>({
-    name: "",
-    category: "",
-    subcategory: "",
-    stock: "",
-    description: "",
-    price: "",
-    salePrice: "",
-    image: null,
-    preorder: false,
-    onSale: false,
-    visible: true,
-    variations: [],
-  });
+  const [formData, setFormData] = useState<ProductFormData>(initialProductFormData);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/products`)
@@ -388,7 +389,10 @@ export default function Products() {
         formData={formData}
         setFormData={setFormData}
         isOpen={isAddOpen}
-        onClose={() => setIsAddOpen(false)}
+        onClose={() => {
+          setFormData(initialProductFormData);
+          setIsAddOpen(false);
+        }}
       />
     )}
     {isEditOpen && (
