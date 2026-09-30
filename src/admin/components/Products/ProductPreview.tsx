@@ -48,7 +48,7 @@ export default function ProductPreview({
           </span>
         </div>
 
-        <h3 className="font-heading text-xl font-semibold">
+        <h3 className="font-heading line-clamp-4 max-w-sm text-xl font-semibold">
           {productName}
         </h3>
 
@@ -67,7 +67,7 @@ export default function ProductPreview({
           </span>
         </div>
 
-        <p className="mt-4 line-clamp-4 text-sm text-muted-foreground">
+        <p className="mt-4 line-clamp-4 max-w-sm text-sm text-muted-foreground">
           {description}
         </p>
 

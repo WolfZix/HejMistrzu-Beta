@@ -85,17 +85,11 @@ export default function AddProductModal({
               opacity: 0,
               scale: 0.5,
             }}
-            transition={{
-              duration: 0.2,
-            }}
-            onClick={(e) =>
-              e.stopPropagation()
-            }
-            onMouseDown={(e) =>
-              e.stopPropagation()
-            }
+            transition={{ duration: 0.2 }}
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
             className="
-              w-full max-w-2xl relative rounded-xl
+              w-full max-w-4xl relative rounded-xl
               border border-primary/30 bg-card
               px-6 pb-6 pt-10
               shadow-[0_0_15px_1px_hsl(43,50%,10%)]
@@ -104,27 +98,13 @@ export default function AddProductModal({
             <button
               type="button"
               onClick={closeModal}
-              className="
-                absolute
-                top-3
-                right-3
-                p-2
-                rounded-lg
-                hover:bg-muted/30
-              "
+              className="absolute top-3 right-3 p-2 rounded-lg hover:bg-muted/30"
             >
               <X size={18} />
             </button>
 
             <div className="mb-4">
-              <h2
-                className="
-                  font-heading
-                  text-center
-                  text-2xl
-                  font-semibold
-                "
-              >
+              <h2 className="font-heading text-center text-2xl font-semibold">
                 Dodaj produkt
               </h2>
             </div>
