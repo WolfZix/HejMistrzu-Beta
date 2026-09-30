@@ -37,9 +37,6 @@ export default function ProductForm({
   closeModal,
 }: ProductFormProps) {
   const [subcategory, setSubcategory] = useState("");
-  const [preorder, setPreorder] = useState(false);
-  const [onSale, setOnSale] = useState(false);
-  const [visible, setVisible] = useState(true);
 
   return (
     <form
@@ -120,20 +117,35 @@ export default function ProductForm({
           <div className="col-span-3 flex justify-between gap-4">
             <FormToggle
               label="Preorder"
-              value={preorder}
-              onChange={setPreorder}
+              value={formData.preorder}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  preorder: value,
+                }))
+              }
             />
 
             <FormToggle
               label="Promocja"
-              value={onSale}
-              onChange={setOnSale}
+              value={formData.onSale}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  onSale: value,
+                }))
+              }
             />
 
             <FormToggle
               label="Widoczny"
-              value={visible}
-              onChange={setVisible}
+              value={formData.visible}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  visible: value,
+                }))
+              }
             />
           </div>
         </div>

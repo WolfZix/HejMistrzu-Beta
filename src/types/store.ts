@@ -67,4 +67,7 @@ export type ProductFormData = {
   price: string;
   salePrice: string;
   image: File | null;
+  preorder: boolean;
+  onSale: boolean;
+  visible: boolean;
 };

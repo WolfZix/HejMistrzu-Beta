@@ -34,3 +34,4 @@ Sklep:
 - Naprawić kategorie
 - Jeśli ktoś jest na stronie zamówienia to po usunięciu wszystkiego z koszyka przeniosło go automatycznie na stronę sklepu
 - Galeria zdjęć w produktach i wariantach
+- Zrobić badge preorder
