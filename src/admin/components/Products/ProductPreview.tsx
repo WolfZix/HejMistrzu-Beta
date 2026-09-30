@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Tag, Clock3, Package } from "lucide-react";
 import type { ProductFormData } from "@/types/store";
 
@@ -10,13 +11,17 @@ export default function ProductPreview({
   formData,
   imageSrc,
 }: ProductPreviewProps) {
+  const [selectedVariationIndex, setSelectedVariationIndex] = useState<number | null>(null);
+  const [variationImageSrc, setVariationImageSrc] = useState<string>();
+  
   const productName = formData.name || "Nowy produkt";
-
-  const description =
-    formData.description || "Tutaj pojawi się opis produktu.";
-
-  const price = Number(formData.price);
-  const salePrice = Number(formData.salePrice);
+  const description = formData.description || "Tutaj pojawi się opis produktu.";
+  const selectedVariation = selectedVariationIndex !== null ? formData.variations[selectedVariationIndex] : null;
+  const price = Number(selectedVariation?.price ?? formData.price);
+  const salePrice = Number(selectedVariation?.salePrice ?? formData.salePrice);
+  const stock = selectedVariation ? selectedVariation.stock : formData.stock;
+  const hasStock = String(stock).trim() !== "" && Number(stock) > 0;
+  const currentImageSrc = variationImageSrc ?? imageSrc;
 
   const hasSale =
     formData.onSale &&
@@ -28,9 +33,21 @@ export default function ProductPreview({
 
   const displayPrice = hasSale ? salePrice : price;
 
-  const hasStock =
-    formData.stock.trim() !== "" &&
-    Number(formData.stock) > 0;
+  useEffect(() => {
+    if (selectedVariationIndex !== null && selectedVariationIndex >= formData.variations.length) setSelectedVariationIndex(null);
+  }, [formData.variations.length, selectedVariationIndex]);
+
+  useEffect(() => {
+    if (!selectedVariation?.image) {
+      setVariationImageSrc(undefined);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(selectedVariation.image);
+    setVariationImageSrc(objectUrl);
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [selectedVariation]);
 
   return (
     <div
@@ -45,9 +62,9 @@ export default function ProductPreview({
       <div className="grid h-[560px] grid-cols-2">
         {/* IMAGE */}
         <div className="relative flex items-center justify-center bg-background/30">
-          {imageSrc ? (
+          {currentImageSrc ? (
             <img
-              src={imageSrc}
+              src={currentImageSrc}
               alt={productName}
               className="h-full w-full object-contain"
             />
@@ -141,8 +158,45 @@ export default function ProductPreview({
             </p>
           </div>
 
-          {/* FUTURE VARIANTS */}
-          {/* Tutaj później pojawi się sekcja wariantów */}
+          {/* VARIATIONS */}
+          {formData.variations.length > 0 && (
+            <div className="mt-4">
+              <p className="mb-2 text-sm text-muted-foreground">
+                Wariant:
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {formData.variations.map((variation, index) => {
+                  const isSelected =
+                    selectedVariationIndex === index;
+
+                  return (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() =>
+                        setSelectedVariationIndex(index)
+                      }
+                      className={`
+                        rounded-full
+                        border
+                        px-3 py-1.5
+                        text-sm
+                        transition-colors
+                        ${
+                          isSelected
+                            ? "border-primary bg-primary text-black"
+                            : "border-primary/30 hover:border-primary hover:bg-primary/10"
+                        }
+                      `}
+                    >
+                      {variation.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div>
             {/* SEPARATOR */}
@@ -170,7 +224,7 @@ export default function ProductPreview({
                 <>
                   <Package className="h-4 w-4 text-green-400" />
                   <span className="text-green-400">
-                    Dostępny ({formData.stock})
+                    Dostępny ({stock})
                   </span>
                 </>
               ) : (

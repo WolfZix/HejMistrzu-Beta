@@ -204,10 +204,6 @@ export default function ProductForm({
             <h3 className="text-sm font-medium">
               Warianty produktu
             </h3>
-
-            <p className="text-xs text-muted-foreground">
-              Opcjonalne warianty z własną ceną, stanem i zdjęciem.
-            </p>
           </div>
 
           <button

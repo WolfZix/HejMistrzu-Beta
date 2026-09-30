@@ -103,7 +103,7 @@ export default function AddProductModal({
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             className="
-              w-full max-w-4xl relative rounded-xl
+              w-full max-w-5xl relative rounded-xl
               border border-primary/30 bg-card
               px-6 pb-6 pt-10
               shadow-[0_0_15px_1px_hsl(43,50%,10%)]
