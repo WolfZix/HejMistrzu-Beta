@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash2, Pencil, Plus, AlertTriangle } from "lucide-react";
-import AdminTable from "../components/AdminTable";
+import { Plus } from "lucide-react";
 import { StoreProduct, ProductFormData } from "@/types/store";
 import PageLoader from "@/pages/PageLoader";
 import AddProductModal from "../components/Products/AddProductModal";
@@ -9,6 +8,7 @@ import EditProductModal from "../components/Products/EditProductModal";
 import { normalizeText } from "@/utils";
 import TableFilters from "../components/TableFilters";
 import DeleteModal from "../components/DeleteModal";
+import ProductsTable from "../components/Products/ProductsTable";
 
 const PRODUCTS_PER_PAGE = 6;
 const initialProductFormData: ProductFormData = {
@@ -85,34 +85,10 @@ export default function Products() {
   const currentProducts = sortedProducts.slice((currentPage - 1) * PRODUCTS_PER_PAGE, currentPage * PRODUCTS_PER_PAGE);
 
   const sortOptions = [
-    {
-      value: "default",
-      label: "Domyślnie",
-    },
-    {
-      value: "name-asc",
-      label: "Nazwa A-Z",
-    },
-    {
-      value: "name-desc",
-      label: "Nazwa Z-A",
-    },
-    {
-      value: "stock-asc",
-      label: "Ilość rosnąco",
-    },
-    {
-      value: "stock-desc",
-      label: "Ilość malejąco",
-    },
-    {
-      value: "price-asc",
-      label: "Cena rosnąco",
-    },
-    {
-      value: "price-desc",
-      label: "Cena malejąco",
-    },
+    { value: "default", label: "Domyślnie" },
+    { value: "name-asc", label: "Nazwa A-Z" }, { value: "name-desc", label: "Nazwa Z-A" },
+    { value: "stock-asc", label: "Ilość rosnąco" }, { value: "stock-desc", label: "Ilość malejąco" },
+    { value: "price-asc", label: "Cena rosnąco" }, { value: "price-desc", label: "Cena malejąco" },
   ];
 
   const [formData, setFormData] = useState<ProductFormData>(initialProductFormData);
@@ -132,14 +108,6 @@ export default function Products() {
   useEffect(() => {
     setCurrentPage(1)
   }, [search]);
-
-  function getStockClass(stock: number) {
-    return stock >= 5
-    ? "text-green-400"
-    : stock < 5 && stock > 1
-      ? "text-yellow-400"
-      : "text-red-400"
-  }
 
   return (
     <>
@@ -165,179 +133,35 @@ export default function Products() {
         <button
         onClick={() => navigate("/admin/produkty/nowy")}
         className="
-            flex
-            items-center
-            gap-2
-            px-4
-            py-3
-            rounded-lg
-            bg-primary/90
-            w-fit
-            text-black/90
-            hover:shadow-[0_0_10px_1px_hsl(43,50%,26%)]
-            hover:bg-primary
-            hover:text-black
-            transition-all duration-200
-          ">
+          flex
+          items-center
+          gap-2
+          px-4
+          py-3
+          rounded-lg
+          bg-primary/90
+          w-fit
+          text-black/90
+          hover:shadow-[0_0_10px_1px_hsl(43,50%,26%)]
+          hover:bg-primary
+          hover:text-black
+          transition-all duration-200
+        ">
           <Plus size={18} /> Dodaj Produkt
         </button>
       }
         />
 
       <div className="h-[34rem] flex flex-col justify-between">
-        <AdminTable>
-          <thead>
-            <tr className="border-b border-border text-primary text-center">
-              <th className="p-4 w-20">ID</th>
-              <th className="p-4 w-[45%]">Produkt</th>
-              <th className="p-4 w-[20%]">Kategoria</th>
-              <th className="p-4 w-32">Cena</th>
-              <th className="p-4 w-40">Magazyn: szt.</th>
-              <th className="p-4 w-20">Status</th>
-              <th className="p-4 w-28">Akcje</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {currentProducts.map((product) => (
-              <tr
-                key={product.id}
-                className="
-                  border-b
-                  border-border/50
-                  hover:bg-muted/20
-                  text-center
-                "
-              >
-                <td className="p-4">{product.id}</td>
-                <td className="p-4">
-                  <div className="relative group">
-                    <div className="truncate">
-                      {product.name}
-                    </div>
-
-                    <div
-                      className="
-                        hidden
-                        group-hover:block
-                        absolute
-                        left-0
-                        right-0
-                        w-fit
-                        mx-auto
-                        bottom-full
-                        mb-1
-                        z-50
-                        rounded-md
-                        bg-zinc-900
-                        px-2
-                        py-1
-                        text-sm
-                        whitespace-nowrap
-                        shadow-lg
-                      "
-                    >
-                      {product.name}
-                    </div>
-                  </div>
-                </td>
-
-                <td className="p-4">
-                  <div className="relative group">
-                    <div className="truncate">
-                      {product.categories.at(-1)?.name || "-"}
-                    </div>
-
-                    <div
-                      className="
-                        hidden
-                        group-hover:block
-                        absolute
-                        left-0
-                        right-0
-                        w-fit
-                        mx-auto
-                        bottom-full
-                        mb-1
-                        z-50
-                        rounded-md
-                        bg-zinc-900
-                        px-2
-                        py-1
-                        text-sm
-                        whitespace-nowrap
-                        shadow-lg
-                      "
-                    >
-                      {product.categories.at(-1)?.name || "-"}
-                    </div>
-                  </div>
-                </td>
-
-                <td className="p-4 text-nowrap">
-                  {product.price.toFixed(2)} zł {" "}
-                  <span className="text-muted-foreground line-through text-sm">
-                    {product.onSale ? product.regularPrice?.toFixed(2) + " zł" : ""}  
-                  </span>
-                  </td>
-                <td className="p-4">
-                  <div className="flex justify-center gap-1">
-                    <span className={`flex gap-1 items-center ${getStockClass(product.stock)}`}>
-                      {product.stock < 5 ? (<AlertTriangle size={14} />) : ""}
-                      {product.stock}
-                    </span>
-                  </div>
-                </td>
-                <td className="p-4">
-                  <div className="flex justify-center gap-1">
-                    <span className={`px-2 py-1 rounded-md text-xs font-medium
-                      ${product.onSale ? "bg-red-500/50 text-white" : "bg-muted text-white"}`}
-                    >
-                    {product.onSale ? "Promocja" : "Zwykły"}
-                    </span>
-                  </div>
-                </td>
-
-                <td className="p-4">
-                  <div className="flex justify-center gap-2">
-                      <button
-                        onClick={() => {
-                          setSelectedProduct(product);
-                          setIsEditOpen(!isEditOpen);
-                        }}
-                        className="
-                          p-2
-                          rounded-lg
-                          hover:bg-muted
-                          border border-transparent
-                          hover:border-muted-foreground/30
-                        "
-                      >
-                        <Pencil size={16} />
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setSelectedProduct(product);
-                          setIsDeleteOpen(true);
-                        }}
-                        className="
-                          p-2
-                          rounded-lg
-                          hover:bg-destructive/10
-                          hover:text-destructive
-                          border border-transparent
-                          hover:border-destructive/30
-                        "
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </AdminTable>
+        <ProductsTable 
+          currentProducts={currentProducts}
+          setIsEditOpen={setIsEditOpen}
+          isEditOpen={isEditOpen}
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          selectedProduct={selectedProduct}
+          setSelectedProduct={setSelectedProduct}
+        />
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">
             Strona {currentPage} z {totalPages}
