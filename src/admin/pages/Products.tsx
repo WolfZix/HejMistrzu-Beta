@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { StoreProduct, ProductFormData } from "@/types/store";
 import PageLoader from "@/pages/PageLoader";
-import AddProductModal from "../components/Products/AddProductModal";
 import EditProductModal from "../components/Products/EditProductModal";
 import { normalizeText } from "@/utils";
 import TableFilters from "../components/TableFilters";
@@ -224,17 +223,6 @@ export default function Products() {
           </div>
         )}
     </div>
-    {isAddOpen && (
-      <AddProductModal
-        formData={formData}
-        setFormData={setFormData}
-        isOpen={isAddOpen}
-        onClose={() => {
-          setFormData(initialProductFormData);
-          setIsAddOpen(false);
-        }}
-      />
-    )}
     {isEditOpen && (
       <EditProductModal
         product={selectedProduct}
