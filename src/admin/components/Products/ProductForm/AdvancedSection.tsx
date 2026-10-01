@@ -65,9 +65,9 @@ export function AdvancedSection({ formData, setFormData }: AdvancedSectionProps)
             className={`
               flex cursor-pointer items-center gap-3
               rounded-lg border border-primary/20
-              px-4 py-3 text-sm
+              px-4 py-3 text-sm text-white
               transition-colors hover:border-primary/40
-              ${formData.posAvailable ? "bg-primary/10 text-black" : ""}
+              ${formData.posAvailable ? "bg-primary/10" : ""}
             `}
           >
             {formData.posAvailable ? (
