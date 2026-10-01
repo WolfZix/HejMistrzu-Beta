@@ -95,9 +95,9 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
         <div className="grid grid-cols-2 gap-3">
           {[
             "Paczkomat 24/7",
-            "Kurier InPost",
-            "Paczkomat — pobranie",
-            "Kurier InPost — pobranie",
+            "Kurier",
+            "Paczkomat Pobranie",
+            "Kurier Pobranie",
           ].map((method) => {
             const isChecked = formData.inpostMethods.includes(method);
 
