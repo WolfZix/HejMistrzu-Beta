@@ -6,7 +6,10 @@ type ImagesSectionProps = {
   setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
 };
 
-export function ImagesSection({ formData, setFormData }: ImagesSectionProps) {
+export function ImagesSection({
+  formData,
+  setFormData,
+}: ImagesSectionProps) {
   return (
     <section>
       <div className="mb-4 border-b border-primary/10 pb-3">
@@ -15,38 +18,17 @@ export function ImagesSection({ formData, setFormData }: ImagesSectionProps) {
           Pierwsze zdjęcie będzie zdjęciem głównym produktu.
         </p>
       </div>
-
-      <div className="grid grid-cols-2 gap-6">
-        <FormFileInput
-          label="Zdjęcie główne"
-          required
-          className="bg-background"
-          onChange={(file) =>
-            setFormData((prev) => ({
-              ...prev,
-              image: file,
-            }))
-          }
-        />
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">
-            Galeria zdjęć
-          </label>
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            className="
-              block w-full rounded-lg border border-primary/20
-              bg-background px-3 py-2 text-sm
-              file:mr-3 file:rounded-md file:border-0
-              file:bg-primary/10 file:px-3 file:py-1.5
-              file:text-sm file:text-primary focus:border-primary
-              focus:ring-2 focus:ring-primary/50"
-          />
-        </div>
-      </div>
+      <FormFileInput
+        label="Zdjęcia produktu"
+        required
+        className="bg-background"
+        onChange={(files) => {
+          setFormData((prev) => ({
+            ...prev,
+            images: [...prev.images, ...files],
+          }));
+        }}
+      />
     </section>
-  )
+  );
 }

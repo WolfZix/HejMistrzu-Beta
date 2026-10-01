@@ -46,5 +46,5 @@ export function BasicInformation({ formData, setFormData }: BasicInformationProp
         />
       </div>
     </section>
-  )
+  );
 }

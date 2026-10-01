@@ -6,7 +6,6 @@ import { StockSection } from "./StockSection";
 import { VariableSection } from "./VariableSection";
 import { DeliverySection } from "./DeliverySection";
 import { CategoriesSection } from "./CategoriesSection";
-import { AttributesSection } from "./AttributesSection";
 import { AdvancedSection } from "./AdvancedSection";
 
 type ProductFormProps = {
@@ -51,9 +50,7 @@ export default function ProductForm({
       <VariableSection formData={formData} setFormData={setFormData} onAddVariation={onAddVariation} />
       <DeliverySection formData={formData} setFormData={setFormData} />
       <CategoriesSection formData={formData} setFormData={setFormData} categories={categories} subcategories={subcategories} />
-      <AttributesSection formData={formData} setFormData={setFormData} />
       <AdvancedSection formData={formData} setFormData={setFormData} />
-
       <div className="flex gap-3 border-t border-primary/10 pt-6">
         <button
           type="button"

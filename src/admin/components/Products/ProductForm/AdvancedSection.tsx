@@ -1,6 +1,5 @@
 import { ProductFormData } from "@/types/store";
 import { CheckIcon, X } from "lucide-react";
-import { useState } from "react";
 
 type AdvancedSectionProps = {
   formData: ProductFormData;
@@ -8,7 +7,6 @@ type AdvancedSectionProps = {
 };
 
 export function AdvancedSection({ formData, setFormData }: AdvancedSectionProps) {
-  const [isPOSChecked, setIsPOSChecked] = useState(false);
   return (
     <section>
       <div className="mb-4 border-b border-primary/10 pb-3">
@@ -21,6 +19,13 @@ export function AdvancedSection({ formData, setFormData }: AdvancedSectionProps)
             Notatka do zakupu
           </label>
           <textarea
+            value={formData.purchaseNote}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                purchaseNote: e.target.value,
+              }))
+            }
             rows={4}
             placeholder="Opcjonalna wiadomość dla klienta..."
             className="
@@ -38,24 +43,40 @@ export function AdvancedSection({ formData, setFormData }: AdvancedSectionProps)
             </label>
             <input
               type="number"
+              value={formData.menuOrder}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  menuOrder: e.target.value,
+                }))
+              }
               placeholder="0"
               className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
             />
           </div>
 
           <label
-              onClick={() => setIsPOSChecked(!isPOSChecked)}
-              className={`
-                flex cursor-pointer items-center gap-3
-                rounded-lg border border-primary/20
-                px-4 py-3 text-sm
-                transition-colors hover:border-primary/40
-                ${isPOSChecked ? "bg-primary/80 text-black" : ""}
-              `}
-            >
-              {isPOSChecked ? (<CheckIcon className="h-4 w-4" />) : (<X className="h-4 w-4" />)}
-              Dostepny dla POS
-            </label>
+            onClick={() =>
+              setFormData((prev) => ({
+                ...prev,
+                posAvailable: !prev.posAvailable,
+              }))
+            }
+            className={`
+              flex cursor-pointer items-center gap-3
+              rounded-lg border border-primary/20
+              px-4 py-3 text-sm
+              transition-colors hover:border-primary/40
+              ${formData.posAvailable ? "bg-primary/80 text-black" : ""}
+            `}
+          >
+            {formData.posAvailable ? (
+              <CheckIcon className="h-4 w-4" />
+            ) : (
+              <X className="h-4 w-4" />
+            )}
+            Dostępny dla POS
+          </label>
         </div>
       </div>
     </section>

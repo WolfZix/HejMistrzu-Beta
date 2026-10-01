@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import ProductForm from "@/admin/components/Products/ProductForm/ProductForm";
 import ProductPreview from "@/admin/components/Products/ProductPreview";
 import AddVariationModal from "@/admin/components/Products/AddVariationModal";
-import type {
-  ProductFormData,
-  ProductVariationFormData,
-} from "@/types/store";
-import { NavLink } from "react-router-dom";
+import type { ProductFormData, ProductVariationFormData } from "@/types/store";
 
 const initialProductFormData: ProductFormData = {
   name: "",
@@ -16,11 +12,25 @@ const initialProductFormData: ProductFormData = {
   description: "",
   price: "",
   salePrice: "",
-  image: null,
+  images: [],
   preorder: false,
   onSale: false,
   visible: true,
   variations: [],
+  manageStock: false,
+  soldIndividually: false,
+  sku: "",
+  gtin: "",
+  lowStockThreshold: "",
+  backorders: "Nie zezwalaj",
+  inpostMethods: [],
+  weight: "",
+  length: "",
+  width: "",
+  height: "",
+  posAvailable: false,
+  purchaseNote: "",
+  menuOrder: "0",
 };
 
 export default function AddProduct() {
@@ -31,18 +41,18 @@ export default function AddProduct() {
   const [isVariationOpen, setIsVariationOpen] = useState(false);
 
   useEffect(() => {
-    if (!formData.image) {
+    if (!formData.images || formData.images.length === 0) {
       setPreviewImage(undefined);
       return;
     }
 
-    const objectUrl = URL.createObjectURL(formData.image);
+    const objectUrl = URL.createObjectURL(formData.images[0]);
     setPreviewImage(objectUrl);
 
     return () => {
       URL.revokeObjectURL(objectUrl);
     };
-  }, [formData.image]);
+  }, [formData.images]);
 
   function handleAddVariation(variation: ProductVariationFormData) {
     setFormData((prev) => ({

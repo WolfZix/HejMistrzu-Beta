@@ -47,28 +47,6 @@ export function CategoriesSection({ formData, setFormData, categories, subcatego
             label: subcategory,
           }))}
         />
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">
-            Sprzedaż dodatkowa
-          </label>
-          <input
-            type="text"
-            placeholder="Wybierz produkty..."
-            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-          />
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">
-            Sprzedaż krzyżowa
-          </label>
-          <input
-            type="text"
-            placeholder="Wybierz produkty..."
-            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-          />
-        </div>
       </div>
     </section>
   );

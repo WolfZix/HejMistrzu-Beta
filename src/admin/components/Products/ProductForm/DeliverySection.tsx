@@ -1,6 +1,5 @@
 import { ProductFormData } from "@/types/store";
 import { CheckIcon, X } from "lucide-react";
-import { useState } from "react";
 
 type DeliverySectionProps = {
   formData: ProductFormData;
@@ -8,7 +7,6 @@ type DeliverySectionProps = {
 };
 
 export function DeliverySection({ formData, setFormData }: DeliverySectionProps) {
-  const [checkedMethods, setCheckedMethods] = useState<string[]>([]);
   return (
     <section>
       <div className="mb-4 border-b border-primary/10 pb-3">
@@ -22,6 +20,13 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
           </label>
           <input
             type="number"
+            value={formData.weight}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                weight: e.target.value,
+              }))
+            }
             placeholder="0.5"
             className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
@@ -33,6 +38,13 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
           </label>
           <input
             type="number"
+            value={formData.length}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                length: e.target.value,
+              }))
+            }
             placeholder="20"
             className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
@@ -44,7 +56,14 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
           </label>
           <input
             type="number"
-            placeholder="15"
+            value={formData.width}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                width: e.target.value,
+              }))
+            }
+            placeholder="0.5"
             className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
@@ -55,6 +74,13 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
           </label>
           <input
             type="number"
+            value={formData.height}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                height: e.target.value,
+              }))
+            }
             placeholder="10"
             className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
@@ -73,17 +99,18 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
             "Paczkomat — pobranie",
             "Kurier InPost — pobranie",
           ].map((method) => {
-            const isChecked = checkedMethods.includes(method);
+            const isChecked = formData.inpostMethods.includes(method);
 
             return (
               <label
                 key={method}
                 onClick={() => {
-                  setCheckedMethods((prev) =>
-                    prev.includes(method)
-                      ? prev.filter((item) => item !== method)
-                      : [...prev, method]
-                  );
+                  setFormData((prev) => ({
+                    ...prev,
+                    inpostMethods: prev.inpostMethods.includes(method)
+                      ? prev.inpostMethods.filter((item) => item !== method)
+                      : [...prev.inpostMethods, method],
+                  }));
                 }}
                 className={`
                   flex cursor-pointer items-center gap-3

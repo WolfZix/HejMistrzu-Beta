@@ -68,11 +68,25 @@ export type ProductFormData = {
   description: string;
   price: string;
   salePrice: string;
-  image: File | null;
+  images: File[];
   preorder: boolean;
   onSale: boolean;
   visible: boolean;
   variations: ProductVariationFormData[];
+  sku: string;
+  gtin: string;
+  manageStock: boolean;
+  soldIndividually: boolean;
+  lowStockThreshold: string;
+  backorders: "Nie zezwalaj" | "Zezwalaj" | "Zezwalaj + poinformuj";
+  inpostMethods: string[];
+  weight: string;
+  length: string;
+  width: string;
+  height: string;
+  posAvailable: boolean;
+  purchaseNote: string;
+  menuOrder: string;
 };
 
 export type ProductVariationFormData = {
