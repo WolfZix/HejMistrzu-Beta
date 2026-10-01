@@ -47,6 +47,11 @@ export function PriceSection({ formData, setFormData }: PriceSectionProps) {
         <FormToggle
           label="Promocja"
           value={formData.onSale}
+          className={`
+              ${formData.onSale
+                ? "bg-primary/50 text-black border-primary"
+                : "border-primary/20 bg-background/50"}
+            `}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
@@ -58,6 +63,11 @@ export function PriceSection({ formData, setFormData }: PriceSectionProps) {
         <FormToggle
           label="Preorder"
           value={formData.preorder}
+          className={`
+              ${formData.preorder
+                ? "bg-primary/50 text-black border-primary"
+                : "border-primary/20 bg-background/50"}
+            `}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
@@ -69,6 +79,11 @@ export function PriceSection({ formData, setFormData }: PriceSectionProps) {
         <FormToggle
           label="Widoczny"
           value={formData.visible}
+          className={`
+              ${formData.visible
+                ? "bg-primary/50 text-black border-primary"
+                : "border-primary/20 bg-background/50"}
+            `}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
