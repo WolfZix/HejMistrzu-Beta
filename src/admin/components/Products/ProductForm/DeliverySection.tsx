@@ -117,7 +117,7 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
                   rounded-lg border border-primary/20
                   px-4 py-3 text-sm text-white
                   transition-colors hover:border-primary/40
-                  ${isChecked ? "bg-primary/10" : ""}
+                  ${isChecked ? "bg-primary/10 border-primary" : ""}
                 `}
               >
                 {isChecked ? (
