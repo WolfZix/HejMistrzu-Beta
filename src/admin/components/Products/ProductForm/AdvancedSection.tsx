@@ -67,7 +67,7 @@ export function AdvancedSection({ formData, setFormData }: AdvancedSectionProps)
               rounded-lg border border-primary/20
               px-4 py-3 text-sm
               transition-colors hover:border-primary/40
-              ${formData.posAvailable ? "bg-primary/80 text-black" : ""}
+              ${formData.posAvailable ? "bg-primary/10 text-black" : ""}
             `}
           >
             {formData.posAvailable ? (

@@ -28,7 +28,7 @@ export default function FormToggle({
             transition-all
             ${
               value
-                ? "bg-primary/10 text-black border-primary"
+                ? "bg-primary/10 border-primary"
                 : "border-primary/20 bg-background/50"
             }
           `}
