@@ -1,4 +1,6 @@
 import { ProductFormData } from "@/types/store";
+import { CheckIcon, X } from "lucide-react";
+import { useState } from "react";
 
 type AdvancedSectionProps = {
   formData: ProductFormData;
@@ -6,6 +8,7 @@ type AdvancedSectionProps = {
 };
 
 export function AdvancedSection({ formData, setFormData }: AdvancedSectionProps) {
+  const [isPOSChecked, setIsPOSChecked] = useState(false);
   return (
     <section>
       <div className="mb-4 border-b border-primary/10 pb-3">
@@ -22,7 +25,7 @@ export function AdvancedSection({ formData, setFormData }: AdvancedSectionProps)
             placeholder="Opcjonalna wiadomość dla klienta..."
             className="
               w-full resize-y rounded-lg border
-              border-border bg-background px-3 py-2
+              border-primary/20 bg-background px-3 py-2
               text-sm outline-none focus:border-primary
             "
           />
@@ -36,14 +39,23 @@ export function AdvancedSection({ formData, setFormData }: AdvancedSectionProps)
             <input
               type="number"
               placeholder="0"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+              className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
             />
           </div>
 
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" />
-            Dostępny dla POS
-          </label>
+          <label
+              onClick={() => setIsPOSChecked(!isPOSChecked)}
+              className={`
+                flex cursor-pointer items-center gap-3
+                rounded-lg border border-primary/20
+                px-4 py-3 text-sm
+                transition-colors hover:border-primary/40
+                ${isPOSChecked ? "bg-primary/80 text-black" : ""}
+              `}
+            >
+              {isPOSChecked ? (<CheckIcon className="h-4 w-4" />) : (<X className="h-4 w-4" />)}
+              Dostepny dla POS
+            </label>
         </div>
       </div>
     </section>

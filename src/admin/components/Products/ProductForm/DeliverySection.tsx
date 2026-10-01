@@ -1,4 +1,6 @@
 import { ProductFormData } from "@/types/store";
+import { CheckIcon, X } from "lucide-react";
+import { useState } from "react";
 
 type DeliverySectionProps = {
   formData: ProductFormData;
@@ -6,6 +8,7 @@ type DeliverySectionProps = {
 };
 
 export function DeliverySection({ formData, setFormData }: DeliverySectionProps) {
+  const [checkedMethods, setCheckedMethods] = useState<string[]>([]);
   return (
     <section>
       <div className="mb-4 border-b border-primary/10 pb-3">
@@ -20,7 +23,7 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
           <input
             type="number"
             placeholder="0.5"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
 
@@ -31,7 +34,7 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
           <input
             type="number"
             placeholder="20"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
 
@@ -42,7 +45,7 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
           <input
             type="number"
             placeholder="15"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
 
@@ -53,7 +56,7 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
           <input
             type="number"
             placeholder="10"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
       </div>
@@ -69,20 +72,36 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
             "Kurier InPost",
             "Paczkomat — pobranie",
             "Kurier InPost — pobranie",
-          ].map((method) => (
-            <label
-              key={method}
-              className="
-                flex cursor-pointer items-center gap-3
-                rounded-lg border border-border
-                px-4 py-3 text-sm
-                transition-colors hover:border-primary/40
-              "
-            >
-              <input type="checkbox" />
-              {method}
-            </label>
-          ))}
+          ].map((method) => {
+            const isChecked = checkedMethods.includes(method);
+
+            return (
+              <label
+                key={method}
+                onClick={() => {
+                  setCheckedMethods((prev) =>
+                    prev.includes(method)
+                      ? prev.filter((item) => item !== method)
+                      : [...prev, method]
+                  );
+                }}
+                className={`
+                  flex cursor-pointer items-center gap-3
+                  rounded-lg border border-primary/20
+                  px-4 py-3 text-sm
+                  transition-colors hover:border-primary/40
+                  ${isChecked ? "bg-primary/80 text-black" : ""}
+                `}
+              >
+                {isChecked ? (
+                  <CheckIcon className="h-4 w-4" />
+                ) : (
+                  <X className="h-4 w-4" />
+                )}
+                {method}
+              </label>
+            );
+          })}
         </div>
       </div>
     </section>

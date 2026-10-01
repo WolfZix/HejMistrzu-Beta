@@ -52,11 +52,12 @@ export default function ProductPreview({
   return (
     <div
       className="
-        w-full max-w-4xl
+        w-full scale-50 xl:scale-100 xl:max-w-2xl h-[560px]
         overflow-hidden rounded-xl
         border border-primary/30
         bg-card
         shadow-[0_0_15px_1px_hsl(43,50%,10%)]
+        fixed xl:top-16 xl:right-8 -bottom-[8rem] -right-[14rem]
       "
     >
       <div className="grid h-[560px] grid-cols-2">

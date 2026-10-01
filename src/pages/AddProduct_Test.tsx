@@ -101,7 +101,7 @@ export default function AddProduct_Test() {
     </aside>
     <main className="flex-1 p-6">
       <div className="min-h-screen p-6">
-        <div className="flex items-start gap-10">
+        <div className="flex flex-col-reverse items-start gap-10 mb-[20rem] xl:mb-0">
           <div className="w-full">
             <div className="mb-6">
               <h2 className="font-heading text-2xl font-semibold">

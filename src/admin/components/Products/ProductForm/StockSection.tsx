@@ -1,6 +1,8 @@
 import FormInput from "@/components/Forms/FormInput";
+import FormSelect from "@/components/Forms/FormSelect";
 import FormToggle from "@/components/Forms/FormToggle";
 import { ProductFormData } from "@/types/store";
+import { useState } from "react";
 
 type StockSectionProps = {
   formData: ProductFormData;
@@ -8,6 +10,8 @@ type StockSectionProps = {
 };
 
 export function StockSection({ formData, setFormData }: StockSectionProps) {
+  const [isManagingStock, setIsManagingStock] = useState(false);
+  const [isSoldIndividually, setIsSoldIndividually] = useState(false);
   return (
           <section>
         <div className="mb-4 border-b border-primary/10 pb-3">
@@ -22,7 +26,7 @@ export function StockSection({ formData, setFormData }: StockSectionProps) {
             <input
               type="text"
               placeholder="HM-001"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+              className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
             />
           </div>
 
@@ -33,16 +37,21 @@ export function StockSection({ formData, setFormData }: StockSectionProps) {
             <input
               type="text"
               placeholder="5901234567890"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+              className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
             />
           </div>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 flex gap-4">
           <FormToggle
             label="Zarządzaj stanem magazynowym"
-            value={true}
-            onChange={() => {}}
+            value={isManagingStock}
+            onChange={setIsManagingStock}
+          />
+          <FormToggle
+            label="Sprzedawany pojedyńczo"
+            value={isSoldIndividually}
+            onChange={setIsSoldIndividually}
           />
         </div>
 
@@ -61,39 +70,38 @@ export function StockSection({ formData, setFormData }: StockSectionProps) {
           />
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium">
-              Niski próg magazynowy
-            </label>
-            <input
-              type="number"
-              placeholder="2"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-            />
+            <FormInput
+            label="Niski próg magazynowy"
+            value={formData.lowStockThreshold}
+            onChange={(value) =>
+              setFormData((prev) => ({
+                ...prev,
+                lowStockThreshold: value,
+              }))
+            }
+            type="number"
+            placeholder="5"
+          />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium">
-              Backorders
-            </label>
-            <select
-              className="
-                w-full rounded-lg border border-border
-                bg-background px-3 py-2 text-sm outline-none
-                focus:border-primary
-              "
-            >
-              <option>Nie zezwalaj</option>
-              <option>Zezwalaj + poinformuj</option>
-              <option>Zezwalaj</option>
-            </select>
+            <FormSelect 
+            label="Backorders"
+            value={formData.backorders}
+            className="text-nowrap"
+            options={[
+              { label: "Nie zezwalaj", value: "Nie zezwalaj" },
+              { label: "Zezwalaj + poinformuj", value: "Zezwalaj + poinformuj" },
+              { label: "Zezwalaj", value: "Zezwalaj" },
+            ]}
+            onChange={(value) =>
+              setFormData((prev) => ({
+                ...prev,
+                backorders: value,
+              }))
+            }
+            />
           </div>
-        </div>
-
-        <div className="mt-4">
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" />
-            Sprzedawany pojedynczo
-          </label>
         </div>
       </section>
   );

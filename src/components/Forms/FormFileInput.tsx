@@ -26,15 +26,12 @@ export default function FormFileInput({
           onChange?.(e.target.files?.[0] ?? null)
         }
         className="
-          w-full
-          p-3
-          rounded-lg
-          bg-background/50
-          border border-primary/20
-          focus:border-primary
-          focus:ring-2
-          focus:ring-primary/50
-          outline-none
+            block w-full rounded-lg border border-primary/20
+            bg-background/50 px-3 py-2 text-sm
+            file:mr-3 file:rounded-md file:border-0
+            file:bg-primary/10 file:px-3 file:py-1.5
+            file:text-sm file:text-primary focus:border-primary
+            focus:ring-2 focus:ring-primary/50
         "
       />
     </div>

@@ -15,25 +15,20 @@ export function AttributesSection({ formData, setFormData }: AttributesSectionPr
         </p>
       </div>
 
-      <div className="rounded-lg border border-border p-4">
+      <div>
         <div className="grid grid-cols-2 gap-4">
           <input
             type="text"
             placeholder="Nazwa atrybutu"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
 
           <input
             type="text"
             placeholder="Wartości, np. Czerwony | Niebieski"
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
-
-        <label className="mt-3 flex items-center gap-2 text-sm">
-          <input type="checkbox" />
-          Widoczny na stronie produktu
-        </label>
 
         <button
           type="button"

@@ -43,7 +43,7 @@ export default function ProductForm({
 }: ProductFormProps) {
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6 xl:max-w-xl">
       <BasicInformation formData={formData} setFormData={setFormData} />
       <ImagesSection formData={formData} setFormData={setFormData} />
       <PriceSection formData={formData} setFormData={setFormData} />

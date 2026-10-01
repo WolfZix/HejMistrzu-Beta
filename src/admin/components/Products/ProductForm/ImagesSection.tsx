@@ -12,7 +12,7 @@ export function ImagesSection({ formData, setFormData }: ImagesSectionProps) {
       <div className="mb-4 border-b border-primary/10 pb-3">
         <h2 className="text-lg font-semibold">Zdjęcia</h2>
         <p className="text-sm text-muted-foreground">
-          Zdjęcie główne oraz dodatkowe zdjęcia produktu.
+          Pierwsze zdjęcie będzie zdjęciem głównym produktu.
         </p>
       </div>
 
@@ -20,6 +20,7 @@ export function ImagesSection({ formData, setFormData }: ImagesSectionProps) {
         <FormFileInput
           label="Zdjęcie główne"
           required
+          className="bg-background"
           onChange={(file) =>
             setFormData((prev) => ({
               ...prev,
@@ -37,12 +38,12 @@ export function ImagesSection({ formData, setFormData }: ImagesSectionProps) {
             multiple
             accept="image/*"
             className="
-              block w-full rounded-lg border border-border
+              block w-full rounded-lg border border-primary/20
               bg-background px-3 py-2 text-sm
               file:mr-3 file:rounded-md file:border-0
               file:bg-primary/10 file:px-3 file:py-1.5
-              file:text-sm file:text-primary
-            "
+              file:text-sm file:text-primary focus:border-primary
+              focus:ring-2 focus:ring-primary/50"
           />
         </div>
       </div>

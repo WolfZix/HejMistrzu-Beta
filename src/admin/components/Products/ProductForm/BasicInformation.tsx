@@ -44,22 +44,6 @@ export function BasicInformation({ formData, setFormData }: BasicInformationProp
           rows={8}
           required
         />
-
-        {/* Krótki opis */}
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">
-            Krótki opis
-          </label>
-          <textarea
-            className="
-              min-h-28 w-full resize-y rounded-lg border
-              border-border bg-background px-3 py-2 text-sm
-              outline-none transition-colors
-              focus:border-primary
-            "
-            placeholder="Krótki opis produktu..."
-          />
-        </div>
       </div>
     </section>
   )

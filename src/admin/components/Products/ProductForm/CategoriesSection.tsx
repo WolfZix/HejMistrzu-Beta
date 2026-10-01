@@ -55,7 +55,7 @@ export function CategoriesSection({ formData, setFormData, categories, subcatego
           <input
             type="text"
             placeholder="Wybierz produkty..."
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
 
@@ -66,7 +66,7 @@ export function CategoriesSection({ formData, setFormData, categories, subcatego
           <input
             type="text"
             placeholder="Wybierz produkty..."
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
       </div>

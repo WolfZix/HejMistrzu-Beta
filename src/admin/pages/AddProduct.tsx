@@ -6,6 +6,7 @@ import type {
   ProductFormData,
   ProductVariationFormData,
 } from "@/types/store";
+import { NavLink } from "react-router-dom";
 
 const initialProductFormData: ProductFormData = {
   name: "",
@@ -64,7 +65,7 @@ export default function AddProduct() {
 
   return (
     <div className="min-h-screen p-6">
-      <div className="flex items-start gap-10">
+      <div className="flex flex-col-reverse items-start gap-10 mb-[20rem] xl:mb-0">
         <div className="w-full">
           <div className="mb-6">
             <h2 className="font-heading text-2xl font-semibold">
