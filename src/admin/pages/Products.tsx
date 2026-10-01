@@ -8,41 +8,13 @@ import { normalizeText } from "@/utils";
 import TableFilters from "../components/TableFilters";
 import DeleteModal from "../components/DeleteModal";
 import ProductsTable from "../components/Products/ProductsTable";
+import { initialProductFormData } from "@/data/store";
 
 const PRODUCTS_PER_PAGE = 6;
-const initialProductFormData: ProductFormData = {
-  name: "",
-  category: "",
-  subcategory: "",
-  stock: "",
-  description: "",
-  price: "",
-  salePrice: "",
-  images: [],
-  preorder: false,
-  onSale: false,
-  visible: true,
-  variations: [],
-  manageStock: false,
-  soldIndividually: false,
-  sku: "",
-  gtin: "",
-  lowStockThreshold: "",
-  backorders: "Nie zezwalaj",
-  inpostMethods: [],
-  weight: "",
-  length: "",
-  width: "",
-  height: "",
-  posAvailable: false,
-  purchaseNote: "",
-  menuOrder: "0",
-};
 
 export default function Products() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
 
-  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<StoreProduct | null>(null);

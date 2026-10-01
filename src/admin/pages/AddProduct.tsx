@@ -3,11 +3,10 @@ import ProductForm from "@/admin/components/Products/ProductForm/ProductForm";
 import ProductPreview from "@/admin/components/Products/ProductPreview";
 import AddVariationModal from "@/admin/components/Products/AddVariationModal";
 import type { ProductFormData, ProductVariationFormData } from "@/types/store";
+import { initialProductFormData } from "@/data/store";
 
-export default function AddProduct({ initialProductFormData }: { initialProductFormData: ProductFormData }) {
-  const [formData, setFormData] =
-    useState<ProductFormData>(initialProductFormData);
-
+export default function AddProduct() {
+  const [formData, setFormData] = useState<ProductFormData>(initialProductFormData);
   const [previewImage, setPreviewImage] = useState<string>();
   const [isVariationOpen, setIsVariationOpen] = useState(false);
 
@@ -16,10 +15,8 @@ export default function AddProduct({ initialProductFormData }: { initialProductF
       setPreviewImage(undefined);
       return;
     }
-
     const objectUrl = URL.createObjectURL(formData.images[0]);
     setPreviewImage(objectUrl);
-
     return () => {
       URL.revokeObjectURL(objectUrl);
     };
