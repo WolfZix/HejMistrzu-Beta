@@ -19,36 +19,51 @@ export function ImagesSection({
           Pierwsze zdjęcie będzie zdjęciem głównym produktu.
         </p>
       </div>
-      <div className="flex items-center justify-center gap-6">
-        <FormFileInput
-          label="Zdjęcia produktu"
-          required
-          className="bg-background"
-          onChange={(files) => {
-            setFormData((prev) => ({
-              ...prev,
-              images: [...prev.images, ...files],
-            }));
-          }}
-        />
-        <button 
-          className="
-          border-2
-          border-red-500/50
-          bg-transparent
-          text-white/50
-          hover:border-red-500
-          hover:bg-red-500/50
-          hover:text-white
-          rounded-lg px-4 py-2
-          transition-all duration-200
-          active:scale-95
-          "
-          onClick={() => setFormData((prev) => ({ ...prev, images: [] }))}
-        >
-          <X className="h-8 w-8" />
-        </button>
-      </div>
+      <FormFileInput
+        label="Zdjęcia produktu"
+        required
+        className="bg-background"
+        onChange={(files) => {
+          setFormData((prev) => ({
+            ...prev,
+            images: [...prev.images, ...files],
+          }));
+        }}
+      />
+      {formData.images.length > 0 && (
+        <div className="mt-4 grid grid-cols-4 gap-3">
+          {formData.images.map((image, index) => (
+            <div
+              key={`${image.name}-${index}`}
+              className="relative aspect-square overflow-hidden rounded-lg border border-primary/20"
+            >
+              <img
+                src={URL.createObjectURL(image)}
+                alt={`Zdjęcie ${index + 1}`}
+                className="h-full w-full object-cover"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    images: prev.images.filter((_, imageIndex) => imageIndex !== index),
+                  }))
+                }
+                className="
+                  absolute right-1 top-1
+                  flex h-6 w-6 items-center justify-center
+                  rounded-full bg-black/70 text-white
+                  transition-colors hover:bg-red-500
+                "
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
