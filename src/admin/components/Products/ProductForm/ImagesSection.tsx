@@ -19,7 +19,7 @@ export function ImagesSection({
           Pierwsze zdjęcie będzie zdjęciem głównym produktu.
         </p>
       </div>
-      <div className="flex items-center gap-6">
+      <div className="flex items-center justify-center gap-6">
         <FormFileInput
           label="Zdjęcia produktu"
           required
@@ -33,19 +33,20 @@ export function ImagesSection({
         />
         <button 
           className="
+          border-2
           border-red-500/50
           bg-transparent
           text-white/50
           hover:border-red-500
           hover:bg-red-500/50
           hover:text-white
-          rounded-lg px-2 py-1
+          rounded-lg px-4 py-2
           transition-all duration-200
           active:scale-95
           "
           onClick={() => setFormData((prev) => ({ ...prev, images: [] }))}
         >
-          <X className="h-4 w-4" />
+          <X className="h-8 w-8" />
         </button>
       </div>
     </section>
