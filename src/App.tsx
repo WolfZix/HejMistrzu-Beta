@@ -27,6 +27,7 @@ const AdminDashboard = lazy(() => import("@/admin/pages/Dashboard"));
 const AdminReservations = lazy(() => import("@/admin/pages/Reservations"));
 const AdminUsers = lazy(() => import("@/admin/pages/Users"));
 const AdminProducts = lazy(() => import("@/admin/pages/Products"));
+const AddProduct = lazy(() => import("@/admin/pages/AddProduct"));
 const AdminEvents = lazy(() => import("@/admin/pages/Events"));
 const EventParticipants = lazy(() => import("@/admin/pages/EventParticipants"));
 
@@ -67,6 +68,7 @@ function App() {
                   <Route path="rezerwacje" element={<AdminReservations />} />
                   <Route path="uzytkownicy" element={<AdminUsers />} />
                   <Route path="produkty" element={<AdminProducts />} />
+                  <Route path="produkty/nowy" element={<AddProduct />} />
                   <Route path="eventy" element={<AdminEvents />} />
                   <Route path="uczestnicy" element={<EventParticipants />} />
                 </Route>
