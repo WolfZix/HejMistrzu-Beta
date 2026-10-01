@@ -42,14 +42,14 @@ export default function ProductForm({
 }: ProductFormProps) {
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6 xl:max-w-xl">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6 space-y-6 xl:max-w-xl">
       <BasicInformation formData={formData} setFormData={setFormData} />
       <ImagesSection formData={formData} setFormData={setFormData} />
       <PriceSection formData={formData} setFormData={setFormData} />
-      <StockSection formData={formData} setFormData={setFormData} />
       <VariableSection formData={formData} setFormData={setFormData} onAddVariation={onAddVariation} />
-      <DeliverySection formData={formData} setFormData={setFormData} />
       <CategoriesSection formData={formData} setFormData={setFormData} categories={categories} subcategories={subcategories} />
+      <StockSection formData={formData} setFormData={setFormData} />
+      <DeliverySection formData={formData} setFormData={setFormData} />
       <AdvancedSection formData={formData} setFormData={setFormData} />
       <div className="flex gap-3 border-t border-primary/10 pt-6">
         <button
