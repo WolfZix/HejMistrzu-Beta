@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Trash2, Pencil, Plus, AlertTriangle } from "lucide-react";
 import AdminTable from "../components/AdminTable";
 import { StoreProduct, ProductFormData } from "@/types/store";
@@ -101,6 +102,7 @@ export default function Products() {
   ];
 
   const [formData, setFormData] = useState<ProductFormData>(initialProductFormData);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/products`)
@@ -147,7 +149,7 @@ export default function Products() {
         sortOptions={sortOptions}
         button={
         <button
-        onClick={() => setIsAddOpen(true)}
+        onClick={() => navigate("/admin/produkty/nowy")}
         className="
             flex
             items-center
