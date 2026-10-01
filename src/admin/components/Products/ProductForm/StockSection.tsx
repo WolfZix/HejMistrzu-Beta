@@ -36,7 +36,7 @@ export function StockSection({ formData, setFormData }: StockSectionProps) {
 
         <div>
           <label className="mb-1.5 block text-sm font-medium">
-            GTIN / EAN
+            GTIN, UPC, EAN, lub ISBN
           </label>
           <input
             type="text"

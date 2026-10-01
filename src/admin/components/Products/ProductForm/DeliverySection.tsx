@@ -114,10 +114,10 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
                 }}
                 className={`
                   flex cursor-pointer items-center gap-3
-                  rounded-lg border border-primary/20
+                  rounded-lg border
                   px-4 py-3 text-sm text-white
                   transition-colors hover:border-primary/40
-                  ${isChecked ? "bg-primary/10 border-primary" : ""}
+                  ${isChecked ? "bg-primary/10 border-primary" : "border-primary/20 bg-background/50"}
                 `}
               >
                 {isChecked ? (
