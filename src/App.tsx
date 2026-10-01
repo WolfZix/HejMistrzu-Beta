@@ -10,6 +10,7 @@ import AdminRoute from "@/components/AdminRoute";
 import { AuthProvider } from "@/context/AuthContext";
 
 import PageLoader from "@/pages/PageLoader";
+import AddProduct_Test from "./pages/AddProduct_Test";
 const Home = lazy(() => import("@/pages/Home"));
 const Events = lazy(() => import("@/pages/Events"));
 const Store = lazy(() => import("@/pages/Store"));
@@ -42,6 +43,7 @@ function App() {
             <ScrollToTop />
             <Suspense fallback={<PageLoader />}>
               <Routes>
+                <Route path="/nowy-produkt" element={<AddProduct_Test />} />
                 <Route element={<Layout />}>
                   <Route path="/" element={<Home />} />
                   <Route path="/wydarzenia" element={<Events />} />

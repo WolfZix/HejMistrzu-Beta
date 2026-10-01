@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import ProductForm from "./ProductForm";
+import ProductForm from "./ProductForm/ProductForm";
 import ProductPreview from "./ProductPreview";
 import AddVariationModal from "./AddVariationModal";
 import type { ProductFormData, ProductVariationFormData } from "@/types/store";

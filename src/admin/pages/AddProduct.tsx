@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ProductForm from "@/admin/components/Products/ProductForm";
+import ProductForm from "@/admin/components/Products/ProductForm/ProductForm";
 import ProductPreview from "@/admin/components/Products/ProductPreview";
 import AddVariationModal from "@/admin/components/Products/AddVariationModal";
 import type {
@@ -64,10 +64,10 @@ export default function AddProduct() {
 
   return (
     <div className="min-h-screen p-6">
-      <div className="mx-auto flex max-w-7xl items-start gap-10">
-        <div className="w-full max-w-5xl rounded-xl border border-primary/30 bg-card p-6 shadow-[0_0_15px_1px_hsl(43,50%,10%)]">
+      <div className="flex items-start gap-10">
+        <div className="w-full">
           <div className="mb-6">
-            <h2 className="font-heading text-center text-2xl font-semibold">
+            <h2 className="font-heading text-2xl font-semibold">
               Dodaj produkt
             </h2>
           </div>
