@@ -47,7 +47,7 @@ export default function TableFilters({
       <FormSelect
         label={"Sortuj"}
         className="glass"
-        value={sortOptions.find(option => option.value === sortBy)?.label}
+        value={sortBy}
         onChange={setSortBy}
         options={sortOptions}
       />
