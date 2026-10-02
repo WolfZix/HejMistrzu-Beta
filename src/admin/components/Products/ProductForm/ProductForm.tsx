@@ -1,4 +1,4 @@
-import type { ProductFormData } from "@/types/store";
+import type { Category, ProductFormData } from "@/types/store";
 import { BasicInformation } from "./BasicInformation";
 import { ImagesSection } from "./ImagesSection";
 import { PriceSection } from "./PriceSection";
@@ -14,6 +14,7 @@ type ProductFormProps = {
   handleSubmit: (e: React.FormEvent) => void;
   closeModal: () => void;
   onAddVariation: () => void;
+  categories: Category[];
 };
 
 export default function ProductForm({
@@ -22,6 +23,7 @@ export default function ProductForm({
   handleSubmit,
   closeModal,
   onAddVariation,
+  categories
 }: ProductFormProps) {
 
   return (
@@ -30,7 +32,7 @@ export default function ProductForm({
       <ImagesSection formData={formData} setFormData={setFormData} />
       <PriceSection formData={formData} setFormData={setFormData} />
       <VariableSection formData={formData} setFormData={setFormData} onAddVariation={onAddVariation} />
-      <CategoriesSection formData={formData} setFormData={setFormData} />
+      <CategoriesSection formData={formData} setFormData={setFormData} categories={categories} />
       <StockSection formData={formData} setFormData={setFormData} />
       <DeliverySection formData={formData} setFormData={setFormData} />
       <AdvancedSection formData={formData} setFormData={setFormData} />

@@ -1,26 +1,13 @@
 import FormSelect from "@/components/Forms/FormSelect";
-import { ProductFormData } from "@/types/store";
-import { useEffect, useState } from "react";
-
-type Category = {
-  id: number;
-  name: string;
-  parent: number;
-};
+import { ProductFormData, Category } from "@/types/store";
 
 type CategoriesSectionProps = {
   formData: ProductFormData;
   setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
+  categories: Category[];
 };
 
-export function CategoriesSection({ formData, setFormData }: CategoriesSectionProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/categories`)
-      .then((res) => res.json())
-      .then((data) => setCategories(data));
-  }, []);
+export function CategoriesSection({ formData, setFormData, categories }: CategoriesSectionProps) {
 
   const getChildren = (parentId: number) => {
     return categories.filter((category) => category.parent === parentId);

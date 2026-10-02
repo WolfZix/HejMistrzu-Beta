@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { Tag, Clock3, Package } from "lucide-react";
-import type { ProductFormData } from "@/types/store";
+import type { ProductFormData, Category } from "@/types/store";
 
 type ProductPreviewProps = {
   formData: ProductFormData;
   imageSrc?: string;
+  categories: Category[];
 };
 
-export default function ProductPreview({
-  formData,
-  imageSrc,
-}: ProductPreviewProps) {
+export default function ProductPreview({ formData, imageSrc, categories }: ProductPreviewProps) {
   const [selectedVariationIndex, setSelectedVariationIndex] = useState<number | null>(null);
   const [variationImageSrc, setVariationImageSrc] = useState<string>();
   
@@ -48,6 +46,11 @@ export default function ProductPreview({
       URL.revokeObjectURL(objectUrl);
     };
   }, [selectedVariation]);
+
+  const categoryPath = formData.categoryIds
+  .map((id) => categories.find((category) => category.id === id)?.name)
+  .filter(Boolean)
+  .join(" / ");
 
   return (
     <div
@@ -128,7 +131,7 @@ export default function ProductPreview({
                 text-primary
               "
             >
-              {formData.category || "Inne"}
+              {categoryPath || "Inne"}
             </span>
           </div>
 

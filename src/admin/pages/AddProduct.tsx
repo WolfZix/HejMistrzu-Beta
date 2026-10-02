@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import ProductForm from "@/admin/components/Products/ProductForm/ProductForm";
 import ProductPreview from "@/admin/components/Products/ProductPreview";
 import AddVariationModal from "@/admin/components/Products/AddVariationModal";
-import type { ProductFormData, ProductVariationFormData } from "@/types/store";
+import type { ProductFormData, ProductVariationFormData, Category } from "@/types/store";
 import { initialProductFormData } from "@/data/store";
 
 export default function AddProduct() {
   const [formData, setFormData] = useState<ProductFormData>(initialProductFormData);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [previewImage, setPreviewImage] = useState<string>();
   const [isVariationOpen, setIsVariationOpen] = useState(false);
 
@@ -21,6 +22,12 @@ export default function AddProduct() {
       URL.revokeObjectURL(objectUrl);
     };
   }, [formData.images]);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/categories`)
+      .then((res) => res.json())
+      .then((data) => setCategories(data));
+  }, []);
 
   function handleAddVariation(variation: ProductVariationFormData) {
     setFormData((prev) => ({
@@ -43,6 +50,7 @@ export default function AddProduct() {
       body: JSON.stringify({
       name: formData.name,
       description: formData.description,
+      categoryIds: formData.categoryIds,
       price: formData.price,
       salePrice: formData.salePrice,
       preorder: formData.preorder,
@@ -90,12 +98,14 @@ export default function AddProduct() {
             handleSubmit={handleSubmit}
             closeModal={closePage}
             onAddVariation={() => setIsVariationOpen(true)}
+            categories={categories}
           />
         </div>
 
         <ProductPreview
           formData={formData}
           imageSrc={previewImage}
+          categories={categories}
         />
       </div>
 
