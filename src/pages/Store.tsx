@@ -39,7 +39,6 @@ export default function Store() {
   const rootCategories = categories.filter((category) => category.parent === 0 );
   const selectedCategoryObject = categories.find((category) => category.id === selectedCategory);
   const parentCategory = categories.find((category) => category.id === selectedCategoryObject?.parent);
-  const hasChildren = (categoryId: number) => categories.some((category) => category.parent === categoryId);
 
   // UI
   const [isLoading, setIsLoading] = useState(true);

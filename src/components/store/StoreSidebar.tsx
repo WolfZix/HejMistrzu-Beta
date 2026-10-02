@@ -44,15 +44,16 @@ export default function StoreSidebar({
 
   const renderCategory = (category: Category, level = 0) => {
     const children = categories.filter((child) => child.parent === category.id);
-    const isExpanded = expandedCategory === category.id;
     const isSelected = selectedCategory === category.id;
+    const isRoot = level === 0;
+    const isExpanded = isRoot ? expandedCategory === category.id : true;
 
     return (
       <div key={category.id}>
         <button
           onClick={() => {
             setSelectedCategory(category.id);
-            if (children.length > 0) { setExpandedCategory(isExpanded ? null : category.id) }
+            if (isRoot && children.length > 0) { setExpandedCategory(expandedCategory === category.id ? null : category.id) }
           }}
           className={`w-full flex justify-between px-3 py-2.5 rounded-lg text-sm border transition-all ${
             isSelected
