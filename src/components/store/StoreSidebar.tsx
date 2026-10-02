@@ -60,8 +60,14 @@ export default function StoreSidebar({
           onClick={() => {
             setSelectedCategory(category.id);
             if (children.length === 0) return;
+            if (isRoot) {
+              const isCurrentlyExpanded = expandedCategory === category.id;
+              setExpandedCategory(isCurrentlyExpanded ? null : category.id);
+              setExpandedCategories(isCurrentlyExpanded ? [] : [category.id]);
+              return;
+            }
             if (expandedCategories.includes(category.id)) {
-              setExpandedCategories([]);
+              setExpandedCategories(path);
               return;
             }
             setExpandedCategories([...path, category.id]);
