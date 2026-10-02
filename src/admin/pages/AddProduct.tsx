@@ -41,13 +41,20 @@ export default function AddProduct() {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify({
-        name: formData.name,
-        description: formData.description,
-        price: formData.price,
-        salePrice: formData.salePrice,
-        preorder: formData.preorder,
-        inpostMethods: formData.inpostMethods,
-      }),
+      name: formData.name,
+      description: formData.description,
+      price: formData.price,
+      salePrice: formData.salePrice,
+      preorder: formData.preorder,
+      inpostMethods: formData.inpostMethods,
+
+      sku: formData.sku,
+      gtin: formData.gtin,
+      weight: formData.weight,
+      length: formData.length,
+      width: formData.width,
+      height: formData.height,
+    }),
     });
 
     const data = await response.json();
