@@ -45,7 +45,7 @@ export default function StoreSidebar({
     setOnlyWishlist(false);
   }
 
-  const renderCategory = (category: Category, level = 0) => {
+  const renderCategory = ( category: Category, level = 0, path: number[] = [] ) => {
     const children = categories.filter((child) => child.parent === category.id);
     const isSelected = selectedCategory === category.id;
     const isRoot = level === 0;
@@ -60,17 +60,11 @@ export default function StoreSidebar({
           onClick={() => {
             setSelectedCategory(category.id);
             if (children.length === 0) return;
-            if (isRoot) {
-              const willExpand = expandedCategory !== category.id;
-              setExpandedCategory(willExpand ? category.id : null);
+            if (expandedCategories.includes(category.id)) {
               setExpandedCategories([]);
               return;
             }
-            setExpandedCategories((prev) =>
-              prev.includes(category.id)
-                ? prev.filter((id) => id !== category.id)
-                : [...prev, category.id]
-            );
+            setExpandedCategories([...path, category.id]);
           }}
           className={`w-full grid grid-cols-[minmax(0,1fr)_auto] gap-2 px-3 py-2.5 rounded-lg text-sm border transition-all ${
             isSelected
@@ -96,7 +90,7 @@ export default function StoreSidebar({
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              {children.map((child) => renderCategory(child, level + 1))}
+              {children.map((child) => renderCategory(child, level + 1, [...path, category.id]) )}
             </motion.div>
           )}
         </AnimatePresence>
