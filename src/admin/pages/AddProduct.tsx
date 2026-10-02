@@ -57,6 +57,9 @@ export default function AddProduct() {
       visible: formData.visible,
       manageStock: formData.manageStock,
       stock: formData.stock,
+      soldIndividually: formData.soldIndividually,
+      lowStockThreshold: formData.lowStockThreshold,
+      backorders: formData.backorders,
     }),
   });
 
