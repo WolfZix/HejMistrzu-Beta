@@ -141,7 +141,7 @@ router.post("/", verifyToken, requireAdmin, async (req, res) => {
       {
         name,
         type: "simple",
-        status: "private",
+        status: visible ? "publish" : "private",
 
         regular_price: String(price ?? ""),
         sale_price: String(salePrice ?? ""),
