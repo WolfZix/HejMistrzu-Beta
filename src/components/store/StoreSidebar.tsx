@@ -105,7 +105,7 @@ export default function StoreSidebar({
   };
 
   return (
-    <aside className="hidden md:block w-72 shrink-0">
+    <aside className="hidden md:block w-96 shrink-0">
       <div className="glass rounded-xl p-5">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-heading text-base tracking-wider text-primary">Kategorie</h3>
