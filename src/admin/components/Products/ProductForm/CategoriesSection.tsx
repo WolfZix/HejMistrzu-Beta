@@ -1,14 +1,46 @@
 import FormSelect from "@/components/Forms/FormSelect";
 import { ProductFormData } from "@/types/store";
+import { useEffect, useState } from "react";
+
+type Category = {
+  id: number;
+  name: string;
+  parent: number;
+};
 
 type CategoriesSectionProps = {
   formData: ProductFormData;
   setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
-  categories: string[];
-  subcategories: string[];
 };
 
-export function CategoriesSection({ formData, setFormData, categories, subcategories }: CategoriesSectionProps) {
+export function CategoriesSection({ formData, setFormData }: CategoriesSectionProps) {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/categories`)
+      .then((res) => res.json())
+      .then((data) => setCategories(data));
+  }, []);
+
+  const mainCategories = categories.filter((category) => category.parent === 0);
+  const subcategories = categories.filter((category) => category.parent === formData.categoryId);
+
+  const handleCategoryChange = (value: string) => {
+    const categoryId = value ? Number(value) : null;
+    setFormData((prev) => ({
+      ...prev,
+      categoryId,
+      subcategoryId: null,
+    }));
+  };
+
+  const handleSubcategoryChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      subcategoryId: value ? Number(value) : null,
+    }));
+  };
+
   return (
     <section>
       <div className="mb-4 border-b border-primary/10 pb-3">
@@ -19,32 +51,22 @@ export function CategoriesSection({ formData, setFormData, categories, subcatego
         <FormSelect
           label="Kategoria"
           containerClassname="w-full"
-          value={formData.category}
-          onChange={(value) =>
-            setFormData((prev) => ({
-              ...prev,
-              category: value,
-            }))
-          }
-          options={categories.map((category) => ({
-            value: category,
-            label: category,
+          value={formData.categoryId?.toString() ?? ""}
+          onChange={handleCategoryChange}
+          options={mainCategories.map((category) => ({
+            value: category.id.toString(),
+            label: category.name,
           }))}
         />
 
         <FormSelect
           label="Podkategoria"
           containerClassname="w-full"
-          value={formData.subcategory}
-          onChange={(value) =>
-            setFormData((prev) => ({
-              ...prev,
-              subcategory: value,
-            }))
-          }
+          value={formData.subcategoryId?.toString() ?? ""}
+          onChange={handleSubcategoryChange}
           options={subcategories.map((subcategory) => ({
-            value: subcategory,
-            label: subcategory,
+            value: subcategory.id.toString(),
+            label: subcategory.name,
           }))}
         />
       </div>

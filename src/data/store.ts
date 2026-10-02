@@ -2,8 +2,8 @@ import { ProductFormData } from "@/types/store";
 
 export const initialProductFormData: ProductFormData = {
   name: "",
-  category: "",
-  subcategory: "",
+  categoryId: null,
+  subcategoryId: null,
   stock: "",
   description: "",
   price: "",

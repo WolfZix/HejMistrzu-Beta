@@ -16,23 +16,6 @@ type ProductFormProps = {
   onAddVariation: () => void;
 };
 
-const categories = [
-  "Pokemon",
-  "Magic",
-  "Warhammer",
-  "RPG",
-  "Inne",
-  "Akcesoria",
-];
-
-const subcategories = [
-  "Booster",
-  "ETB",
-  "Deck",
-  "Sleeves",
-  "Dice",
-];
-
 export default function ProductForm({
   formData,
   setFormData,
@@ -47,7 +30,7 @@ export default function ProductForm({
       <ImagesSection formData={formData} setFormData={setFormData} />
       <PriceSection formData={formData} setFormData={setFormData} />
       <VariableSection formData={formData} setFormData={setFormData} onAddVariation={onAddVariation} />
-      <CategoriesSection formData={formData} setFormData={setFormData} categories={categories} subcategories={subcategories} />
+      <CategoriesSection formData={formData} setFormData={setFormData} />
       <StockSection formData={formData} setFormData={setFormData} />
       <DeliverySection formData={formData} setFormData={setFormData} />
       <AdvancedSection formData={formData} setFormData={setFormData} />

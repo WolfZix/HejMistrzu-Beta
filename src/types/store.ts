@@ -62,8 +62,8 @@ export type Category = {
 
 export type ProductFormData = {
   name: string;
-  category: string;
-  subcategory: string;
+  categoryId: number | null;
+  subcategoryId: number | null;
   stock: string;
   description: string;
   price: string;
