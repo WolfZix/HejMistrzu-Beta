@@ -22,22 +22,19 @@ export function CategoriesSection({ formData, setFormData }: CategoriesSectionPr
       .then((data) => setCategories(data));
   }, []);
 
-  const mainCategories = categories.filter((category) => category.parent === 0);
-  const subcategories = categories.filter((category) => category.parent === formData.categoryId);
-
-  const handleCategoryChange = (value: string) => {
-    const categoryId = value ? Number(value) : null;
-    setFormData((prev) => ({
-      ...prev,
-      categoryId,
-      subcategoryId: null,
-    }));
+  const getChildren = (parentId: number) => {
+    return categories.filter((category) => category.parent === parentId);
   };
 
-  const handleSubcategoryChange = (value: string) => {
+  const handleCategoryChange = (level: number, value: string) => {
+    const categoryId = value ? Number(value) : null;
+
     setFormData((prev) => ({
       ...prev,
-      subcategoryId: value ? Number(value) : null,
+      categoryIds:
+        categoryId === null
+          ? prev.categoryIds.slice(0, level)
+          : [...prev.categoryIds.slice(0, level), categoryId],
     }));
   };
 
@@ -48,27 +45,30 @@ export function CategoriesSection({ formData, setFormData }: CategoriesSectionPr
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <FormSelect
-          label="Kategoria"
-          containerClassname="w-full"
-          value={formData.categoryId?.toString() ?? ""}
-          onChange={handleCategoryChange}
-          options={mainCategories.map((category) => ({
-            value: category.id.toString(),
-            label: category.name,
-          }))}
-        />
+        {[
+          { parentId: 0, level: 0 },
+          ...formData.categoryIds.map((categoryId, index) => ({
+            parentId: categoryId,
+            level: index + 1,
+          })),
+        ].map(({ parentId, level }) => {
+          const options = getChildren(parentId);
+          if (options.length === 0) return null
 
-        <FormSelect
-          label="Podkategoria"
-          containerClassname="w-full"
-          value={formData.subcategoryId?.toString() ?? ""}
-          onChange={handleSubcategoryChange}
-          options={subcategories.map((subcategory) => ({
-            value: subcategory.id.toString(),
-            label: subcategory.name,
-          }))}
-        />
+          return (
+            <FormSelect
+              key={level}
+              label={level === 0 ? "Kategoria" : "Podkategoria"}
+              containerClassname="w-full"
+              value={formData.categoryIds[level]?.toString() ?? ""}
+              onChange={(value) => handleCategoryChange(level, value)}
+              options={options.map((category) => ({
+                value: category.id.toString(),
+                label: category.name,
+              }))}
+            />
+          );
+        })}
       </div>
     </section>
   );
