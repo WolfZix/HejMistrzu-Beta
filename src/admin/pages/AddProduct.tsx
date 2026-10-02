@@ -54,6 +54,7 @@ export default function AddProduct() {
       length: formData.length,
       width: formData.width,
       height: formData.height,
+      visible: formData.visible,
     }),
     });
 
