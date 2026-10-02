@@ -106,7 +106,7 @@ router.get("/:id/variations", async (req, res) => {
   }
 });
 
-router.post("/products", verifyToken, requireAdmin, async (req, res) => {
+router.post("/", verifyToken, requireAdmin, async (req, res) => {
   try {
     const {
       name,
