@@ -69,12 +69,12 @@ export default function StoreSidebar({
                 : [...prev, category.id]
             );
           }}
-          className={`w-full flex justify-between px-3 py-2.5 rounded-lg text-sm border transition-all ${
+          className={`w-full flex justify-between pr-3 py-2.5 rounded-lg text-sm border transition-all ${
             isSelected
               ? "bg-primary/10 text-primary border-primary/20"
               : "text-muted-foreground hover:text-foreground hover:bg-muted/30 border-transparent"
           }`}
-          style={{ paddingLeft: `${12 + level * 10}px` }}
+          style={{ paddingLeft: `${12 + level * 16}px` }}
         >
           <span className="flex items-center gap-1 min-w-0">
             {category.name}
