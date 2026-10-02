@@ -106,6 +106,48 @@ router.get("/:id/variations", async (req, res) => {
   }
 });
 
+router.post("/products", verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const {
+      name,
+      description,
+      price,
+      salePrice,
+    } = req.body;
+
+    const response = await axios.post(
+      `${process.env.WC_URL}/wp-json/wc/v3/products`,
+      {
+        name,
+        type: "simple",
+        status: "private",
+        regular_price: String(price ?? ""),
+        sale_price: String(salePrice ?? ""),
+        description,
+      },
+      {
+        params: {
+          consumer_key: process.env.WC_CONSUMER_KEY_W,
+          consumer_secret: process.env.WC_CONSUMER_SECRET_W,
+        },
+      }
+    );
+
+    res.status(201).json({
+      success: true,
+      product: response.data,
+    });
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+
+    res.status(error.response?.status || 500).json({
+      success: false,
+      message: "Nie udało się utworzyć produktu",
+      error: error.response?.data || error.message,
+    });
+  }
+});
+
 router.get("/sync-all", verifyToken, requireAdmin, async (_req, res) => {
   try {
     const results = await syncAllProducts();
@@ -249,34 +291,6 @@ router.get("/sync/:id/full", verifyToken, requireAdmin, async (req, res) => {
     res.status(error.response?.status || 500).json({
       success: false,
       message: error.message || "Nie udało się zsynchronizować produktu"
-    });
-  }
-});
-
-router.post("/test-write", verifyToken, requireAdmin, async (_req, res) => {
-  try {
-    const response = await axios.get(
-      `${process.env.WC_URL}/wp-json/wc/v3/products`,
-      {
-        params: {
-          consumer_key: process.env.WC_CONSUMER_KEY_W,
-          consumer_secret: process.env.WC_CONSUMER_SECRET_W,
-          per_page: 1,
-        },
-      }
-    );
-
-    res.json({
-      success: true,
-      message: "Klucz Read/Write działa poprawnie",
-      productCount: response.data.length,
-    });
-  } catch (error) {
-    console.error(error.response?.data || error.message);
-
-    res.status(error.response?.status || 500).json({
-      success: false,
-      message: "Klucz Read/Write nie działa",
     });
   }
 });
