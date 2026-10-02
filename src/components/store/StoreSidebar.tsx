@@ -72,17 +72,19 @@ export default function StoreSidebar({
                 : [...prev, category.id]
             );
           }}
-          className={`w-full flex justify-between px-3 py-2.5 rounded-lg text-sm border transition-all ${
+          className={`w-full grid grid-cols-[minmax(0,1fr)_auto] gap-2 px-3 py-2.5 rounded-lg text-sm border transition-all ${
             isSelected
               ? "bg-primary/10 text-primary border-primary/20"
               : "text-muted-foreground hover:text-foreground hover:bg-muted/30 border-transparent"
           }`}
         >
-          <span className="flex items-center gap-1 min-w-0">
+          <span className="flex items-center gap-1 min-w-0 text-left">
             {category.name}
             {children.length > 0 && (isExpanded ? ( <ChevronUp size={16} /> ) : ( <ChevronDown size={16} /> ))}
           </span>
-          <span>{category.count}</span>
+          <span className="w-6 shrink-0 text-right">
+            {category.count}
+          </span>
         </button>
 
         <AnimatePresence>
