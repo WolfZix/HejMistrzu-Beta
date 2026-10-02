@@ -55,8 +55,10 @@ export default function AddProduct() {
       width: formData.width,
       height: formData.height,
       visible: formData.visible,
+      manageStock: formData.manageStock,
+      stock: formData.stock,
     }),
-    });
+  });
 
     const data = await response.json();
 
