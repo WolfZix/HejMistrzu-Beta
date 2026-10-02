@@ -253,7 +253,7 @@ router.get("/sync/:id/full", verifyToken, requireAdmin, async (req, res) => {
   }
 });
 
-router.post("/test-write", async (_req, res) => {
+router.post("/test-write", verifyToken, requireAdmin, async (_req, res) => {
   try {
     const response = await axios.get(
       `${process.env.WC_URL}/wp-json/wc/v3/products`,
