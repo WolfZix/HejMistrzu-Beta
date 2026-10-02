@@ -134,6 +134,7 @@ router.post("/", verifyToken, requireAdmin, async (req, res) => {
       purchaseNote,
       menuOrder,
     } = req.body;
+    console.log("VISIBLE:", visible);
 
     const response = await axios.post(
       `${process.env.WC_URL}/wp-json/wc/v3/products`,
