@@ -128,26 +128,6 @@ useEffect(() => {
   fetchCategories();
 }, []);
 
-useEffect(() => {
-  if (selectedCategory !== null) {
-    const timer = setTimeout(() => {
-    window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-  }, 10);
-  return () => clearTimeout(timer);
-  } else {
-    const timer = setTimeout(() => {
-    window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-  }, 10);
-  return () => clearTimeout(timer);
-  }
-}, [selectedCategory])
-
   return (
     <div className="pt-20 pb-24">
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
