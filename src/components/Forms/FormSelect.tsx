@@ -47,7 +47,7 @@ export default function FormSelect({
         `}
       >
         <span>
-          {value || "Wybierz..."}
+          {options.find((option) => option.value === value)?.label || "Wybierz..."}
         </span>
 
         <ChevronDown
