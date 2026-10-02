@@ -74,9 +74,9 @@ export default function StoreSidebar({
               ? "bg-primary/10 text-primary border-primary/20"
               : "text-muted-foreground hover:text-foreground hover:bg-muted/30 border-transparent"
           }`}
-          style={{ paddingLeft: `${12 + level * 16}px` }}
+          style={{ paddingLeft: `${12 + level * 10}px` }}
         >
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 min-w-0">
             {category.name}
             {children.length > 0 && (isExpanded ? ( <ChevronUp size={16} /> ) : ( <ChevronDown size={16} /> ))}
           </span>
