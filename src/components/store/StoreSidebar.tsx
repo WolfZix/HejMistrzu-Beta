@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown, ChevronUp, ShieldCheck, Tag, Truck, FilterX, Heart } from "lucide-react";
 import type { Category } from "@/types/store";
+import { useState } from "react";
 
 type StoreSidebarProps = {
   categories: Category[];
@@ -33,10 +34,12 @@ export default function StoreSidebar({
   onlyWishlist,
   setOnlyWishlist,
 }: StoreSidebarProps) {
+  const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
 
   function resetFilters() {
     setSelectedCategory(null);
     setExpandedCategory(null);
+    setExpandedCategories([]);
     setOnlyPromotions(false);
     setOnlyInStock(false);
     setOnlyWishlist(false);
@@ -46,14 +49,25 @@ export default function StoreSidebar({
     const children = categories.filter((child) => child.parent === category.id);
     const isSelected = selectedCategory === category.id;
     const isRoot = level === 0;
-    const isExpanded = isRoot ? expandedCategory === category.id : true;
+    const isExpanded = isRoot ? expandedCategory === category.id : expandedCategories.includes(category.id);
 
     return (
       <div key={category.id}>
         <button
           onClick={() => {
             setSelectedCategory(category.id);
-            if (isRoot && children.length > 0) { setExpandedCategory(expandedCategory === category.id ? null : category.id) }
+            if (children.length === 0) return;
+            if (isRoot) {
+              const willExpand = expandedCategory !== category.id;
+              setExpandedCategory(willExpand ? category.id : null);
+              setExpandedCategories([]);
+              return;
+            }
+            setExpandedCategories((prev) =>
+              prev.includes(category.id)
+                ? prev.filter((id) => id !== category.id)
+                : [...prev, category.id]
+            );
           }}
           className={`w-full flex justify-between px-3 py-2.5 rounded-lg text-sm border transition-all ${
             isSelected
