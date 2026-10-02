@@ -110,9 +110,29 @@ router.post("/", verifyToken, requireAdmin, async (req, res) => {
   try {
     const {
       name,
+      category,
+      subcategory,
+      stock,
       description,
       price,
       salePrice,
+      preorder,
+      onSale,
+      visible,
+      sku,
+      gtin,
+      manageStock,
+      soldIndividually,
+      lowStockThreshold,
+      backorders,
+      inpostMethods,
+      weight,
+      length,
+      width,
+      height,
+      posAvailable,
+      purchaseNote,
+      menuOrder,
     } = req.body;
 
     const response = await axios.post(
@@ -121,9 +141,45 @@ router.post("/", verifyToken, requireAdmin, async (req, res) => {
         name,
         type: "simple",
         status: "private",
+
         regular_price: String(price ?? ""),
         sale_price: String(salePrice ?? ""),
         description,
+
+        sku,
+        global_unique_id: gtin,
+
+        manage_stock: manageStock,
+        stock_quantity: stock ? Number(stock) : null,
+        sold_individually: soldIndividually,
+        low_stock_amount: lowStockThreshold
+          ? Number(lowStockThreshold)
+          : null,
+
+        backorders: backorders === "Nie zezwalaj"
+          ? "no"
+          : backorders === "Zezwalaj + poinformuj"
+            ? "notify"
+            : "yes",
+
+        weight,
+        dimensions: {
+          length,
+          width,
+          height,
+        },
+
+        purchase_note: purchaseNote,
+        menu_order: Number(menuOrder ?? 0),
+        meta_data: [
+      {
+        key: "_hejmistrzu_preorder",
+        value: preorder,
+      },
+      {
+        key: "woo_inpost_shipping_methods_allowed",
+        value: inpostMethods,
+      }]
       },
       {
         params: {
