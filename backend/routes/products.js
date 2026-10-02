@@ -253,4 +253,32 @@ router.get("/sync/:id/full", verifyToken, requireAdmin, async (req, res) => {
   }
 });
 
+router.post("/test-write", verifyToken, requireAdmin, async (_req, res) => {
+  try {
+    const response = await axios.get(
+      `${process.env.WC_URL}/wp-json/wc/v3/products`,
+      {
+        params: {
+          consumer_key: process.env.WC_CONSUMER_KEY_W,
+          consumer_secret: process.env.WC_CONSUMER_SECRET_W,
+          per_page: 1,
+        },
+      }
+    );
+
+    res.json({
+      success: true,
+      message: "Klucz Read/Write działa poprawnie",
+      productCount: response.data.length,
+    });
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+
+    res.status(error.response?.status || 500).json({
+      success: false,
+      message: "Klucz Read/Write nie działa",
+    });
+  }
+});
+
 module.exports = router;
