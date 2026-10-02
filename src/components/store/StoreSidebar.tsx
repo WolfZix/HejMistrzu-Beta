@@ -10,7 +10,6 @@ type StoreSidebarProps = {
   productsCount: number;
   setSelectedCategory: (id: number | null) => void;
   setExpandedCategory: (id: number | null) => void;
-  hasChildren: (categoryId: number) => boolean;
   onlyInStock: boolean;
   setOnlyInStock: (onlyInStock: boolean) => void;
   onlyPromotions: boolean;
@@ -27,7 +26,6 @@ export default function StoreSidebar({
   productsCount,
   setSelectedCategory,
   setExpandedCategory,
-  hasChildren,
   onlyInStock,
   setOnlyInStock,
   onlyPromotions,
@@ -43,6 +41,49 @@ export default function StoreSidebar({
     setOnlyInStock(false);
     setOnlyWishlist(false);
   }
+
+  const renderCategory = (category: Category, level = 0) => {
+    const children = categories.filter((child) => child.parent === category.id);
+    const isExpanded = expandedCategory === category.id;
+    const isSelected = selectedCategory === category.id;
+
+    return (
+      <div key={category.id}>
+        <button
+          onClick={() => {
+            setSelectedCategory(category.id);
+            if (children.length > 0) { setExpandedCategory(isExpanded ? null : category.id) }
+          }}
+          className={`w-full flex justify-between px-3 py-2.5 rounded-lg text-sm border transition-all ${
+            isSelected
+              ? "bg-primary/10 text-primary border-primary/20"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/30 border-transparent"
+          }`}
+          style={{ paddingLeft: `${12 + level * 16}px` }}
+        >
+          <span className="flex items-center gap-1">
+            {category.name}
+            {children.length > 0 && (isExpanded ? ( <ChevronUp size={16} /> ) : ( <ChevronDown size={16} /> ))}
+          </span>
+          <span>{category.count}</span>
+        </button>
+
+        <AnimatePresence>
+          {isExpanded && children.length > 0 && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              {children.map((child) => renderCategory(child, level + 1))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
 
   return (
     <aside className="hidden md:block w-56 shrink-0">
@@ -131,81 +172,7 @@ export default function StoreSidebar({
               {productsCount}
             </span>
           </button>
-          {rootCategories.map((entry) => (
-            <div key={entry.id}>
-              <button
-                onClick={() => {
-                  setExpandedCategory(null);
-                  setSelectedCategory(entry.id);
-                  if (hasChildren(entry.id)) {
-                    setExpandedCategory(
-                      expandedCategory === entry.id ? null : entry.id
-                    );
-                  }
-                }}
-                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium border transition-all ${
-                  selectedCategory === entry.id
-                    ? "bg-primary/10 text-primary border border-primary/20"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30 border-transparent"
-                }`}
-              >
-                {hasChildren(entry.id) ? (
-                  <div className="flex gap-1">
-                  <span>
-                    {entry.name}
-                  </span> 
-                  <span className="mr-auto">
-                    {expandedCategory === entry.id ? (
-                      <ChevronUp size={18}/>
-                    ) : (
-                      <ChevronDown size={18}/>
-                    )}
-                  </span>
-                  <span>
-                    {entry.count}
-                  </span>
-                </div>
-                ) : (
-                  <span className="flex justify-between">
-                    <span>{entry.name}</span>
-                    <span>{entry.count}</span>
-                  </span>
-                  )}
-              </button>
-
-              <AnimatePresence>
-                {hasChildren(entry.id) && expandedCategory === entry.id && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="ml-4 mt-1 space-y-1 overflow-hidden"
-                  >
-                    {categories
-                      .filter((category) => category.parent === entry.id)
-                      .map((subcategory) => (
-                        <button
-                          key={subcategory.id}
-                          onClick={() => {
-                            setSelectedCategory(subcategory.id)
-                          }}
-                          className={`w-full flex justify-between px-3 py-2 text-sm border border-transparent rounded-lg transition-all ${
-                            selectedCategory === subcategory.id
-                              ? "bg-primary/10 text-primary border border-primary/20"
-                              : "text-muted-foreground hover:text-primary border-transparent"
-                          }`}
-                        >
-                          <span>{subcategory.name}</span>
-                          <span>{subcategory.count}</span>
-                        </button>
-                      ))
-                    }
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+          {rootCategories.map((category) => renderCategory(category))}
         </div>
         <div className="mt-5 pt-5 border-t border-border space-y-2">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">

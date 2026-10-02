@@ -162,7 +162,6 @@ useEffect(() => {
             productsCount={products.length}
             setSelectedCategory={setSelectedCategory}
             setExpandedCategory={setExpandedCategory}
-            hasChildren={hasChildren}
             onlyInStock={onlyInStock}
             setOnlyInStock={setOnlyInStock}
             onlyPromotions={onlyPromotions}
