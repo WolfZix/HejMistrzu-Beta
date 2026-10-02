@@ -60,6 +60,8 @@ export default function AddProduct() {
       soldIndividually: formData.soldIndividually,
       lowStockThreshold: formData.lowStockThreshold,
       backorders: formData.backorders,
+      purchaseNote: formData.purchaseNote,
+      menuOrder: formData.menuOrder,
     }),
   });
 
