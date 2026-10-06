@@ -77,8 +77,14 @@ export default function AddProduct() {
       },
       body: data,
     });
-    console.log("STATUS:", response.status);
-    console.log("BODY:", await response.text());
+    if (response.status === 413) {
+      alert("Łączny rozmiar zdjęć jest zbyt duży.");
+      return;
+    }
+    if (!response.ok) {
+      alert("Nie udało się utworzyć produktu.");
+      return;
+    }
   }
 
   function closePage() {
