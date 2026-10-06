@@ -133,8 +133,11 @@ router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, 
       posAvailable,
       purchaseNote,
       menuOrder,
+      variations,
     } = req.body;
     const parsedCategoryIds = JSON.parse(categoryIds || "[]");
+    const parsedVariations = JSON.parse(variations || "[]");
+    console.log("WARIANTY:", parsedVariations);
     const images = (req.files ?? []).map((file) => ({ src: `${process.env.SERVER_URL}/uploads/${file.filename}`}));
 
     const response = await axios.post(

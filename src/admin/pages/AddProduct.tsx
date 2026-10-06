@@ -65,6 +65,14 @@ export default function AddProduct() {
     data.append("backorders", formData.backorders);
     data.append("purchaseNote", formData.purchaseNote);
     data.append("menuOrder", formData.menuOrder);
+    data.append("variations", JSON.stringify(
+      formData.variations.map((variation) => ({
+        name: variation.name,
+        price: variation.price,
+        salePrice: variation.salePrice,
+        stock: variation.stock,
+      }))
+    ));
 
     formData.images.forEach((image) => {
       data.append("images", image);
