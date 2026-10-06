@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import type { ProductCardProps } from "@/types/store";
 
 export function ProductCard({ product, isWishlisted, isNotified, onQuickView, onToggleWishlist, onAddToCart }: ProductCardProps) {
+  const categoryPath = product.categories.map((category) => category.name).join(" / ");
   return (
     <div
       className="group glass rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-primary/20 border border-transparent flex flex-col relative h-full"
@@ -33,7 +34,7 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
 
       <div className="p-5 flex flex-col flex-1">
         <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1.5">
-          {product.categories.at(-1)?.name}
+          {categoryPath}
         </p>
         <h3 className="font-medium text-sm leading-snug mb-3 line-clamp-2 group-hover:text-primary transition-colors">{product.name}</h3>
         <div className="min-h-[20px] flex items-center gap-1.5 mb-3">
