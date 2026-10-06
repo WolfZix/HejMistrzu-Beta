@@ -110,8 +110,7 @@ router.post("/", verifyToken, requireAdmin, async (req, res) => {
   try {
     const {
       name,
-      categoryId,
-      subcategoryId,
+      categoryIds,
       stock,
       description,
       price,
@@ -145,11 +144,7 @@ router.post("/", verifyToken, requireAdmin, async (req, res) => {
         regular_price: String(price ?? ""),
         sale_price: String(salePrice ?? ""),
         description,
-        categories: [
-          ...(categoryId ? [{ id: Number(categoryId) }] : []),
-          ...(subcategoryId ? [{ id: Number(subcategoryId) }] : []),
-        ],
-
+        categories: (categoryIds ?? []).map((id) => ({ id: Number(id) })),
         sku,
         global_unique_id: gtin,
 
