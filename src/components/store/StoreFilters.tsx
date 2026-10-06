@@ -118,7 +118,7 @@ export default function StoreFilters({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3 mb-8">
+    <div className="flex flex-col sm:flex-row gap-3 mb-8 items-end">
       <div className="relative flex-1">
         <p className="text-xs text-muted-foreground mb-1">
           Szukaj produktów
@@ -209,6 +209,9 @@ export default function StoreFilters({
         </AnimatePresence>
       </div>
       <div className="lg:hidden">
+        <label className="text-xs text-muted-foreground mb-1 block">
+          Kategorie
+        </label>
         <button
           onClick={() => setIsCategoryOpen(!isCategoryOpen)}
           className="w-full h-11 px-4 rounded-xl border border-border bg-card flex items-center justify-between"
