@@ -73,12 +73,12 @@ export default function AddProduct() {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/products`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: data,
     });
-    console.log(response);
+    console.log("STATUS:", response.status);
+    console.log("BODY:", await response.text());
   }
 
   function closePage() {
