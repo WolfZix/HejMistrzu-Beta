@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { LoaderCircle, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type RegisterModalProps = {
   isRegisterOpen: boolean;
@@ -20,6 +20,17 @@ export default function RegisterModal({
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+
+    useEffect(() => {
+      if (isRegisterOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "auto";
+      }
+      return () => {
+        document.body.style.overflow = "auto";
+      }
+    }, [isRegisterOpen])
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +85,7 @@ export default function RegisterModal({
             className="
             fixed
             inset-0
-            z-50
+            z-[100]
             flex
             items-center
             justify-center

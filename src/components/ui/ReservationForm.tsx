@@ -227,6 +227,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
                     setIsSessionOpen(false);
                     setIsTimeOpen(false);
                     setIsHourOpen((prev) => !prev);
+                    setIsPeopleCountOpen(false);
                   }}
                   className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-11 rounded-xl"
                 >
