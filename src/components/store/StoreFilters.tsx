@@ -208,7 +208,7 @@ export default function StoreFilters({
           )}
         </AnimatePresence>
       </div>
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <button
           onClick={() => setIsCategoryOpen(!isCategoryOpen)}
           className="w-full h-11 px-4 rounded-xl border border-border bg-card flex items-center justify-between"
