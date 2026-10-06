@@ -133,6 +133,7 @@ router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, 
       purchaseNote,
       menuOrder,
     } = req.body;
+    const parsedCategoryIds = JSON.parse(categoryIds || "[]");
 
     const response = await axios.post(
       `${process.env.WC_URL}/wp-json/wc/v3/products`,
@@ -145,7 +146,7 @@ router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, 
         regular_price: String(price ?? ""),
         sale_price: String(salePrice ?? ""),
         description,
-        categories: (categoryIds ?? []).map((id) => ({ id: Number(id) })),
+        categories: parsedCategoryIds.map((id) => ({ id: Number(id) })),
         sku,
         global_unique_id: gtin,
 
