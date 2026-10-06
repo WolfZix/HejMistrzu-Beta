@@ -229,11 +229,11 @@ export default function StoreFilters({
         <AnimatePresence>
           {isCategoryOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="mt-2 rounded-xl border border-border bg-card p-2 overflow-hidden"
+              className="mt-2 rounded-xl border border-border bg-card p-2 overflow-y-auto max-h-[60vh]"
             >
               <button
                 onClick={() => {
