@@ -216,16 +216,18 @@ export default function StoreFilters({
           onClick={() => setIsCategoryOpen(!isCategoryOpen)}
           className="w-full h-11 px-4 rounded-xl border border-border bg-card flex items-center justify-between"
         >
-          <span>
+          <span className="min-w-0 truncate whitespace-nowrap">
             {selectedCategory === null
               ? "Wszystkie kategorie"
-              : categories.find((category) => category.id === selectedCategory)?.name}
+              : categories.find(
+                  (category) => category.id === selectedCategory
+                )?.name}
           </span>
 
           {isCategoryOpen ? (
-            <ChevronUp size={18} />
+            <ChevronUp size={18} className="shrink-0" />
           ) : (
-            <ChevronDown size={18} />
+            <ChevronDown size={18} className="shrink-0" />
           )}
         </button>
 
