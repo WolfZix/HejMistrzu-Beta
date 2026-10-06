@@ -91,7 +91,7 @@ export default function UserDropdown({ onLoginClick, onRegisterClick }: UserDrop
               bg-card
               shadow-[0_0_15px_1px_hsl(43,50%,10%)]
               overflow-hidden
-              z-50
+              z-[100]
             "
           >
             {!isLoggedIn ? (
