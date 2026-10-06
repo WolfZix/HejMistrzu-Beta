@@ -33,10 +33,90 @@ export default function StoreFilters({
   sortOptions,
 }: StoreFiltersProps) {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [expandedMobileCategory, setExpandedMobileCategory] = useState<number | null>(null);
+  const [expandedMobileCategories, setExpandedMobileCategories] = useState<number[]>([]);
+
   const getChildren = (parentId: number) => {
     return categories.filter((category) => category.parent === parentId);
   };
+
+  const renderMobileCategory = (
+    category: Category,
+    level = 0,
+    path: number[] = []
+  ) => {
+    const children = getChildren(category.id);
+    const isExpanded = expandedMobileCategories.includes(category.id);
+    const isSelected = selectedCategory === category.id;
+
+    return (
+      <div key={category.id}>
+        <div
+          className="flex items-center"
+          style={{ marginLeft: `${level * 12}px` }}
+        >
+          <button
+            onClick={() => {
+              setSelectedCategory(category.id);
+
+              if (children.length === 0) {
+                setIsCategoryOpen(false);
+                return;
+              }
+
+              setExpandedMobileCategories(
+                isExpanded ? path : [...path, category.id]
+              );
+            }}
+            className={`flex-1 text-left px-3 py-2.5 rounded-lg text-sm ${
+              isSelected
+                ? "bg-primary/10 text-primary"
+                : "text-muted-foreground hover:bg-muted/30"
+            }`}
+          >
+            {category.name}
+          </button>
+
+          {children.length > 0 && (
+            <button
+              onClick={() => {
+                setExpandedMobileCategories(
+                  isExpanded ? path : [...path, category.id]
+                );
+              }}
+              className="p-2 text-muted-foreground"
+            >
+              {isExpanded ? (
+                <ChevronUp size={16} />
+              ) : (
+                <ChevronDown size={16} />
+              )}
+            </button>
+          )}
+        </div>
+
+        <AnimatePresence>
+          {isExpanded && children.length > 0 && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              {children.map((child) =>
+                renderMobileCategory(
+                  child,
+                  level + 1,
+                  [...path, category.id]
+                )
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-8">
       <div className="relative flex-1">
@@ -159,7 +239,7 @@ export default function StoreFilters({
                 onClick={() => {
                   setSelectedCategory(null);
                   setIsCategoryOpen(false);
-                  setExpandedMobileCategory(null);
+                  setExpandedMobileCategories([]);
                 }}
                 className={`w-full text-left px-3 py-2.5 rounded-lg text-sm ${
                   selectedCategory === null
@@ -169,87 +249,7 @@ export default function StoreFilters({
               >
                 Wszystkie
               </button>
-
-              {categories
-                .filter((category) => category.parent === 0)
-                .map((category) => {
-                  const children = getChildren(category.id);
-                  const isExpanded = expandedMobileCategory === category.id;
-                  const isSelected = selectedCategory === category.id;
-
-                  return (
-                    <div key={category.id}>
-                      <div className="flex items-center">
-                        <button
-                          onClick={() => {
-                            setSelectedCategory(category.id);
-
-                            if (children.length === 0) {
-                              setIsCategoryOpen(false);
-                              return;
-                            }
-
-                            setExpandedMobileCategory(
-                              isExpanded ? null : category.id
-                            );
-                          }}
-                          className={`flex-1 text-left px-3 py-2.5 rounded-lg text-sm ${
-                            isSelected
-                              ? "bg-primary/10 text-primary"
-                              : "text-muted-foreground hover:bg-muted/30"
-                          }`}
-                        >
-                          {category.name}
-                        </button>
-
-                        {children.length > 0 && (
-                          <button
-                            onClick={() =>
-                              setExpandedMobileCategory(
-                                isExpanded ? null : category.id
-                              )
-                            }
-                            className="p-2 text-muted-foreground"
-                          >
-                            {isExpanded ? (
-                              <ChevronUp size={16} />
-                            ) : (
-                              <ChevronDown size={16} />
-                            )}
-                          </button>
-                        )}
-                      </div>
-
-                      <AnimatePresence>
-                        {isExpanded && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="ml-4 overflow-hidden"
-                          >
-                            {children.map((child) => (
-                              <button
-                                key={child.id}
-                                onClick={() => {
-                                  setSelectedCategory(child.id);
-                                  setIsCategoryOpen(false);
-                                }}
-                                className={`w-full text-left px-3 py-2 rounded-lg text-sm ${
-                                  selectedCategory === child.id
-                                    ? "bg-primary/10 text-primary"
-                                    : "text-muted-foreground hover:bg-muted/30"
-                                }`}
-                              >
-                                {child.name}
-                              </button>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })}
+              { categories.filter((category) => category.parent === 0).map((category) => renderMobileCategory(category)) }
             </motion.div>
           )}
         </AnimatePresence>
