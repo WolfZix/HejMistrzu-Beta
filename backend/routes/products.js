@@ -189,6 +189,7 @@ router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, 
         },
       }
     );
+    console.log(req.files);
 
     res.status(201).json({
       success: true,
