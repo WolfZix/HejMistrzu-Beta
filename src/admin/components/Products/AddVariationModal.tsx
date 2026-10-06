@@ -169,7 +169,7 @@ export default function AddVariationModal({
                 onChange={(file) =>
                   setFormData((prev) => ({
                     ...prev,
-                    image: file,
+                    image: file[0] ?? null,
                   }))
                 }
               />

@@ -144,7 +144,7 @@ router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, 
       `${process.env.WC_URL}/wp-json/wc/v3/products`,
       {
         name,
-        type: "simple",
+        type: parsedVariations.length > 0 ? "variable" : "simple",
         // NA PRODUKCJE status: visible ? "publish" : "private",
         status: "private",
 
@@ -152,6 +152,17 @@ router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, 
         sale_price: String(salePrice ?? ""),
         description,
         categories: parsedCategoryIds.map((id) => ({ id: Number(id) })),
+        attributes:
+          parsedVariations.length > 0
+            ? [
+                {
+                  name: "Wariant",
+                  visible: true,
+                  variation: true,
+                  options: parsedVariations.map((variation) => variation.name),
+                },
+              ]
+            : [],
         images,
         sku,
         global_unique_id: gtin,
