@@ -157,7 +157,7 @@ useEffect(() => {
               sortOptions={SORT_OPTIONS}
               setSortBy={setSortBy}
               sortBy={sortBy}
-              rootCategories={rootCategories}
+              categories={categories}
               setSelectedCategory={setSelectedCategory}
               selectedCategory={selectedCategory}
             />

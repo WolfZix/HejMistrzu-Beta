@@ -1,7 +1,8 @@
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
 import { Input } from "../ui/input";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Category } from "@/types/store";
+import { useState } from "react";
 
 type StoreFiltersProps = {
   search: string;
@@ -10,7 +11,7 @@ type StoreFiltersProps = {
   setSortBy: (value: string) => void;
   isSortOpen: boolean;
   setIsSortOpen: (value: boolean) => void;
-  rootCategories: Category[];
+  categories: Category[];
   selectedCategory: number | null;
   setSelectedCategory: (id: number | null) => void;
   sortOptions: {
@@ -26,11 +27,16 @@ export default function StoreFilters({
   setSortBy,
   isSortOpen,
   setIsSortOpen,
-  rootCategories,
+  categories,
   selectedCategory,
   setSelectedCategory,
   sortOptions,
 }: StoreFiltersProps) {
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [expandedMobileCategory, setExpandedMobileCategory] = useState<number | null>(null);
+  const getChildren = (parentId: number) => {
+    return categories.filter((category) => category.parent === parentId);
+  };
   return (
     <div className="flex flex-col sm:flex-row gap-3 mb-8">
       <div className="relative flex-1">
@@ -122,32 +128,131 @@ export default function StoreFilters({
           )}
         </AnimatePresence>
       </div>
-      <div className="flex flex-wrap justify-center gap-2 md:hidden">
+      <div className="md:hidden">
         <button
-            onClick={() => {
-              setSelectedCategory(null);
-            }}
-            className={`px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
-              selectedCategory === null ? "bg-primary/10 text-primary border border-primary/20" : "bg-card text-muted-foreground border border-border"
-            }`}
-          >
-            <span>
-              Wszystkie  
-            </span>
-          </button>
-        {rootCategories.map((entry, index) => (
-          <button
-            key={`${entry.id}-${index}`}
-            onClick={() => {
-              setSelectedCategory(entry.id)
-            }}
-            className={`px-3 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
-              selectedCategory === entry.id ? "bg-primary/10 text-primary border border-primary/20" : "bg-card text-muted-foreground border border-border"
-            }`}
-          >
-            {entry.name}
-          </button>
-        ))}
+          onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+          className="w-full h-11 px-4 rounded-xl border border-border bg-card flex items-center justify-between"
+        >
+          <span>
+            {selectedCategory === null
+              ? "Wszystkie kategorie"
+              : categories.find((category) => category.id === selectedCategory)?.name}
+          </span>
+
+          {isCategoryOpen ? (
+            <ChevronUp size={18} />
+          ) : (
+            <ChevronDown size={18} />
+          )}
+        </button>
+
+        <AnimatePresence>
+          {isCategoryOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="mt-2 rounded-xl border border-border bg-card p-2 overflow-hidden"
+            >
+              <button
+                onClick={() => {
+                  setSelectedCategory(null);
+                  setIsCategoryOpen(false);
+                  setExpandedMobileCategory(null);
+                }}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm ${
+                  selectedCategory === null
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted/30"
+                }`}
+              >
+                Wszystkie
+              </button>
+
+              {categories
+                .filter((category) => category.parent === 0)
+                .map((category) => {
+                  const children = getChildren(category.id);
+                  const isExpanded = expandedMobileCategory === category.id;
+                  const isSelected = selectedCategory === category.id;
+
+                  return (
+                    <div key={category.id}>
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => {
+                            setSelectedCategory(category.id);
+
+                            if (children.length === 0) {
+                              setIsCategoryOpen(false);
+                              return;
+                            }
+
+                            setExpandedMobileCategory(
+                              isExpanded ? null : category.id
+                            );
+                          }}
+                          className={`flex-1 text-left px-3 py-2.5 rounded-lg text-sm ${
+                            isSelected
+                              ? "bg-primary/10 text-primary"
+                              : "text-muted-foreground hover:bg-muted/30"
+                          }`}
+                        >
+                          {category.name}
+                        </button>
+
+                        {children.length > 0 && (
+                          <button
+                            onClick={() =>
+                              setExpandedMobileCategory(
+                                isExpanded ? null : category.id
+                              )
+                            }
+                            className="p-2 text-muted-foreground"
+                          >
+                            {isExpanded ? (
+                              <ChevronUp size={16} />
+                            ) : (
+                              <ChevronDown size={16} />
+                            )}
+                          </button>
+                        )}
+                      </div>
+
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="ml-4 overflow-hidden"
+                          >
+                            {children.map((child) => (
+                              <button
+                                key={child.id}
+                                onClick={() => {
+                                  setSelectedCategory(child.id);
+                                  setIsCategoryOpen(false);
+                                }}
+                                className={`w-full text-left px-3 py-2 rounded-lg text-sm ${
+                                  selectedCategory === child.id
+                                    ? "bg-primary/10 text-primary"
+                                    : "text-muted-foreground hover:bg-muted/30"
+                                }`}
+                              >
+                                {child.name}
+                              </button>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )
