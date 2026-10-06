@@ -118,7 +118,7 @@ export default function StoreFilters({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-3 mb-8 items-end">
+    <div className="relative z-50 flex flex-col sm:flex-row gap-3 mb-8 items-end">
       <div className="relative flex-1">
         <p className="text-xs text-muted-foreground mb-1">
           Szukaj produktów
@@ -176,7 +176,7 @@ export default function StoreFilters({
                 absolute
                 top-full
                 mt-1
-                z-50
+                z-[999]
                 w-full
                 rounded-xl
                 border
@@ -236,7 +236,7 @@ export default function StoreFilters({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute mt-2 rounded-xl border border-border bg-card p-2 overflow-y-auto max-h-[60vh]"
+              className="absolute top-full left-0 right-0 mt-2 z-[999] rounded-xl border border-border bg-card p-2 overflow-y-auto max-h-[60vh]"
             >
               <button
                 onClick={() => {
