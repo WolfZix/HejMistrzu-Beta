@@ -208,7 +208,7 @@ export default function StoreFilters({
           )}
         </AnimatePresence>
       </div>
-      <div className="lg:hidden">
+      <div className="lg:hidden relative">
         <label className="text-xs text-muted-foreground mb-1 block">
           Kategorie
         </label>
@@ -236,7 +236,7 @@ export default function StoreFilters({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="mt-2 rounded-xl border border-border bg-card p-2 overflow-y-auto max-h-[60vh]"
+              className="absolute mt-2 rounded-xl border border-border bg-card p-2 overflow-y-auto max-h-[60vh]"
             >
               <button
                 onClick={() => {
