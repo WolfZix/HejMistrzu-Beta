@@ -108,6 +108,7 @@ router.get("/:id/variations", async (req, res) => {
 });
 
 router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, res) => {
+  const fs = require("fs");
   try {
     const {
       name,
@@ -191,7 +192,13 @@ router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, 
         },
       }
     );
-    console.log(req.files);
+    req.files?.forEach((file) => {
+      fs.unlink(file.path, (error) => {
+        if (error) {
+          console.error("Nie udało się usunąć pliku:", error.message);
+        }
+      });
+    });
 
     res.status(201).json({
       success: true,
