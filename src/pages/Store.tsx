@@ -19,7 +19,6 @@ const SORT_OPTIONS = [
   ]
 
 export default function Store() {
-  // Filters
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("default");
   const [isSortOpen, setIsSortOpen] = useState(false);
@@ -27,12 +26,10 @@ export default function Store() {
   const [onlyPromotions, setOnlyPromotions] = useState(false);
   const [onlyWishlist, setOnlyWishlist] = useState(false);
 
-  // Products
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [visibleProducts, setVisibleProducts] = useState(9);
   const [selectedProduct, setSelectedProduct] = useState<StoreProduct | null>(null);
 
-  // Categories
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<number | null>(null);
@@ -40,7 +37,6 @@ export default function Store() {
   const selectedCategoryObject = categories.find((category) => category.id === selectedCategory);
   const parentCategory = categories.find((category) => category.id === selectedCategoryObject?.parent);
 
-  // UI
   const [isLoading, setIsLoading] = useState(true);
   const [wishlist, setWishlist] = useState<number[]>([]);
   const [notified, setNotified] = useState<Record<number, boolean>>({});
@@ -161,7 +157,7 @@ useEffect(() => {
               setSelectedCategory={setSelectedCategory}
               selectedCategory={selectedCategory}
             />
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                 {filtered.slice(0, visibleProducts).map((product) => (
                   <ProductCard
                     key={product.id}
