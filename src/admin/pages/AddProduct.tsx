@@ -41,41 +41,43 @@ export default function AddProduct() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    const data = new FormData();
+
+    data.append("name", formData.name);
+    data.append("description", formData.description);
+    data.append("categoryIds", JSON.stringify(formData.categoryIds));
+    data.append("price", formData.price);
+    data.append("salePrice", formData.salePrice);
+    data.append("preorder", String(formData.preorder));
+    data.append("inpostMethods", JSON.stringify(formData.inpostMethods));
+
+    data.append("sku", formData.sku);
+    data.append("gtin", formData.gtin);
+    data.append("weight", formData.weight);
+    data.append("length", formData.length);
+    data.append("width", formData.width);
+    data.append("height", formData.height);
+    data.append("visible", String(formData.visible));
+    data.append("manageStock", String(formData.manageStock));
+    data.append("stock", formData.stock);
+    data.append("soldIndividually", String(formData.soldIndividually));
+    data.append("lowStockThreshold", formData.lowStockThreshold);
+    data.append("backorders", formData.backorders);
+    data.append("purchaseNote", formData.purchaseNote);
+    data.append("menuOrder", formData.menuOrder);
+
+    formData.images.forEach((image) => {
+      data.append("images", image);
+    });
+
     const response = await fetch(`${import.meta.env.VITE_API_URL}/products`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({
-      name: formData.name,
-      description: formData.description,
-      categoryIds: formData.categoryIds,
-      price: formData.price,
-      salePrice: formData.salePrice,
-      preorder: formData.preorder,
-      inpostMethods: formData.inpostMethods,
-
-      sku: formData.sku,
-      gtin: formData.gtin,
-      weight: formData.weight,
-      length: formData.length,
-      width: formData.width,
-      height: formData.height,
-      visible: formData.visible,
-      manageStock: formData.manageStock,
-      stock: formData.stock,
-      soldIndividually: formData.soldIndividually,
-      lowStockThreshold: formData.lowStockThreshold,
-      backorders: formData.backorders,
-      purchaseNote: formData.purchaseNote,
-      menuOrder: formData.menuOrder,
-    }),
-  });
-
-    const data = await response.json();
-
-    console.log(data);
+      body: data,
+    });
+    console.log(response);
   }
 
   function closePage() {

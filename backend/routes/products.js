@@ -5,6 +5,7 @@ const pool = require("../config/db");
 const router = express.Router();
 const verifyToken = require("../middleware/verifyToken");
 const requireAdmin = require("../middleware/requireAdmin");
+const upload = require("../config/multer");
 const {
   syncProduct,
   syncVariations,
@@ -106,7 +107,7 @@ router.get("/:id/variations", async (req, res) => {
   }
 });
 
-router.post("/", verifyToken, requireAdmin, async (req, res) => {
+router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, res) => {
   try {
     const {
       name,
