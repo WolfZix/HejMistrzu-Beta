@@ -208,7 +208,7 @@ export default function StoreFilters({
           )}
         </AnimatePresence>
       </div>
-      <div className="lg:hidden relative w-[180px] shrink-0">
+      <div className="lg:hidden relative w-[200px] shrink-0">
         <label className="text-xs text-muted-foreground mb-1 block">
           Kategorie
         </label>
