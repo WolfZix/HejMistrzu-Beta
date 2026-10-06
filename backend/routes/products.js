@@ -250,10 +250,13 @@ router.post(
           }
         );
       }
-      req.files?.forEach((file) => {
+      Object.values(req.files ?? {}).flat().forEach((file) => {
         fs.unlink(file.path, (error) => {
           if (error) {
-            console.error("Nie udało się usunąć pliku:", error.message);
+            console.error(
+              "Nie udało się usunąć pliku:",
+              error.message
+            );
           }
         });
       });
