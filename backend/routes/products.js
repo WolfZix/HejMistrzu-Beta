@@ -107,127 +107,172 @@ router.get("/:id/variations", async (req, res) => {
   }
 });
 
-router.post("/", verifyToken, requireAdmin, upload.array("images"), async (req, res) => {
-  const fs = require("fs");
-  try {
-    const {
-      name,
-      categoryIds,
-      stock,
-      description,
-      price,
-      salePrice,
-      preorder,
-      visible,
-      sku,
-      gtin,
-      manageStock,
-      soldIndividually,
-      lowStockThreshold,
-      backorders,
-      inpostMethods,
-      weight,
-      length,
-      width,
-      height,
-      posAvailable,
-      purchaseNote,
-      menuOrder,
-      variations,
-    } = req.body;
-    const parsedCategoryIds = JSON.parse(categoryIds || "[]");
-    const parsedVariations = JSON.parse(variations || "[]");
-    console.log("WARIANTY:", parsedVariations);
-    const images = (req.files ?? []).map((file) => ({ src: `${process.env.SERVER_URL}/uploads/${file.filename}`}));
-
-    const response = await axios.post(
-      `${process.env.WC_URL}/wp-json/wc/v3/products`,
-      {
+router.post(
+  "/",
+  verifyToken,
+  requireAdmin,
+  upload.fields([
+    { name: "images", maxCount: 20 },
+    { name: "variationImages", maxCount: 20 }
+  ]), 
+  async (req, res) => {
+    const fs = require("fs");
+    try {
+      const {
         name,
-        type: parsedVariations.length > 0 ? "variable" : "simple",
-        // NA PRODUKCJE status: visible ? "publish" : "private",
-        status: "private",
-
-        regular_price: String(price ?? ""),
-        sale_price: String(salePrice ?? ""),
+        categoryIds,
+        stock,
         description,
-        categories: parsedCategoryIds.map((id) => ({ id: Number(id) })),
-        attributes:
-          parsedVariations.length > 0
-            ? [
-                {
-                  name: "Wariant",
-                  visible: true,
-                  variation: true,
-                  options: parsedVariations.map((variation) => variation.name),
-                },
-              ]
-            : [],
-        images,
+        price,
+        salePrice,
+        preorder,
+        visible,
         sku,
-        global_unique_id: gtin,
-
-        manage_stock: manageStock,
-        stock_quantity: stock ? Number(stock) : null,
-        sold_individually: soldIndividually,
-        low_stock_amount: lowStockThreshold
-          ? Number(lowStockThreshold)
-          : null,
-
-        backorders: backorders === "Nie zezwalaj"
-          ? "no"
-          : backorders === "Zezwalaj + poinformuj"
-            ? "notify"
-            : "yes",
-
+        gtin,
+        manageStock,
+        soldIndividually,
+        lowStockThreshold,
+        backorders,
+        inpostMethods,
         weight,
-        dimensions: {
-          length,
-          width,
-          height,
-        },
+        length,
+        width,
+        height,
+        posAvailable,
+        purchaseNote,
+        menuOrder,
+        variations,
+      } = req.body;
+      const parsedCategoryIds = JSON.parse(categoryIds || "[]");
+      const parsedVariations = JSON.parse(variations || "[]");
+      console.log("WARIANTY:", parsedVariations);
+      const productImages = req.files?.images ?? [];
+      const variationImages = req.files?.variationImages ?? [];
+      const images = productImages.map((file) => ({ src: `${process.env.SERVER_URL}/uploads/${file.filename}` }));
 
-        purchase_note: purchaseNote,
-        menu_order: Number(menuOrder ?? 0),
-        meta_data: [
-      {
-        key: "_hejmistrzu_preorder",
-        value: preorder,
-      },
-      {
-        key: "woo_inpost_shipping_methods_allowed",
-        value: inpostMethods,
-      }]
-      },
-      {
-        params: {
-          consumer_key: process.env.WC_CONSUMER_KEY_W,
-          consumer_secret: process.env.WC_CONSUMER_SECRET_W,
+      const response = await axios.post(
+        `${process.env.WC_URL}/wp-json/wc/v3/products`,
+        {
+          name,
+          type: parsedVariations.length > 0 ? "variable" : "simple",
+          // NA PRODUKCJE status: visible ? "publish" : "private",
+          status: "private",
+
+          regular_price: String(price ?? ""),
+          sale_price: String(salePrice ?? ""),
+          description,
+          categories: parsedCategoryIds.map((id) => ({ id: Number(id) })),
+          attributes:
+            parsedVariations.length > 0
+              ? [
+                  {
+                    name: "Wariant",
+                    visible: true,
+                    variation: true,
+                    options: parsedVariations.map((variation) => variation.name),
+                  },
+                ]
+              : [],
+          images,
+          sku,
+          global_unique_id: gtin,
+
+          manage_stock: manageStock,
+          stock_quantity: stock ? Number(stock) : null,
+          sold_individually: soldIndividually,
+          low_stock_amount: lowStockThreshold
+            ? Number(lowStockThreshold)
+            : null,
+
+          backorders: backorders === "Nie zezwalaj"
+            ? "no"
+            : backorders === "Zezwalaj + poinformuj"
+              ? "notify"
+              : "yes",
+
+          weight,
+          dimensions: {
+            length,
+            width,
+            height,
+          },
+
+          purchase_note: purchaseNote,
+          menu_order: Number(menuOrder ?? 0),
+          meta_data: [
+        {
+          key: "_hejmistrzu_preorder",
+          value: preorder,
         },
-      }
-    );
-    req.files?.forEach((file) => {
-      fs.unlink(file.path, (error) => {
-        if (error) {
-          console.error("Nie udało się usunąć pliku:", error.message);
+        {
+          key: "woo_inpost_shipping_methods_allowed",
+          value: inpostMethods,
+        }]
+        },
+        {
+          params: {
+            consumer_key: process.env.WC_CONSUMER_KEY_W,
+            consumer_secret: process.env.WC_CONSUMER_SECRET_W,
+          },
         }
+      );
+      for (const variation of parsedVariations) {
+        const image = variation.imageIndex !== null
+          ? variationImages[variation.imageIndex]
+          : null;
+
+        await axios.post(
+          `${process.env.WC_URL}/wp-json/wc/v3/products/${response.data.id}/variations`,
+          {
+            regular_price: String(variation.price ?? ""),
+            sale_price: String(variation.salePrice ?? ""),
+            manage_stock: true,
+            stock_quantity: variation.stock ? Number(variation.stock) : null,
+
+            attributes: [
+              {
+                name: "Wariant",
+                option: variation.name,
+              },
+            ],
+
+            ...(image && {
+              image: {
+                src: `${process.env.SERVER_URL}/uploads/${image.filename}`,
+              },
+            }),
+          },
+          {
+            params: {
+              consumer_key: process.env.WC_CONSUMER_KEY_W,
+              consumer_secret: process.env.WC_CONSUMER_SECRET_W,
+            },
+          }
+        );
+      }
+      req.files?.forEach((file) => {
+        fs.unlink(file.path, (error) => {
+          if (error) {
+            console.error("Nie udało się usunąć pliku:", error.message);
+          }
+        });
       });
-    });
 
-    res.status(201).json({
-      success: true,
-      product: response.data,
-    });
-  } catch (error) {
-    console.error(error.response?.data || error.message);
+      res.status(201).json({
+        success: true,
+        product: response.data,
+      });
+    } catch (error) {
+      console.error(error.response?.data || error.message);
 
-    res.status(error.response?.status || 500).json({
-      success: false,
-      message: "Nie udało się utworzyć produktu",
-      error: error.response?.data || error.message,
-    });
+      res.status(error.response?.status || 500).json({
+        success: false,
+        message: "Nie udało się utworzyć produktu",
+        error: error.response?.data || error.message,
+      });
+    }
   }
-});
+);
 
 router.get("/sync-all", verifyToken, requireAdmin, async (_req, res) => {
   try {

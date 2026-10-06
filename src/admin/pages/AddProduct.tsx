@@ -65,18 +65,27 @@ export default function AddProduct() {
     data.append("backorders", formData.backorders);
     data.append("purchaseNote", formData.purchaseNote);
     data.append("menuOrder", formData.menuOrder);
-    data.append("variations", JSON.stringify(
-      formData.variations.map((variation) => ({
+    const variationImages: File[] = [];
+    const variations = formData.variations.map((variation) => {
+      let imageIndex = null;
+      if (variation.image) {
+        imageIndex = variationImages.length;
+        variationImages.push(variation.image);
+      }
+      return {
         name: variation.name,
         price: variation.price,
         salePrice: variation.salePrice,
         stock: variation.stock,
-      }))
-    ));
-
-    formData.images.forEach((image) => {
-      data.append("images", image);
+        imageIndex,
+      };
     });
+
+    data.append("variations", JSON.stringify(variations));
+    
+    variationImages.forEach((image) => { data.append("variationImages", image) });
+    formData.variations.forEach((variation) => { variation.image ? data.append("variationImages", variation.image) : "" });
+    formData.images.forEach((image) => { data.append("images", image) });
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/products`, {
       method: "POST",
