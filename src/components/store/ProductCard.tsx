@@ -7,11 +7,11 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
   const variations = product.variations ?? [];
   const variationPrices = variations.map((variation) => {
     const regularPrice = Number(variation.price);
-    const salePrice = variation.salePrice !== "" && variation.salePrice != null
+    const salePrice = variation.salePrice != null  && variation.regularPrice != null
       ? Number(variation.salePrice)
       : NaN;
     const hasSale = 
-      variation.salePrice !== "" &&
+      variation.salePrice != null &&
       variation.salePrice != null &&
       !Number.isNaN(salePrice) &&
       salePrice > 0 &&

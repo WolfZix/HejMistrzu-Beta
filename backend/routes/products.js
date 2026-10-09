@@ -16,56 +16,164 @@ const {
   syncChangedProducts,
 } = require("../services/syncProducts");
 
+
 router.get("/", async (_req, res) => {
   try {
-    const params = {
-      consumer_key: process.env.WC_CONSUMER_KEY,
-      consumer_secret: process.env.WC_CONSUMER_SECRET,
-      per_page: 100,
-      page: 1,
-    };
+    const [productsResult, variationsResult, categoriesResult, imagesResult] =
+      await Promise.all([
+        pool.query(`
+          SELECT *
+          FROM products
+          WHERE status = 'publish'
+          ORDER BY id
+        `),
 
-    const firstPage = await axios.get(`${process.env.WC_URL}/wp-json/wc/v3/products`, { params });
-    const totalPages = Number(firstPage.headers["x-wp-totalpages"]);
-    let allProducts = [...firstPage.data];
-    for (let page = 2; page <= totalPages; page++) {
-      const response = await axios.get(`${process.env.WC_URL}/wp-json/wc/v3/products`, { 
-        params: {
-          ...params,
-          page,
-        }
+        pool.query(`
+          SELECT *
+          FROM product_variations
+          ORDER BY woocommerce_id
+        `),
+
+        pool.query(`
+          SELECT
+            pcr.product_id,
+            pc.woocommerce_id AS category_id,
+            pc.name
+          FROM product_category_relations pcr
+          JOIN product_categories pc
+            ON pc.id = pcr.category_id
+        `),
+
+        pool.query(`
+          SELECT product_id, url, position
+          FROM product_images
+          ORDER BY position ASC
+        `),
+      ]);
+
+    const variationsByProduct = new Map();
+    for (const variation of variationsResult.rows) {
+      const list = variationsByProduct.get(variation.product_id) || [];
+
+      const regularPrice =
+        variation.regular_price != null
+          ? Number(variation.regular_price)
+          : null;
+
+      const salePrice =
+        variation.sale_price != null
+          ? Number(variation.sale_price)
+          : null;
+
+      const price =
+        salePrice !== null && regularPrice !== null &&
+        salePrice < regularPrice
+          ? salePrice
+          : Number(variation.price ?? regularPrice ?? 0);
+
+      list.push({
+        id: variation.woocommerce_id,
+        name: variation.name,
+        price,
+        regularPrice,
+        salePrice,
+        onSale:
+          salePrice !== null &&
+          regularPrice !== null &&
+          salePrice < regularPrice,
+        stock: variation.stock_quantity ?? 0,
+        inStock: variation.stock_status === "instock",
+        image: variation.image_url || null,
       });
-      allProducts.push(...response.data);
+
+      variationsByProduct.set(variation.product_id, list);
     }
 
-    const visibleProducts = allProducts.filter((product) => product.status === "publish");
+    const categoriesByProduct = new Map();
+    for (const category of categoriesResult.rows) {
+      const list = categoriesByProduct.get(category.product_id) || [];
 
-    const products = visibleProducts.map(product => ({
-      id: product.id,
-      name: product.name,
-      price: Number(product.price),
-      regularPrice: Number(product.regular_price) || null,
-      salePrice: Number(product.sale_price) || null,
-      onSale: product.on_sale,
-      categories: product.categories.map(category => ({
-        id: category.id,
+      list.push({
+        id: category.category_id,
         name: category.name,
-      })),
-      image: product.images?.[0]?.src || "",
-      inStock: product.stock_status === "instock",
-      stock: product.stock_quantity ?? 0,
-      hasVariations: product.type === "variable",
-      description: product.short_description || "",
-    }));
+      });
+
+      categoriesByProduct.set(category.product_id, list);
+    }
+
+    const imagesByProduct = new Map();
+    for (const image of imagesResult.rows) {
+      const list = imagesByProduct.get(image.product_id) || [];
+      list.push(image.url);
+      imagesByProduct.set(image.product_id, list);
+    }
+
+    const products = productsResult.rows.map((product) => {
+      const variations = variationsByProduct.get(product.id) || [];
+      const categories = categoriesByProduct.get(product.id) || [];
+      const images = imagesByProduct.get(product.id) || [];
+
+      const hasVariations = product.type === "variable";
+
+      const onSale = hasVariations
+        ? variations.some((variation) => variation.onSale)
+        : product.sale_price != null &&
+          product.regular_price != null &&
+          Number(product.sale_price) < Number(product.regular_price);
+
+      const regularPrice =
+        product.regular_price != null
+          ? Number(product.regular_price)
+          : null;
+
+      const salePrice =
+        product.sale_price != null
+          ? Number(product.sale_price)
+          : null;
+
+      const price = hasVariations
+        ? variations.length > 0
+          ? Math.min(...variations.map((variation) => variation.price))
+          : Number(product.price ?? 0)
+        : Number(product.price ?? 0);
+
+      const stock = hasVariations
+        ? variations.reduce((sum, variation) => sum + Number(variation.stock), 0)
+        : Number(product.stock_quantity ?? 0);
+
+      const inStock = hasVariations
+        ? variations.some((variation) => variation.inStock)
+        : product.stock_status === "instock";
+
+      return {
+        id: product.woocommerce_id,
+        name: product.name,
+        price,
+        originalPrice: regularPrice ?? price,
+        regularPrice,
+        salePrice,
+        onSale,
+        categories,
+        image: images[0] || "",
+        inStock,
+        stock,
+        hasVariations,
+        variations,
+        description: product.short_description || "",
+      };
+    });
+
     res.json(products);
   } catch (error) {
-    console.error(error.response?.data);
+    console.error("Błąd pobierania produktów z PostgreSQL:", error);
+
     res.status(500).json({
       success: false,
       message: "Nie udało się pobrać produktów",
     });
   }
 });
+
 
 router.get("/:id/variations", async (req, res) => {
   try {
@@ -76,6 +184,8 @@ router.get("/:id/variations", async (req, res) => {
           woocommerce_id,
           name,
           price,
+          regular_price,
+          sale_price,
           stock_quantity,
           stock_status
         FROM product_variations
@@ -94,6 +204,8 @@ router.get("/:id/variations", async (req, res) => {
         id: variation.woocommerce_id,
         name: variation.name,
         price: Number(variation.price),
+        regularPrice: variation.regular_price !== null ? Number(variation.regular_price) : null,
+        salePrice: variation.sale_price !== null ? Number(variation.sale_price) : null,
         stock: variation.stock_quantity ?? 0,
         inStock: variation.stock_status === "instock",
       }))
