@@ -18,7 +18,13 @@ export default function ProductPreview({ formData, imageSrc, categories, hasVari
   const selectedVariation = selectedVariationIndex !== null ? formData.variations[selectedVariationIndex] : null;
   const price = Number(selectedVariation?.price ?? formData.price);
   const salePrice = Number(selectedVariation?.salePrice ?? formData.salePrice);
-  const stock = selectedVariation ? selectedVariation.stock : formData.stock;
+
+  const stock = selectedVariation
+  ? selectedVariation.stock
+  : hasVariations
+    ? formData.variations.reduce((total, variation) => total + (Number(variation.stock) || 0), 0)
+    : formData.stock;
+  
   const hasStock = String(stock).trim() !== "" && Number(stock) > 0;
   const currentImageSrc = variationImageSrc ?? imageSrc;
 
@@ -211,14 +217,14 @@ export default function ProductPreview({ formData, imageSrc, categories, hasVari
             <div>
               {hasSale && (
                 <span className="mr-2 text-sm text-muted-foreground line-through">
-                  {hasVariations
+                  {hasVariations && !selectedVariation
                     ? "Wybierz wariant"
                     : `${price.toFixed(2).replace(".", ",")} zł`}
                 </span>
               )}
 
               <span className="text-2xl font-semibold text-primary">
-                {hasVariations
+                {hasVariations && !selectedVariation
                   ? "Wybierz wariant"
                   : `${Number.isNaN(displayPrice)
                       ? "—"
