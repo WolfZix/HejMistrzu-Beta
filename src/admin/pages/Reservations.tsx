@@ -9,6 +9,7 @@ import EditReservationModal from "../components/Reservations/Edit/EditReservatio
 import DeleteModal from "../components/DeleteModal";
 import ViewReservationModal from "../components/Reservations/ViewReservationModal";
 import TableFilters from "../components/TableFilters";
+import { getStatusClass } from "@/utils";
 
 const SORT_OPTIONS = [
   {
@@ -106,7 +107,8 @@ export default function Reservations() {
   async function fetchReservations() {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/reservations`);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/reservations`, { headers: { Authorization: `Bearer ${token}` } });
       setReservations(response.data);
     } catch(error) {
       console.error(error);
@@ -114,24 +116,12 @@ export default function Reservations() {
       setIsLoading(false);
     }
   }
-  
-  function getStatusClass(status: string) {
-    switch (status) {
-      case "Oczekująca":
-        return "bg-yellow-500/10 text-yellow-400";
-      case "Potwierdzona":
-        return "bg-green-500/10 text-green-400";
-      case "Anulowana":
-        return "bg-red-500/10 text-red-400";  
-      default:
-        return "";
-    }
-  }
 
   async function handleDeleteReservation() {
     if (!selectedReservation) return;
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/reservations/${selectedReservation.id}`);
+      const token = localStorage.getItem("token");
+      await axios.delete(`${import.meta.env.VITE_API_URL}/reservations/${selectedReservation.id}`, { headers: { Authorization: `Bearer ${token}` } });
       setIsDeleteOpen(false);
       setSelectedReservation(null);
       fetchReservations();
