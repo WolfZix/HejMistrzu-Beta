@@ -30,7 +30,7 @@ export default function FormToggle({
             border
             transition-all
             ${
-              value
+              value && !disabled
                 ? "bg-primary/10 border-primary"
                 : "border-primary/20 bg-background/50"
             }
