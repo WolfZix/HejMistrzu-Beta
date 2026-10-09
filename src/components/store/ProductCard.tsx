@@ -4,6 +4,23 @@ import { Button } from "@/components/ui/button";
 import type { ProductCardProps } from "@/types/store";
 
 export function ProductCard({ product, isWishlisted, isNotified, onQuickView, onToggleWishlist, onAddToCart }: ProductCardProps) {
+  const variations = product.variations ?? [];
+  const variationPrices = variations.map((variation) => {
+    const regularPrice = Number(variation.price);
+    const salePrice = Number(variation.salePrice);
+    const hasSale = 
+      variation.salePrice !== "" &&
+      variation.salePrice != null &&
+      !Number.isNaN(salePrice) &&
+      salePrice > 0 &&
+      salePrice < regularPrice;
+      return {regularPrice, displayPrice: hasSale ? salePrice : regularPrice}
+  });
+  const cheapestVariation = variationPrices
+    .filter((variation) => !Number.isNaN(variation.displayPrice))
+    .sort((a, b) => a.displayPrice - b.displayPrice)[0];
+  const displayPrice = product.hasVariations && cheapestVariation ? cheapestVariation.displayPrice : product.price;
+  const displayRegularPrice = product.hasVariations && cheapestVariation ? cheapestVariation.regularPrice : product.regularPrice;
   return (
     <div
       className="group glass rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-primary/20 border border-transparent flex flex-col relative h-full"
@@ -53,12 +70,12 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
         <div className="mt-auto flex items-end justify-between">
           <div className="flex items-baseline gap-2">
             <span className="font-heading text-xl font-bold text-gold-gradient">
-              {product.price.toFixed(2)} zł
+              {displayPrice.toFixed(2)} zł
             </span>
-            {product.regularPrice &&
-              product.regularPrice > product.price && (
+            {displayRegularPrice != null &&
+              displayRegularPrice > displayPrice && (
                 <span className="text-muted-foreground line-through">
-                  {product.regularPrice.toFixed(2)} zł
+                  {displayRegularPrice?.toFixed(2)} zł
                 </span>
               )}
           </div>

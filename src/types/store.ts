@@ -19,6 +19,7 @@ export interface StoreProduct {
   inStock: boolean;
   stock: number;
   hasVariations: boolean;
+  variations: ProductVariationFormData[];
   rating?: number | null;
   description: string;
 }
