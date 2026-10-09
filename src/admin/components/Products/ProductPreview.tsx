@@ -30,7 +30,7 @@ export default function ProductPreview({ formData, imageSrc, categories, hasVari
 
   const hasSale =
     formData.onSale &&
-    formData.salePrice.trim() !== "" &&
+    String(selectedVariation?.salePrice ?? formData.salePrice).trim() !== "" &&
     !Number.isNaN(salePrice) &&
     salePrice > 0 &&
     !Number.isNaN(price) &&
