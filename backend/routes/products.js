@@ -177,8 +177,8 @@ router.post(
           sku,
           global_unique_id: gtin,
 
-          manage_stock: manageStock,
-          stock_quantity: stock ? Number(stock) : null,
+          manage_stock: parsedVariations.length === 0 && manageStock,
+          stock_quantity: parsedVariations.length === 0 && stock ? Number(stock) : null,
           sold_individually: soldIndividually,
           low_stock_amount: lowStockThreshold
             ? Number(lowStockThreshold)
