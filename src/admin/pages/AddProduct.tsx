@@ -35,6 +35,12 @@ export default function AddProduct() {
     setFormData((prev) => ({
       ...prev,
       variations: [...prev.variations, variation],
+      ...(prev.variations.length === 0 && {
+        price: '',
+        salePrice: '',
+        stock: '',
+        manageStock: false,
+      }),
     }));
 
     setIsVariationOpen(false);
