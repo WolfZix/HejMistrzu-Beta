@@ -91,11 +91,17 @@ export default function Users() {
   }, [search])
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/users`)
-    .then((res) => res.json())
-    .then((data: User[]) => { setUsers(data) })
-    .catch(console.error);
-  }, [])
+    const token = localStorage.getItem("token");
+    fetch(`${import.meta.env.VITE_API_URL}/users`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(async (res) => {
+      if (!res.ok) throw new Error(`Błąd pobierania użytkowników: ${res.status}`);
+      return res.json();
+    }).then((data: User[]) => {
+      if (!Array.isArray(data)) throw new Error("API nie zwróciło tablicy uzytkowników.");
+      setUsers(data);
+    }).catch(console.error);
+  }, []);
 
   return (
     <div className="space-y-6 min-h-[45rem] relative">
