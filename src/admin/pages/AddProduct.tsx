@@ -140,6 +140,7 @@ export default function AddProduct() {
           formData={formData}
           imageSrc={previewImage}
           categories={categories}
+          hasVariations={hasVariations}
         />
       </div>
 

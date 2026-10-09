@@ -6,9 +6,10 @@ type ProductPreviewProps = {
   formData: ProductFormData;
   imageSrc?: string;
   categories: Category[];
+  hasVariations: boolean;
 };
 
-export default function ProductPreview({ formData, imageSrc, categories }: ProductPreviewProps) {
+export default function ProductPreview({ formData, imageSrc, categories, hasVariations }: ProductPreviewProps) {
   const [selectedVariationIndex, setSelectedVariationIndex] = useState<number | null>(null);
   const [variationImageSrc, setVariationImageSrc] = useState<string>();
   
@@ -210,15 +211,18 @@ export default function ProductPreview({ formData, imageSrc, categories }: Produ
             <div>
               {hasSale && (
                 <span className="mr-2 text-sm text-muted-foreground line-through">
-                  {price.toFixed(2).replace(".", ",")} zł
+                  {hasVariations
+                    ? "Wybierz wariant"
+                    : `${price.toFixed(2).replace(".", ",")} zł`}
                 </span>
               )}
 
               <span className="text-2xl font-semibold text-primary">
-                {Number.isNaN(displayPrice)
-                  ? "0,00"
-                  : displayPrice.toFixed(2).replace(".", ",")}{" "}
-                zł
+                {hasVariations
+                  ? "Wybierz wariant"
+                  : `${Number.isNaN(displayPrice)
+                      ? "—"
+                      : displayPrice.toFixed(2).replace(".", ",")} zł`}
               </span>
             </div>
 
