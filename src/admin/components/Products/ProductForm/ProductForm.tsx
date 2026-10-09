@@ -15,6 +15,7 @@ type ProductFormProps = {
   closeModal: () => void;
   onAddVariation: () => void;
   categories: Category[];
+  hasVariations: boolean;
 };
 
 export default function ProductForm({
@@ -23,10 +24,9 @@ export default function ProductForm({
   handleSubmit,
   closeModal,
   onAddVariation,
-  categories
+  categories,
+  hasVariations,
 }: ProductFormProps) {
-
-  const hasVariations = formData.variations.length > 0;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6 space-y-6 xl:max-w-xl">

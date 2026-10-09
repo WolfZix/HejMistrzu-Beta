@@ -11,6 +11,8 @@ export default function AddProduct() {
   const [previewImage, setPreviewImage] = useState<string>();
   const [isVariationOpen, setIsVariationOpen] = useState(false);
 
+  const hasVariations = formData.variations.length > 0;
+
   useEffect(() => {
     if (!formData.images || formData.images.length === 0) {
       setPreviewImage(undefined);
@@ -46,8 +48,8 @@ export default function AddProduct() {
     data.append("name", formData.name);
     data.append("description", formData.description);
     data.append("categoryIds", JSON.stringify(formData.categoryIds));
-    data.append("price", formData.price);
-    data.append("salePrice", formData.salePrice);
+    data.append("price", hasVariations ? "" : formData.price);
+    data.append("salePrice", hasVariations ? "" : formData.salePrice);
     data.append("preorder", String(formData.preorder));
     data.append("inpostMethods", JSON.stringify(formData.inpostMethods));
 
@@ -58,8 +60,8 @@ export default function AddProduct() {
     data.append("width", formData.width);
     data.append("height", formData.height);
     data.append("visible", String(formData.visible));
-    data.append("manageStock", String(formData.manageStock));
-    data.append("stock", formData.stock);
+    data.append("manageStock", String(hasVariations ? false : formData.manageStock));
+    data.append("stock", hasVariations ? "" : formData.stock);
     data.append("soldIndividually", String(formData.soldIndividually));
     data.append("lowStockThreshold", formData.lowStockThreshold);
     data.append("backorders", formData.backorders);
@@ -84,7 +86,6 @@ export default function AddProduct() {
     data.append("variations", JSON.stringify(variations));
     
     variationImages.forEach((image) => { data.append("variationImages", image) });
-    formData.variations.forEach((variation) => { variation.image ? data.append("variationImages", variation.image) : "" });
     formData.images.forEach((image) => { data.append("images", image) });
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/products`, {
@@ -122,6 +123,7 @@ export default function AddProduct() {
             formData={formData}
             setFormData={setFormData}
             handleSubmit={handleSubmit}
+            hasVariations={hasVariations}
             closeModal={closePage}
             onAddVariation={() => setIsVariationOpen(true)}
             categories={categories}

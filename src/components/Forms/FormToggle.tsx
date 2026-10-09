@@ -36,7 +36,7 @@ export default function FormToggle({
             }
           `}
         >
-          {value ? "Tak" : "Nie"}
+          {disabled ? "Nie" : value ? "Tak" : "Nie"}
         </button>
     </div>
   );
