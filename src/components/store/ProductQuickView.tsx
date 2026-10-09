@@ -188,7 +188,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                     : (`${product.onSale ? (product.salePrice !== null ? product.salePrice * qty : "") : product.price * qty} zł`)
                   }
                 </span>
-                {product.regularPrice && product.onSale && (
+                {!product.hasVariations && product.regularPrice && product.onSale && (
                 <span className="text-muted-foreground line-through">{product.regularPrice * qty} zł</span>
                 )}
               </div>
