@@ -188,9 +188,20 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                     : (`${product.onSale ? (product.salePrice !== null ? product.salePrice * qty : "") : product.price * qty} zł`)
                   }
                 </span>
-                {!product.hasVariations && product.regularPrice && product.onSale && (
-                <span className="text-muted-foreground line-through">{product.regularPrice * qty} zł</span>
-                )}
+                {product.onSale &&
+                  (product.hasVariations
+                    ? selectedVariation?.regularPrice != null &&
+                      selectedVariation.regularPrice > selectedVariation.price
+                    : product.regularPrice != null &&
+                      product.regularPrice > product.price) && (
+                    <span className="text-muted-foreground line-through">
+                      {(
+                        (product.hasVariations
+                          ? selectedVariation!.regularPrice!
+                          : product.regularPrice!) * qty
+                      ).toFixed(2)} zł
+                    </span>
+                  )}
               </div>
               {(product.hasVariations ? hasAvailableVariation : product.inStock && product.stock !== 0)
               ? (

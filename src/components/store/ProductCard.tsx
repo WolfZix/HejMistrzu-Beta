@@ -5,19 +5,14 @@ import type { ProductCardProps } from "@/types/store";
 
 export function ProductCard({ product, isWishlisted, isNotified, onQuickView, onToggleWishlist, onAddToCart }: ProductCardProps) {
   const variations = product.variations ?? [];
+  
   const variationPrices = variations.map((variation) => {
-    const regularPrice = Number(variation.price);
-    const salePrice = variation.salePrice != null  && variation.regularPrice != null
-      ? Number(variation.salePrice)
-      : NaN;
-    const hasSale = 
-      variation.salePrice != null &&
-      variation.salePrice != null &&
-      !Number.isNaN(salePrice) &&
-      salePrice > 0 &&
-      salePrice < regularPrice;
-      return {regularPrice, displayPrice: hasSale ? salePrice : regularPrice}
+    const regularPrice = variation.regularPrice != null ? Number(variation.regularPrice) : Number(variation.price);
+    const salePrice = variation.salePrice != null ? Number(variation.salePrice) : NaN;
+    const hasSale = !Number.isNaN(salePrice) && salePrice > 0 && salePrice < regularPrice;
+    return { regularPrice, displayPrice: hasSale ? salePrice : regularPrice };
   });
+
   const cheapestVariation = variationPrices
     .filter((variation) => !Number.isNaN(variation.displayPrice))
     .sort((a, b) => a.displayPrice - b.displayPrice)[0];
