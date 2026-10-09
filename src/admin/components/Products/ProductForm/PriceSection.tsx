@@ -20,6 +20,7 @@ export function PriceSection({ formData, setFormData, disabled }: PriceSectionPr
           label="Cena regularna"
           value={formData.price}
           disabled={disabled}
+          className={`${disabled ? "opacity-50" : "opacity-100"}`}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
@@ -27,7 +28,7 @@ export function PriceSection({ formData, setFormData, disabled }: PriceSectionPr
             }))
           }
           type="number"
-          placeholder="9999,99"
+          placeholder={`${disabled ? "-" : "99,99"}`}
           required
         />
 
@@ -35,6 +36,7 @@ export function PriceSection({ formData, setFormData, disabled }: PriceSectionPr
           label="Cena promocyjna"
           value={formData.salePrice}
           disabled={disabled}
+          className={`${disabled ? "opacity-50" : "opacity-100"}`}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
@@ -42,7 +44,7 @@ export function PriceSection({ formData, setFormData, disabled }: PriceSectionPr
             }))
           }
           type="number"
-          placeholder="9999,99"
+          placeholder={`${disabled ? "-" : "99,99"}`}
         />
       </div>
 

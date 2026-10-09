@@ -57,8 +57,9 @@ export function StockSection({ formData, setFormData, disabled }: StockSectionPr
       <div className="mt-4 flex gap-4">
         <FormToggle
           label="Zarządzaj stanem magazynowym"
-          value={formData.manageStock}
           disabled={disabled}
+          value={formData.manageStock}
+          className={`${disabled ? " opacity-50" : "opacity-100"}`}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
@@ -83,7 +84,7 @@ export function StockSection({ formData, setFormData, disabled }: StockSectionPr
           label="Ilość"
           value={formData.stock}
           disabled={disabled}
-          className="xl:w-[90%]"
+          className={`xl:w-[90%] ${disabled ? "opacity-50" : "opacity-100"}`}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
@@ -91,7 +92,7 @@ export function StockSection({ formData, setFormData, disabled }: StockSectionPr
             }))
           }
           type="number"
-          placeholder="9999"
+          placeholder={`${disabled ? "-" : "9999"}`}
         />
 
         <div>
@@ -99,7 +100,7 @@ export function StockSection({ formData, setFormData, disabled }: StockSectionPr
           label="Niski próg magazynowy"
           value={formData.lowStockThreshold ?? ""}
           disabled={disabled}
-          className="xl:w-[90%]"
+          className={`xl:w-[90%] ${disabled ? "opacity-50" : "opacity-100"}`}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
@@ -107,7 +108,7 @@ export function StockSection({ formData, setFormData, disabled }: StockSectionPr
             }))
           }
           type="number"
-          placeholder="5"
+          placeholder={`${disabled ? "-" : "5"}`}
         />
         </div>
 
