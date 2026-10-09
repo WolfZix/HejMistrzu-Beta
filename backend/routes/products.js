@@ -55,14 +55,18 @@ router.get("/", async (_req, res) => {
     for (const variation of variationsResult.rows) {
       const list = variationsByProduct.get(variation.product_id) || [];
 
-      const regularPrice =
-        variation.regular_price != null
-          ? Number(variation.regular_price)
+      const cheapestVariation = [...variations].sort((a, b) => a.price - b.price)[0];
+
+      const regularPrice = hasVariations
+        ? cheapestVariation?.regularPrice ?? null
+        : product.regular_price != null
+          ? Number(product.regular_price)
           : null;
 
-      const salePrice =
-        variation.sale_price != null
-          ? Number(variation.sale_price)
+      const salePrice = hasVariations
+        ? cheapestVariation?.salePrice ?? null
+        : product.sale_price != null
+          ? Number(product.sale_price)
           : null;
 
       const price =
