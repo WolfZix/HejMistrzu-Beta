@@ -26,14 +26,16 @@ export default function ProductForm({
   categories
 }: ProductFormProps) {
 
+  const hasVariations = formData.variations.length > 0;
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6 space-y-6 xl:max-w-xl">
       <BasicInformation formData={formData} setFormData={setFormData} />
       <ImagesSection formData={formData} setFormData={setFormData} />
-      <PriceSection formData={formData} setFormData={setFormData} />
-      <VariableSection formData={formData} setFormData={setFormData} onAddVariation={onAddVariation} />
+      <PriceSection formData={formData} setFormData={setFormData} disabled={hasVariations} />
+      <VariableSection formData={formData} setFormData={setFormData} onAddVariation={onAddVariation}/>
       <CategoriesSection formData={formData} setFormData={setFormData} categories={categories} />
-      <StockSection formData={formData} setFormData={setFormData} />
+      <StockSection formData={formData} setFormData={setFormData} disabled={hasVariations} />
       <DeliverySection formData={formData} setFormData={setFormData} />
       <AdvancedSection formData={formData} setFormData={setFormData} />
       <div className="flex gap-3 border-t border-primary/10 pt-6">

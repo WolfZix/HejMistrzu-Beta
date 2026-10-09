@@ -6,9 +6,10 @@ import { ProductFormData } from "@/types/store";
 type StockSectionProps = {
   formData: ProductFormData;
   setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
+  disabled: boolean;
 };
 
-export function StockSection({ formData, setFormData }: StockSectionProps) {
+export function StockSection({ formData, setFormData, disabled }: StockSectionProps) {
   return (
     <section>
       <div className="mb-4 border-b border-primary/10 pb-3">
@@ -57,6 +58,7 @@ export function StockSection({ formData, setFormData }: StockSectionProps) {
         <FormToggle
           label="Zarządzaj stanem magazynowym"
           value={formData.manageStock}
+          disabled={disabled}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
@@ -80,6 +82,7 @@ export function StockSection({ formData, setFormData }: StockSectionProps) {
         <FormInput
           label="Ilość"
           value={formData.stock}
+          disabled={disabled}
           className="xl:w-[90%]"
           onChange={(value) =>
             setFormData((prev) => ({
@@ -95,6 +98,7 @@ export function StockSection({ formData, setFormData }: StockSectionProps) {
           <FormInput
           label="Niski próg magazynowy"
           value={formData.lowStockThreshold ?? ""}
+          disabled={disabled}
           className="xl:w-[90%]"
           onChange={(value) =>
             setFormData((prev) => ({

@@ -6,6 +6,7 @@ type FormInputProps = {
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
   required?: boolean;
+  disabled?: boolean;
 };
 
 export default function FormInput({
@@ -16,6 +17,7 @@ export default function FormInput({
   placeholder = "",
   type = "text",
   required = false,
+  disabled,
 }: FormInputProps) {
   return (
     <div className={`flex flex-col gap-2 w-full ${className}`}>
@@ -30,6 +32,7 @@ export default function FormInput({
         type={type}
         value={value}
         placeholder={placeholder}
+        disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
         className="
           w-full

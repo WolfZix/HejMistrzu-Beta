@@ -5,9 +5,10 @@ import { ProductFormData } from "@/types/store";
 type PriceSectionProps = {
   formData: ProductFormData;
   setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
+  disabled: boolean;
 };
 
-export function PriceSection({ formData, setFormData }: PriceSectionProps) {
+export function PriceSection({ formData, setFormData, disabled }: PriceSectionProps) {
   return (
     <section>
       <div className="mb-4 border-b border-primary/10 pb-3">
@@ -18,6 +19,7 @@ export function PriceSection({ formData, setFormData }: PriceSectionProps) {
         <FormInput
           label="Cena regularna"
           value={formData.price}
+          disabled={disabled}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,
@@ -32,6 +34,7 @@ export function PriceSection({ formData, setFormData }: PriceSectionProps) {
         <FormInput
           label="Cena promocyjna"
           value={formData.salePrice}
+          disabled={disabled}
           onChange={(value) =>
             setFormData((prev) => ({
               ...prev,

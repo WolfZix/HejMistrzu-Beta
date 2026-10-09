@@ -3,6 +3,7 @@ type FormToggleProps = {
   value: boolean;
   onChange: (value: boolean) => void;
   className?: string;
+  disabled?: boolean;
 };
 
 export default function FormToggle({
@@ -10,6 +11,7 @@ export default function FormToggle({
   value,
   onChange,
   className = "",
+  disabled,
 }: FormToggleProps) {
   return (
     <div className={`w-full ${className}`}>
@@ -20,6 +22,7 @@ export default function FormToggle({
         <button
           type="button"
           onClick={() => onChange(!value)}
+          disabled={disabled}
           className={`
             w-full
             h-10
