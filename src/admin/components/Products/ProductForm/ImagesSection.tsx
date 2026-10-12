@@ -1,15 +1,20 @@
 import FormFileInput from "@/components/Forms/FormFileInput";
 import type { ProductFormData } from "@/types/store";
 import { X } from "lucide-react";
+import type { ExistingProductImage } from "@/types/store";
 
 type ImagesSectionProps = {
   formData: ProductFormData;
   setFormData: React.Dispatch<React.SetStateAction<ProductFormData>>;
+  existingImages?: ExistingProductImage[];
+  setExistingImages?: React.Dispatch<React.SetStateAction<ExistingProductImage[]>>;
 };
 
 export function ImagesSection({
   formData,
   setFormData,
+  existingImages = [],
+  setExistingImages
 }: ImagesSectionProps) {
   return (
     <section>
@@ -30,8 +35,33 @@ export function ImagesSection({
           }));
         }}
       />
-      {formData.images.length > 0 && (
+      {(existingImages.length > 0 || formData.images.length > 0) && (
         <div className="mt-4 grid grid-cols-4 gap-3">
+          {existingImages.map((image, index) => (
+            <div
+              key={`${image.url}-${index}`}
+              className="relative aspect-square overflow-hidden rounded-lg border border-primary/20"
+            >
+              <img
+                src={image.url}
+                alt={`Istniejące zdjęcie ${index + 1}`}
+                className="h-full w-full object-cover"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setExistingImages?.((prev) =>
+                    prev.filter((_, imageIndex) => imageIndex !== index)
+                  )
+                }
+                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white transition-colors hover:bg-red-500"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+
           {formData.images.map((image, index) => (
             <div
               key={`${image.name}-${index}`}
@@ -39,7 +69,7 @@ export function ImagesSection({
             >
               <img
                 src={URL.createObjectURL(image)}
-                alt={`Zdjęcie ${index + 1}`}
+                alt={`Nowe zdjęcie ${index + 1}`}
                 className="h-full w-full object-cover"
               />
 
@@ -48,15 +78,12 @@ export function ImagesSection({
                 onClick={() =>
                   setFormData((prev) => ({
                     ...prev,
-                    images: prev.images.filter((_, imageIndex) => imageIndex !== index),
+                    images: prev.images.filter(
+                      (_, imageIndex) => imageIndex !== index
+                    ),
                   }))
                 }
-                className="
-                  absolute right-1 top-1
-                  flex h-6 w-6 items-center justify-center
-                  rounded-full bg-black/70 text-white
-                  transition-colors hover:bg-red-500
-                "
+                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white transition-colors hover:bg-red-500"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -64,6 +91,7 @@ export function ImagesSection({
           ))}
         </div>
       )}
+
     </section>
   );
 }

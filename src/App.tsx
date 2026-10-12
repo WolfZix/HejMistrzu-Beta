@@ -28,6 +28,7 @@ const AdminReservations = lazy(() => import("@/admin/pages/Reservations"));
 const AdminUsers = lazy(() => import("@/admin/pages/Users"));
 const AdminProducts = lazy(() => import("@/admin/pages/Products"));
 const AddProduct = lazy(() => import("@/admin/pages/AddProduct"));
+const EditProduct = lazy(() => import("@/admin/pages/EditProduct"));
 const AdminEvents = lazy(() => import("@/admin/pages/Events"));
 const EventParticipants = lazy(() => import("@/admin/pages/EventParticipants"));
 
@@ -69,6 +70,7 @@ function App() {
                   <Route path="uzytkownicy" element={<AdminUsers />} />
                   <Route path="produkty" element={<AdminProducts />} />
                   <Route path="produkty/nowy" element={<AddProduct />} />
+                  <Route path="produkty/:id/edytuj" element={<EditProduct />} />
                   <Route path="eventy" element={<AdminEvents />} />
                   <Route path="uczestnicy" element={<EventParticipants />} />
                 </Route>

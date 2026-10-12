@@ -1,4 +1,4 @@
-import type { Category, ProductFormData } from "@/types/store";
+import type { Category, ProductFormData, ExistingProductImage } from "@/types/store";
 import { BasicInformation } from "./BasicInformation";
 import { ImagesSection } from "./ImagesSection";
 import { PriceSection } from "./PriceSection";
@@ -16,6 +16,9 @@ type ProductFormProps = {
   onAddVariation: () => void;
   categories: Category[];
   hasVariations: boolean;
+  isEditing?: boolean;
+  existingImages?: ExistingProductImage[];
+  setExistingImages?: React.Dispatch<React.SetStateAction<ExistingProductImage[]>>;
 };
 
 export default function ProductForm({
@@ -26,12 +29,15 @@ export default function ProductForm({
   onAddVariation,
   categories,
   hasVariations,
+  isEditing = false,
+  existingImages = [],
+  setExistingImages,
 }: ProductFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6 space-y-6 xl:max-w-xl">
       <BasicInformation formData={formData} setFormData={setFormData} />
-      <ImagesSection formData={formData} setFormData={setFormData} />
+      <ImagesSection formData={formData} setFormData={setFormData} existingImages={existingImages} setExistingImages={setExistingImages} />
       <PriceSection formData={formData} setFormData={setFormData} disabled={hasVariations} />
       <VariableSection formData={formData} setFormData={setFormData} onAddVariation={onAddVariation}/>
       <CategoriesSection formData={formData} setFormData={setFormData} categories={categories} />
@@ -50,7 +56,7 @@ export default function ProductForm({
           type="submit"
           className="flex-1 rounded-md bg-primary/70 py-2 font-heading font-semibold text-primary-foreground transition-all duration-200 hover:bg-primary"
         >
-          Dodaj
+          {isEditing ? "Zapisz zmiany" : "Dodaj"}
         </button>
       </div>
     </form>

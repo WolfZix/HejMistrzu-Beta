@@ -179,7 +179,6 @@ router.get("/", async (_req, res) => {
   }
 });
 
-
 router.get("/:id/variations", async (req, res) => {
   try {
     const { id } = req.params;
@@ -225,6 +224,84 @@ router.get("/:id/variations", async (req, res) => {
     });
   }
 });
+
+router.get(
+  "/:id/edit",
+  verifyToken,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const result = await pool.query(
+        `
+          SELECT *
+          FROM products
+          WHERE woocommerce_id = $1
+        `,
+        [id]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Nie znaleziono produktu",
+        });
+      }
+
+      const product = result.rows[0];
+
+      const [variationsResult, categoriesResult, imagesResult] =
+        await Promise.all([
+          pool.query(
+            `
+              SELECT *
+              FROM product_variations
+              WHERE product_id = $1
+              ORDER BY woocommerce_id
+            `,
+            [product.id]
+          ),
+
+          pool.query(
+            `
+              SELECT pc.woocommerce_id AS id, pc.name
+              FROM product_category_relations pcr
+              JOIN product_categories pc
+                ON pc.id = pcr.category_id
+              WHERE pcr.product_id = $1
+            `,
+            [product.id]
+          ),
+
+          pool.query(
+            `
+              SELECT url, position
+              FROM product_images
+              WHERE product_id = $1
+              ORDER BY position ASC
+            `,
+            [product.id]
+          ),
+        ]);
+
+      res.json({
+        success: true,
+        product,
+        variations: variationsResult.rows,
+        categories: categoriesResult.rows,
+        images: imagesResult.rows,
+      });
+    } catch (error) {
+      console.error("Błąd pobierania produktu do edycji:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Nie udało się pobrać produktu do edycji",
+      });
+    }
+  }
+);
 
 router.post(
   "/",

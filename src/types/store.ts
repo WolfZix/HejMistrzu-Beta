@@ -99,3 +99,8 @@ export type ProductVariationFormData = {
   stock: string;
   image: File | null;
 };
+
+export type ExistingProductImage = {
+  url: string;
+  position: number;
+}
