@@ -29,6 +29,8 @@ const syncProduct = async (id) => {
   );
 
   const product = response.data;
+  const preorderMeta = product.meta_data?.find((meta) => meta.key === "_hejmistrzu_preorder");
+  const preorder = preorderMeta?.value === true || preorderMeta?.value === "true";
   const query = `
     INSERT INTO products (
       woocommerce_id,
@@ -47,6 +49,7 @@ const syncProduct = async (id) => {
       manage_stock,
       stock_quantity,
       stock_status,
+      preorder,
       created_at,
       updated_at
     )
@@ -54,7 +57,7 @@ const syncProduct = async (id) => {
       $1, $2, $3, $4, $5,
       $6, $7, $8, $9, $10,
       $11, $12, $13, $14, $15,
-      $16, NOW(), NOW()
+      $16, $17, NOW(), NOW()
     )
     ON CONFLICT (woocommerce_id)
     DO UPDATE SET
@@ -73,6 +76,7 @@ const syncProduct = async (id) => {
       manage_stock = EXCLUDED.manage_stock,
       stock_quantity = EXCLUDED.stock_quantity,
       stock_status = EXCLUDED.stock_status,
+      preorder = EXCLUDED.preorder,
       updated_at = NOW()
     RETURNING *;
   `;
@@ -93,7 +97,8 @@ const syncProduct = async (id) => {
     toNumberOrNull(product.sale_price),
     product.manage_stock,
     product.stock_quantity,
-    product.stock_status
+    product.stock_status,
+    product.preorder
   ];
 
   const result = await pool.query(query, values);
