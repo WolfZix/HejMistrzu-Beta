@@ -28,7 +28,7 @@ export function PriceSection({ formData, setFormData, disabled }: PriceSectionPr
             }))
           }
           type="number"
-          placeholder={`${disabled ? "-" : "99,99"}`}
+          placeholder={`${disabled ? "-" : "-"}`}
           required
         />
 
@@ -44,7 +44,7 @@ export function PriceSection({ formData, setFormData, disabled }: PriceSectionPr
             }))
           }
           type="number"
-          placeholder={`${disabled ? "-" : "99,99"}`}
+          placeholder={`${disabled ? "-" : "-"}`}
         />
       </div>
 

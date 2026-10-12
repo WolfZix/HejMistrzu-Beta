@@ -27,7 +27,6 @@ export function BasicInformation({ formData, setFormData }: BasicInformationProp
               name: value,
             }))
           }
-          placeholder="Figurki Warhammer 40K"
           required
         />
 
@@ -40,7 +39,6 @@ export function BasicInformation({ formData, setFormData }: BasicInformationProp
               description: value,
             }))
           }
-          placeholder="Opis produktu..."
           rows={8}
           required
         />

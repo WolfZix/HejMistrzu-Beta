@@ -30,7 +30,7 @@ export function StockSection({ formData, setFormData, disabled }: StockSectionPr
                 sku: e.target.value,
               }))
             }
-            placeholder="HM-001"
+            placeholder="-"
             className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
@@ -48,7 +48,7 @@ export function StockSection({ formData, setFormData, disabled }: StockSectionPr
                 gtin: e.target.value,
               }))
             }
-            placeholder="5901234567890"
+            placeholder="-"
             className="w-full rounded-lg border border-primary/20 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
         </div>
@@ -92,7 +92,7 @@ export function StockSection({ formData, setFormData, disabled }: StockSectionPr
             }))
           }
           type="number"
-          placeholder={`${disabled ? "-" : "9999"}`}
+          placeholder={`${disabled ? "-" : "-"}`}
         />
 
         <div>
