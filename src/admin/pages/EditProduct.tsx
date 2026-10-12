@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductForm from "@/admin/components/Products/ProductForm/ProductForm";
@@ -11,6 +10,7 @@ import type {
   ExistingProductImage,
 } from "@/types/store";
 import { initialProductFormData } from "@/data/store";
+import PageLoader from "@/pages/PageLoader";
 
 export default function EditProduct() {
   const { id } = useParams();
@@ -132,7 +132,7 @@ export default function EditProduct() {
 
   function closePage() { window.history.back() }
 
-  if (loading) { return <div className="p-6">Wczytywanie produktu...</div> }
+  if (loading) { return <PageLoader /> }
 
   return (
     <div className="min-h-screen p-6">
