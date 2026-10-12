@@ -31,6 +31,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
   
   const hasAvailableVariation = variations.some((variation) => variation.stock > 0);
   const maxQty = product.hasVariations ? selectedVariation?.stock ?? 1 : product.stock;
+  const displayImage = selectedVariation?.image || product.image;
 
   const handleAddToCart = () => {
     if (product.hasVariations) {
@@ -80,7 +81,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
         </DialogClose>
         <div className="grid grid-cols-1 md:grid-cols-[450px_1fr] h-full">
           <div className="bg-muted/30 relative flex items-center justify-center h-full overflow-hidden">
-            <img src={product.image} alt={product.name} className="max-w-full max-h-[80vh] object-contain" />
+            <img src={displayImage} alt={selectedVariation?.name || product.name} className="max-w-full max-h-[80vh] object-contain" />
             {product.onSale && (
               <div className={`absolute top-3 left-3 px-2 py-0.5 rounded-full flex items-center border text-xs font-medium bg-red-600 text-white border-black`}>
                 {product.onSale && <Tag className="w-3 h-3 mr-1" />}
