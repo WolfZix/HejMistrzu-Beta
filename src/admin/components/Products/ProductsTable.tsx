@@ -127,7 +127,7 @@ export default function ProductsTable({currentProducts, setIsEditOpen, isEditOpe
               </div>
             </td>
             <td className="p-4">
-              <div className="flex flex-wrap justify-center gap-1">
+              <div className="flex justify-center gap-1">
                 <span className={`px-2 py-1 rounded-md text-xs font-medium
                   ${product.onSale ? "bg-red-500/50 text-white" : "bg-muted text-white"}`}
                 >
