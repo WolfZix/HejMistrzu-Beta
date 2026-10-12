@@ -5,6 +5,7 @@ export type BadgeKind = "Promocja" | "Bestseller" | "Preorder";
 export interface StoreProduct {
   id: number;
   name: string;
+  preorder: boolean;
   price: number;
   originalPrice: number;
   regularPrice: number | null;

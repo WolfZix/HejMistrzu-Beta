@@ -1,4 +1,4 @@
-import { Eye, Heart, ShoppingCart, Check, Tag, Star } from "lucide-react";
+import { Eye, Heart, ShoppingCart, Check, Tag, Star, Clock3 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import type { ProductCardProps } from "@/types/store";
@@ -33,6 +33,12 @@ export function ProductCard({ product, isWishlisted, isNotified, onQuickView, on
           <div className={`absolute top-3 left-3 px-2 py-0.5 rounded-full flex items-center border text-xs font-medium bg-red-600 text-white border-black`}>
             {product.onSale && <Tag className="w-3 h-3 mr-1" />}
             Promocja
+          </div>
+        )}
+        {product.preorder && (
+          <div className={`absolute top-12 left-3 px-2 py-0.5 rounded-full flex items-center border text-xs font-medium bg-primary text-black border-black`}>
+            {product.preorder && <Clock3 className="w-3 h-3 mr-1" />}
+            Przedsprzedaż
           </div>
         )}
         <button

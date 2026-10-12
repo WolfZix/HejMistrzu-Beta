@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Check, Minus, Package, Plus, ShieldCheck, ShoppingCart, Tag, Truck, X } from "lucide-react";
+import { Check, Clock3, Minus, Package, Plus, ShieldCheck, ShoppingCart, Tag, Truck, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogClose, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCart } from "@/context/CartContext";
@@ -86,6 +86,12 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
               <div className={`absolute top-3 left-3 px-2 py-0.5 rounded-full flex items-center border text-xs font-medium bg-red-600 text-white border-black`}>
                 {product.onSale && <Tag className="w-3 h-3 mr-1" />}
                 Promocja
+              </div>
+            )}
+            {product.preorder && (
+              <div className={`absolute top-12 left-3 px-2 py-0.5 rounded-full flex items-center border text-xs font-medium bg-primary text-black border-black`}>
+                {product.preorder && <Clock3 className="w-3 h-3 mr-1" />}
+                Przedsprzedaż
               </div>
             )}
           </div>

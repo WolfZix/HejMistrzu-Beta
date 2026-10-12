@@ -24,6 +24,7 @@ export default function Store() {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [onlyInStock, setOnlyInStock] = useState(false);
   const [onlyPromotions, setOnlyPromotions] = useState(false);
+  const [onlyPreorders, setOnlyPreorders] = useState(false);
   const [onlyWishlist, setOnlyWishlist] = useState(false);
 
   const [products, setProducts] = useState<StoreProduct[]>([]);
@@ -68,6 +69,7 @@ export default function Store() {
 
     const matchesStock = !onlyInStock || product.inStock;
     const matchesPromotions = !onlyPromotions || product.onSale;
+    const matchesPreorders = !onlyPreorders || product.preorder;
     const matchesWishlist = !onlyWishlist || wishlist.includes(product.id);
 
     return (
@@ -75,10 +77,11 @@ export default function Store() {
       matchesSearch &&
       matchesStock &&
       matchesPromotions &&
+      matchesPreorders &&
       matchesWishlist
     );
   });
-}, [sortedProducts, selectedCategory, search, onlyInStock, onlyPromotions, onlyWishlist, wishlist]);
+}, [sortedProducts, selectedCategory, search, onlyInStock, onlyPromotions, onlyPreorders, onlyWishlist, wishlist]);
 
   const toggleWishlist = (productId: number) => {
     setWishlist((prev) => (prev.includes(productId) ? prev.filter((entry) => entry !== productId) : [...prev, productId]));
@@ -141,6 +144,8 @@ useEffect(() => {
             setOnlyInStock={setOnlyInStock}
             onlyPromotions={onlyPromotions}
             setOnlyPromotions={setOnlyPromotions}
+            onlyPreorders={onlyPreorders}
+            setOnlyPreorders={setOnlyPreorders}
             onlyWishlist={onlyWishlist}
             setOnlyWishlist={setOnlyWishlist}
           />

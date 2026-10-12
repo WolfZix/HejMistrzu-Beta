@@ -152,6 +152,7 @@ router.get("/", async (_req, res) => {
       return {
         id: product.woocommerce_id,
         name: product.name,
+        preorder: product.preorder,
         price,
         originalPrice: regularPrice ?? price,
         regularPrice,

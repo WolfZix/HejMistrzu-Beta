@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronDown, ChevronUp, ShieldCheck, Tag, Truck, FilterX, Heart } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, ShieldCheck, Tag, Truck, FilterX, Heart, Clock3 } from "lucide-react";
 import type { Category } from "@/types/store";
 import { useState } from "react";
 
@@ -15,6 +15,8 @@ type StoreSidebarProps = {
   setOnlyInStock: (onlyInStock: boolean) => void;
   onlyPromotions: boolean;
   setOnlyPromotions: (onlyPromotions: boolean) => void;
+  onlyPreorders: boolean;
+  setOnlyPreorders: (onlyPreorders: boolean) => void;
   onlyWishlist: boolean;
   setOnlyWishlist: (onlyWishlist: boolean) => void;
 }
@@ -31,6 +33,8 @@ export default function StoreSidebar({
   setOnlyInStock,
   onlyPromotions,
   setOnlyPromotions,
+  onlyPreorders,
+  setOnlyPreorders,
   onlyWishlist,
   setOnlyWishlist,
 }: StoreSidebarProps) {
@@ -41,6 +45,7 @@ export default function StoreSidebar({
     setExpandedCategory(null);
     setExpandedCategories([]);
     setOnlyPromotions(false);
+    setOnlyPreorders(false);
     setOnlyInStock(false);
     setOnlyWishlist(false);
   }
@@ -110,7 +115,7 @@ export default function StoreSidebar({
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-heading text-base tracking-wider text-primary">Kategorie</h3>
           <AnimatePresence>
-            {(selectedCategory !== null || onlyPromotions || onlyInStock) && (
+            {(selectedCategory !== null || onlyPromotions || onlyInStock || onlyPreorders) && (
               <motion.button
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -156,6 +161,20 @@ export default function StoreSidebar({
             `}
           >
             <Tag size={14} />Na promocji
+          </button>
+
+          <button
+            onClick={() => setOnlyPreorders(!onlyPreorders)}
+            className={`
+              w-full flex gap-2 items-center px-3 py-2 rounded-lg text-sm border transition-all
+              ${
+                onlyPreorders
+                  ? "bg-primary/10 text-primary border-primary/20"
+                  : "text-muted-foreground border-muted-foreground/20 hover:bg-muted/30 hover:text-foreground"
+              }
+            `}
+          >
+            <Clock3 size={14} />Przedsprzedaż
           </button>
 
           <button
