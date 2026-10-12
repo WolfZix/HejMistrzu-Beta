@@ -129,12 +129,14 @@ export default function ProductsTable({currentProducts, setIsEditOpen, isEditOpe
             <td className="p-4">
               <div className="flex justify-center gap-1">
                 <span className={`px-2 py-1 rounded-md text-xs font-medium
-                  ${product.onSale ? "bg-red-500/50 text-white" 
-                    : product.preorder ? "bg-primary/50 text-black" 
-                      : "bg-muted text-white"
-                  }`}
+                  ${product.onSale ? "bg-red-500/50 text-white" : "bg-muted text-white"}`}
                 >
-                {product.onSale ? "Promocja" : product.preorder ? "Przedsprzedaż" : "Zwykły"}
+                {product.onSale ? "Promocja" : "Zwykły"}
+                </span>
+                <span className={`px-2 py-1 rounded-md text-xs font-medium
+                  ${product.preorder ? "bg-primary/50 text-black" : ""}`}
+                >
+                {product.preorder ? "Preorder" : ""}
                 </span>
               </div>
             </td>
