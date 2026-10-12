@@ -191,7 +191,8 @@ router.get("/:id/variations", async (req, res) => {
           regular_price,
           sale_price,
           stock_quantity,
-          stock_status
+          stock_status,
+          image_url
         FROM product_variations
         WHERE product_id = (
           SELECT id
@@ -212,6 +213,7 @@ router.get("/:id/variations", async (req, res) => {
         salePrice: variation.sale_price !== null ? Number(variation.sale_price) : null,
         stock: variation.stock_quantity ?? 0,
         inStock: variation.stock_status === "instock",
+        image: variation.image_url || null,
       }))
     );
   } catch (error) {
