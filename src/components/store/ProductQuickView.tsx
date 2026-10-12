@@ -150,6 +150,8 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                         onClick={() => {
                           setSelectedVariation(variation);
                           setQty(1);
+                          console.log("Wybrany wariant:", variation.name);
+                          console.log("Zdjęcie wariantu:", variation.image);
                         }}
                         disabled={variation.stock === 0}
                         className={`
@@ -163,6 +165,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
                           }
                         `}
                       >
+
                         {variation.name}<br />
                         {variation.stock > 0 ? (
                           <div className="flex items-center gap-1">
