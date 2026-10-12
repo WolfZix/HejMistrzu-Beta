@@ -31,7 +31,7 @@ export default function ProductsTable({currentProducts, setIsEditOpen, isEditOpe
           <th className="p-4 w-[20%]">Kategoria</th>
           <th className="p-4 w-32">Cena</th>
           <th className="p-4 w-40">Magazyn: szt.</th>
-          <th className="p-4 w-20">Status</th>
+          <th className="p-4 w-40">Status</th>
           <th className="p-4 w-28">Akcje</th>
         </tr>
       </thead>
@@ -127,14 +127,14 @@ export default function ProductsTable({currentProducts, setIsEditOpen, isEditOpe
               </div>
             </td>
             <td className="p-4">
-              <div className="flex justify-center gap-1">
+              <div className="flex flex-wrap justify-center gap-1">
                 <span className={`px-2 py-1 rounded-md text-xs font-medium
                   ${product.onSale ? "bg-red-500/50 text-white" : "bg-muted text-white"}`}
                 >
                 {product.onSale ? "Promocja" : "Zwykły"}
                 </span>
                 <span className={`px-2 py-1 rounded-md text-xs font-medium
-                  ${product.preorder ? "bg-primary/50 text-black" : ""}`}
+                  ${product.preorder ? "bg-primary text-black" : ""}`}
                 >
                 {product.preorder ? "Preorder" : ""}
                 </span>
