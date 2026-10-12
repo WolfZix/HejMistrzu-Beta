@@ -44,7 +44,7 @@ export function ProductQuickView({ product, open, onClose }: ProductQuickViewPro
           variationId: selectedVariation.id,
           name: selectedVariation.name,
           price: selectedVariation.price,
-          image: product.image,
+          image: selectedVariation.image || product.image,
         });
       }
     } else {
