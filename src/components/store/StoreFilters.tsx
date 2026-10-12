@@ -119,7 +119,7 @@ export default function StoreFilters({
 
   return (
     <div className="relative z-50 flex flex-col sm:flex-row gap-3 mb-8 items-end">
-      <div className="relative flex-1">
+      <div className="relative w-full">
         <p className="text-xs text-muted-foreground mb-1">
           Szukaj produktów
         </p>
@@ -131,7 +131,7 @@ export default function StoreFilters({
           className="pl-10 bg-card border-border focus:border-primary/50 h-11 rounded-xl"
         />
       </div>
-      <div className="relative min-w-[220px]">
+      <div className="relative md:w-[220px] w-full">
         <p className="text-xs text-muted-foreground mb-1">
           Sortowanie
         </p>
@@ -208,7 +208,7 @@ export default function StoreFilters({
           )}
         </AnimatePresence>
       </div>
-      <div className="lg:hidden relative w-[200px] shrink-0">
+      <div className="lg:hidden relative md:w-[200px] w-full shrink-0">
         <label className="text-xs text-muted-foreground mb-1 block">
           Kategorie
         </label>
