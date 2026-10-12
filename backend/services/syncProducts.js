@@ -98,7 +98,7 @@ const syncProduct = async (id) => {
     product.manage_stock,
     product.stock_quantity,
     product.stock_status,
-    product.preorder
+    preorder
   ];
 
   const result = await pool.query(query, values);
