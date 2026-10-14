@@ -93,14 +93,17 @@ export type ProductFormData = {
 };
 
 export type ProductVariationFormData = {
+  id?: number;
   name: string;
   price: string;
   salePrice: string;
   stock: string;
   image: File | null;
+  imageUrl?: string;
 };
 
 export type ExistingProductImage = {
+  woocommerce_id?: number;
   url: string;
   position: number;
-}
+};

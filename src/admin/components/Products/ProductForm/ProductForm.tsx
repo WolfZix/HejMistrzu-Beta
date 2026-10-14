@@ -17,6 +17,7 @@ type ProductFormProps = {
   categories: Category[];
   hasVariations: boolean;
   isEditing?: boolean;
+  onEditVariation?: (index: number) => void;
   existingImages?: ExistingProductImage[];
   setExistingImages?: React.Dispatch<React.SetStateAction<ExistingProductImage[]>>;
 };
@@ -30,6 +31,7 @@ export default function ProductForm({
   categories,
   hasVariations,
   isEditing = false,
+  onEditVariation,
   existingImages = [],
   setExistingImages,
 }: ProductFormProps) {
@@ -39,7 +41,7 @@ export default function ProductForm({
       <BasicInformation formData={formData} setFormData={setFormData} />
       <ImagesSection formData={formData} setFormData={setFormData} existingImages={existingImages} setExistingImages={setExistingImages} />
       <PriceSection formData={formData} setFormData={setFormData} disabled={hasVariations} />
-      <VariableSection formData={formData} setFormData={setFormData} onAddVariation={onAddVariation}/>
+      <VariableSection formData={formData} setFormData={setFormData} onAddVariation={onAddVariation} onEditVariation={onEditVariation} />
       <CategoriesSection formData={formData} setFormData={setFormData} categories={categories} />
       <StockSection formData={formData} setFormData={setFormData} disabled={hasVariations} />
       <DeliverySection formData={formData} setFormData={setFormData} />

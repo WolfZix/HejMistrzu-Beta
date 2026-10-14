@@ -225,7 +225,6 @@ router.get("/:id/variations", async (req, res) => {
   }
 });
 
-
 router.get("/:id/edit", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
@@ -279,7 +278,7 @@ router.get("/:id/edit", verifyToken, requireAdmin, async (req, res) => {
         ),
 
         pool.query(
-          `SELECT url, position
+          `SELECT woocommerce_id, url, position
           FROM product_images
           WHERE product_id = $1
           ORDER BY position ASC`,
@@ -626,5 +625,211 @@ router.get("/sync/:id/full", verifyToken, requireAdmin, async (req, res) => {
     });
   }
 });
+
+router.put(
+  "/:id",
+  verifyToken,
+  requireAdmin,
+  upload.fields([
+    { name: "images", maxCount: 20 },
+    { name: "variationImages", maxCount: 20 },
+  ]),
+  async (req, res) => {
+    const fs = require("fs");
+
+    try {
+      const { id } = req.params;
+      const {
+        name,
+        categoryIds,
+        description,
+        price,
+        salePrice,
+        preorder,
+        visible,
+        sku,
+        gtin,
+        manageStock,
+        soldIndividually,
+        lowStockThreshold,
+        backorders,
+        inpostMethods,
+        weight,
+        length,
+        width,
+        height,
+        purchaseNote,
+        menuOrder,
+        existingImages,
+      } = req.body;
+
+      const parsedCategoryIds = JSON.parse(categoryIds || "[]");
+      const retainedImages = JSON.parse(existingImages || "[]");
+      const uploadedImages = req.files?.images ?? [];
+
+      const params = {
+        consumer_key: process.env.WC_CONSUMER_KEY,
+        consumer_secret: process.env.WC_CONSUMER_SECRET,
+      };
+
+      const imageList = [
+        ...retainedImages
+          .sort((a, b) => a.position - b.position)
+          .map((image) => ({ id: image.woocommerce_id, src: image.url })),
+        ...uploadedImages.map((file) => ({
+          src: `${process.env.SERVER_URL}/uploads/${file.filename}`,
+        })),
+      ];
+
+      const response = await axios.put(
+        `${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
+        {
+          name,
+          description,
+          status: visible === "true" ? "publish" : "private",
+          type: JSON.parse(req.body.variations || "[]").length > 0 ? "variable" : "simple",
+          regular_price: String(price ?? ""),
+          sale_price: String(salePrice ?? ""),
+          categories: parsedCategoryIds.map((categoryId) => ({
+            id: Number(categoryId),
+          })),
+          images: imageList,
+          sku,
+          global_unique_id: gtin,
+          manage_stock: manageStock === "true",
+          stock_quantity: manageStock === "true" ? Number(req.body.stock) : null,
+          sold_individually: soldIndividually === "true",
+          low_stock_amount:
+            lowStockThreshold !== "" ? Number(lowStockThreshold) : null,
+          backorders:
+            backorders === "Nie zezwalaj"
+              ? "no"
+              : backorders === "Zezwalaj + poinformuj"
+                ? "notify"
+                : "yes",
+          weight,
+          dimensions: { length, width, height },
+          purchase_note: purchaseNote,
+          menu_order: Number(menuOrder ?? 0),
+          meta_data: [
+            {
+              key: "_hejmistrzu_preorder",
+              value: preorder === "true",
+            },
+            {
+              key: "woo_inpost_shipping_methods_allowed",
+              value: JSON.parse(inpostMethods || "[]"),
+            },
+          ],
+        },
+        { params }
+      );
+
+      const parsedVariations = JSON.parse(req.body.variations || "[]");
+      const variationImageIndexes = JSON.parse(
+        req.body.variationImageIndexes || "[]"
+      );
+      const variationImageFiles = req.files?.variationImages ?? [];
+
+      const existingVariationsResponse = await axios.get(
+        `${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations`,
+        {
+          params: {
+            ...params,
+            per_page: 100,
+          },
+        }
+      );
+
+      const existingVariations = existingVariationsResponse.data;
+      const submittedIds = parsedVariations
+        .map((variation) => Number(variation.id))
+        .filter((variationId) => Number.isInteger(variationId) && variationId > 0);
+
+      for (const existingVariation of existingVariations) {
+        if (!submittedIds.includes(existingVariation.id)) {
+          await axios.delete(
+            `${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations/${existingVariation.id}`,
+            {
+              params: {
+                ...params,
+                force: true,
+              },
+            }
+          );
+        }
+      }
+
+      for (let index = 0; index < parsedVariations.length; index++) {
+        const variation = parsedVariations[index];
+        const imagePosition = variationImageIndexes.indexOf(String(index));
+        const imageFile = imagePosition >= 0 ? variationImageFiles[imagePosition] : null;
+
+        const variationPayload = {
+          regular_price: String(variation.price ?? ""),
+          sale_price: String(variation.salePrice ?? ""),
+          manage_stock: true,
+          stock_quantity:
+            variation.stock !== "" ? Number(variation.stock) : null,
+          attributes: [
+            {
+              name: "Wariant",
+              option: variation.name,
+            },
+          ],
+        };
+
+        if (imageFile) {
+          variationPayload.image = {
+            src: `${process.env.SERVER_URL}/uploads/${imageFile.filename}`,
+          };
+        } else if (variation.imageUrl) {
+          variationPayload.image = {
+            src: variation.imageUrl,
+          };
+        }
+
+        const variationUrl = variation.id
+          ? `${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations/${variation.id}`
+          : `${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations`;
+
+        if (variation.id) {
+          await axios.put(variationUrl, variationPayload, { params });
+        } else {
+          await axios.post(variationUrl, variationPayload, { params });
+        }
+      }
+
+      await syncFullProduct(Number(id));
+
+      res.json({
+        success: true,
+        product: response.data,
+      });
+    } catch (error) {
+      console.error(
+        "Błąd aktualizacji produktu:",
+        error.response?.data || error.message
+      );
+
+      res.status(error.response?.status || 500).json({
+        success: false,
+        message: "Nie udało się zaktualizować produktu",
+        error: error.response?.data || error.message,
+      });
+    } finally {
+      Object.values(req.files ?? {})
+        .flat()
+        .forEach((file) => {
+          fs.unlink(file.path, (error) => {
+            if (error) {
+              console.error("Nie udało się usunąć pliku:", error.message);
+            }
+          });
+        });
+    }
+  }
+);
+
 
 module.exports = router;
