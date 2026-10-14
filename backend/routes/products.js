@@ -452,6 +452,9 @@ router.post(
           }
         );
       }
+      
+      await syncFullProduct(response.data.id);
+
       Object.values(req.files ?? {}).flat().forEach((file) => {
         fs.unlink(file.path, (error) => {
           if (error) {
@@ -462,6 +465,12 @@ router.post(
           }
         });
       });
+
+      res.status(201).json({
+        success: true,
+        product: response.data,
+      });
+
 
       res.status(201).json({
         success: true,
