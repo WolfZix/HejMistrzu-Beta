@@ -24,6 +24,10 @@ const syncProduct = async (id) => {
       params: {
         consumer_key: process.env.WC_CONSUMER_KEY,
         consumer_secret: process.env.WC_CONSUMER_SECRET
+      },
+      headers: {
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache"
       }
     }
   );
@@ -113,7 +117,7 @@ const syncProduct = async (id) => {
     id: result.rows[0]?.woocommerce_id,
     name: result.rows[0]?.name,
   });
-  
+
   return result.rows[0];
 };
 
