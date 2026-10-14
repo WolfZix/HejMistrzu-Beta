@@ -347,7 +347,6 @@ router.post(
       } = req.body;
       const parsedCategoryIds = JSON.parse(categoryIds || "[]");
       const parsedVariations = JSON.parse(variations || "[]");
-      console.log("WARIANTY:", parsedVariations);
       const productImages = req.files?.images ?? [];
       const variationImages = req.files?.variationImages ?? [];
       const images = productImages.map((file) => ({ src: `${process.env.SERVER_URL}/uploads/${file.filename}` }));
@@ -733,35 +732,14 @@ router.put(
         },
         { params }
       );
+      const parsedVariations = JSON.parse(req.body.variations || "[]");     
+      const rawVariationImageIndexes = req.body.variationImageIndexes;
+      const variationImageIndexes = 
+        rawVariationImageIndexes == null ? []
+          : Array.isArray(rawVariationImageIndexes) ? rawVariationImageIndexes
+            : [rawVariationImageIndexes];
 
-      //TEMP
-      console.log("[PUT] WooCommerce po aktualizacji:", {
-        id: response.data.id,
-        name: response.data.name,
-        date_modified: response.data.date_modified,
-        date_modified_gmt: response.data.date_modified_gmt,
-      });
-
-      const verifyResponse = await axios.get(`${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
-        {
-          params: {
-            consumer_key: process.env.WC_CONSUMER_KEY,
-            consumer_secret: process.env.WC_CONSUMER_SECRET,
-          },
-        }
-      );
-
-      console.log("[VERIFY GET] WooCommerce:", {
-        id: verifyResponse.data.id,
-        name: verifyResponse.data.name,
-      });
-
-      const parsedVariations = JSON.parse(req.body.variations || "[]");
-      const variationImageIndexes = JSON.parse(
-        req.body.variationImageIndexes || "[]"
-      );
       const variationImageFiles = req.files?.variationImages ?? [];
-
       const existingVariationsResponse = await axios.get(
         `${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations`,
         {
@@ -830,13 +808,7 @@ router.put(
           await axios.post(variationUrl, variationPayload, { params });
         }
       }
-
-      console.log("Synchronizacja produktu:", id);
-
       await syncFullProduct(Number(id));
-
-      console.log("Synchronizacja zakończona:", id);
-
       res.json({
         success: true,
         product: response.data,

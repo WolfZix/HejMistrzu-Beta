@@ -100,10 +100,7 @@ const handleSubmit = async () => {
   setValidationErrors(errors);
   if (hasErrors) return;
 
-  try {
-    console.log("Produkty:",items);
-    console.log("Dane zamówienia:", {...formData, items});
-    
+  try {    
     const response = await fetch(`${import.meta.env.VITE_API_URL}/order`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
@@ -113,7 +110,6 @@ const handleSubmit = async () => {
       })),
     });
     const data = await response.json();
-    console.log(data);
   } catch (error) { console.error(error) }
 };
 
