@@ -733,6 +733,12 @@ router.put(
         },
         { params }
       );
+      
+      //TEMP
+      console.log("[PUT] WooCommerce po aktualizacji:", {
+        id: response.data.id,
+        name: response.data.name,
+      });
 
       const parsedVariations = JSON.parse(req.body.variations || "[]");
       const variationImageIndexes = JSON.parse(
