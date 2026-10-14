@@ -480,12 +480,6 @@ router.post(
         success: true,
         product: response.data,
       });
-
-
-      res.status(201).json({
-        success: true,
-        product: response.data,
-      });
     } catch (error) {
       console.error(error.response?.data || error.message);
 
@@ -685,6 +679,8 @@ router.put(
       const parsedCategoryIds = JSON.parse(categoryIds || "[]");
       const retainedImages = JSON.parse(existingImages || "[]");
       const uploadedImages = req.files?.images ?? [];
+      const parsedVariations = JSON.parse(req.body.variation || "[]");
+      const hasVariations = parasedVariations.length > 0;
 
       const params = {
         consumer_key: process.env.WC_CONSUMER_KEY,
@@ -706,7 +702,23 @@ router.put(
           name,
           description,
           status: visible === "true" ? "publish" : "private",
-          type: JSON.parse(req.body.variations || "[]").length > 0 ? "variable" : "simple",
+          type: hasVariations ? "variable" : "simple",
+          attributes: hasVariations
+            ? [
+                {
+                  name: "Wariant",
+                  visible: true,
+                  variation: true,
+                  options: [
+                    ...new Set(
+                      parsedVariations
+                        .map((variation) => variation.name?.trim())
+                        .filter(Boolean)
+                    ),
+                  ],
+                },
+              ]
+            : [],
           regular_price: String(price ?? ""),
           sale_price: String(salePrice ?? ""),
           categories: parsedCategoryIds.map((categoryId) => ({
@@ -742,8 +754,7 @@ router.put(
           ],
         },
         { params }
-      );
-      const parsedVariations = JSON.parse(req.body.variations || "[]");     
+      );   
       const rawVariationImageIndexes = req.body.variationImageIndexes;
       const variationImageIndexes = 
         rawVariationImageIndexes == null ? []
