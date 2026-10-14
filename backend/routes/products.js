@@ -738,6 +738,8 @@ router.put(
       console.log("[PUT] WooCommerce po aktualizacji:", {
         id: response.data.id,
         name: response.data.name,
+        date_modified: response.data.date_modified,
+        date_modified_gmt: response.data.date_modified_gmt,
       });
 
       const verifyResponse = await axios.get(`${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
@@ -745,10 +747,6 @@ router.put(
           params: {
             consumer_key: process.env.WC_CONSUMER_KEY,
             consumer_secret: process.env.WC_CONSUMER_SECRET,
-          },
-          headers: {
-            "Cache-Control": "no-cache",
-            "Pragma": "no-cache",
           },
         }
       );
