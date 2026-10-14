@@ -42,17 +42,25 @@ export default function ProductPreview({ formData, imageSrc, categories, hasVari
     if (selectedVariationIndex !== null && selectedVariationIndex >= formData.variations.length) setSelectedVariationIndex(null);
   }, [formData.variations.length, selectedVariationIndex]);
 
+  
   useEffect(() => {
-    if (!selectedVariation?.image) {
+    if (!selectedVariation) {
       setVariationImageSrc(undefined);
       return;
     }
-    const objectUrl = URL.createObjectURL(selectedVariation.image);
-    setVariationImageSrc(objectUrl);
-    return () => {
-      URL.revokeObjectURL(objectUrl);
-    };
+
+    if (selectedVariation.image) {
+      const objectUrl = URL.createObjectURL(selectedVariation.image);
+      setVariationImageSrc(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    }
+
+    setVariationImageSrc(selectedVariation.imageUrl || undefined);
   }, [selectedVariation]);
+
 
   const categoryPath = formData.categoryIds
   .map((id) => categories.find((category) => category.id === id)?.name)
