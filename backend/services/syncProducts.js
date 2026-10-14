@@ -127,6 +127,19 @@ const syncVariations = async (id) => {
   );
 
   const variations = response.data;
+
+  //TEMP
+  console.log(
+    "[syncVariations] WooCommerce:",
+    JSON.stringify(variations.map(v => ({
+      id: v.id,
+      name: v.name,
+      attributes: v.attributes,
+      price: v.price,
+      image: v.image?.src,
+    })), null, 2)
+  );
+
   const variationIds = variations.map((variation) => variation.id);
   for (const variation of variations) {
     const attribute = variation.attributes?.[0];
@@ -191,7 +204,7 @@ const syncVariations = async (id) => {
       [
         variation.id,
         localProductId,
-        variation.name,
+        attribute?.option || variation.name || "",
         variation.sku || null,
         price,
         regularPrice,
