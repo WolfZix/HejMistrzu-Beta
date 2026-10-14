@@ -413,8 +413,8 @@ router.post(
         },
         {
           params: {
-            consumer_key: process.env.WC_CONSUMER_KEY_W,
-            consumer_secret: process.env.WC_CONSUMER_SECRET_W,
+            consumer_key: process.env.WC_CONSUMER_KEY,
+            consumer_secret: process.env.WC_CONSUMER_SECRET,
           },
         }
       );
@@ -446,8 +446,8 @@ router.post(
           },
           {
             params: {
-              consumer_key: process.env.WC_CONSUMER_KEY_W,
-              consumer_secret: process.env.WC_CONSUMER_SECRET_W,
+              consumer_key: process.env.WC_CONSUMER_KEY,
+              consumer_secret: process.env.WC_CONSUMER_SECRET,
             },
           }
         );
@@ -809,7 +809,11 @@ router.put(
         }
       }
 
+      console.log("Synchronizacja produktu:", id);
+
       await syncFullProduct(Number(id));
+
+      console.log("Synchronizacja zakończona:", id);
 
       res.json({
         success: true,
