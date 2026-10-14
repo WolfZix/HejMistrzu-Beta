@@ -75,12 +75,7 @@ export default function EditProduct() {
           description: product.description ?? "",
           price: String(product.regular_price ?? ""),
           salePrice: String(product.sale_price ?? ""),
-          onSale: Boolean(
-            product.sale_price ||
-            product.variations?.some(
-              (variation: ProductVariationFormData) => variation.salePrice
-            )
-          ),
+          onSale: Boolean(product.sale_price || variations.some((variation) => variation.salePrice.trim() !== "")),
           stock: String(product.stock_quantity ?? ""),
           preorder: Boolean(product.meta_data?.find((meta: any) => meta.key === "_hejmistrzu_preorder")?.value),
           visible: product.status === "publish",
