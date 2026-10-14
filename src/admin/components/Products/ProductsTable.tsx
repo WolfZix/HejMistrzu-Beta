@@ -1,18 +1,18 @@
 import AdminTable from "@/admin/components/AdminTable";
 import { StoreProduct } from "@/types/store";
 import { AlertTriangle, Pencil, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type ProductsTableProps = {
   currentProducts: StoreProduct[];
-  setIsEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isEditOpen: boolean;
   isDeleteOpen: boolean;
   setIsDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedProduct: StoreProduct | null;
   setSelectedProduct: React.Dispatch<React.SetStateAction<StoreProduct | null>>;
 };
 
-export default function ProductsTable({currentProducts, setIsEditOpen, isEditOpen, setIsDeleteOpen, isDeleteOpen, selectedProduct, setSelectedProduct}: ProductsTableProps) {
+export default function ProductsTable({currentProducts, setIsDeleteOpen, isDeleteOpen, setSelectedProduct}: ProductsTableProps) {
+
+  const navigate = useNavigate();
 
   function getStockClass(stock: number) {
     return stock >= 5
@@ -143,39 +143,36 @@ export default function ProductsTable({currentProducts, setIsEditOpen, isEditOpe
 
             <td className="p-4">
               <div className="flex justify-center gap-2">
-                  <button
-                    onClick={() => {
-                      setSelectedProduct(product);
-                      setIsEditOpen(!isEditOpen);
-                    }}
-                    className="
-                      p-2
-                      rounded-lg
-                      hover:bg-muted
-                      border border-transparent
-                      hover:border-muted-foreground/30
-                    "
-                  >
-                    <Pencil size={16} />
-                  </button>
+                <button
+                  onClick={() => navigate(`/admin/produkty/${product.id}/edytuj`)}
+                  className="
+                    p-2
+                    rounded-lg
+                    hover:bg-muted
+                    border border-transparent
+                    hover:border-muted-foreground/30
+                  "
+                >
+                  <Pencil size={16} />
+                </button>
 
-                  <button
-                    onClick={() => {
-                      setSelectedProduct(product);
-                      setIsDeleteOpen(true);
-                    }}
-                    className="
-                      p-2
-                      rounded-lg
-                      hover:bg-destructive/10
-                      hover:text-destructive
-                      border border-transparent
-                      hover:border-destructive/30
-                    "
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
+                <button
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setIsDeleteOpen(true);
+                  }}
+                  className="
+                    p-2
+                    rounded-lg
+                    hover:bg-destructive/10
+                    hover:text-destructive
+                    border border-transparent
+                    hover:border-destructive/30
+                  "
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </td>
           </tr>
         ))}

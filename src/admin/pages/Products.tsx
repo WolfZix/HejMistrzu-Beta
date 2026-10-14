@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { StoreProduct, ProductFormData } from "@/types/store";
 import PageLoader from "@/pages/PageLoader";
-import EditProductModal from "../components/Products/EditProductModal";
 import { normalizeText } from "@/utils";
 import TableFilters from "../components/TableFilters";
 import DeleteModal from "../components/DeleteModal";
@@ -15,7 +14,6 @@ const PRODUCTS_PER_PAGE = 6;
 export default function Products() {
   const [products, setProducts] = useState<StoreProduct[]>([]);
 
-  const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<StoreProduct | null>(null);
 
@@ -126,11 +124,8 @@ export default function Products() {
       <div className="h-[34rem] flex flex-col justify-between">
         <ProductsTable 
           currentProducts={currentProducts}
-          setIsEditOpen={setIsEditOpen}
-          isEditOpen={isEditOpen}
           isDeleteOpen={isDeleteOpen}
           setIsDeleteOpen={setIsDeleteOpen}
-          selectedProduct={selectedProduct}
           setSelectedProduct={setSelectedProduct}
         />
         <div className="flex items-center justify-between">
@@ -195,18 +190,6 @@ export default function Products() {
           </div>
         )}
     </div>
-    {isEditOpen && (
-      <EditProductModal
-        product={selectedProduct}
-        formData={formData}
-        setFormData={setFormData}
-        isOpen={isEditOpen}
-        onClose={() => {
-          setSelectedProduct(null);
-          setIsEditOpen(false);
-        }}
-      />
-    )}
     {isDeleteOpen && (
       <DeleteModal
         isOpen={isDeleteOpen}
