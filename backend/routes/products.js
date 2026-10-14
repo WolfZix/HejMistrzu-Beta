@@ -430,12 +430,23 @@ router.post(
             manage_stock: true,
             stock_quantity: variation.stock ? Number(variation.stock) : null,
 
-            attributes: [
-              {
-                name: "Wariant",
-                option: variation.name,
-              },
-            ],
+            attributes:
+              JSON.parse(req.body.variations || "[]").length > 0
+                ? [
+                    {
+                      name: "Wariant",
+                      visible: true,
+                      variation: true,
+                      options: [
+                        ...new Set(
+                          JSON.parse(req.body.variations || "[]")
+                            .map((variation) => variation.name.trim())
+                            .filter(Boolean)
+                        ),
+                      ],
+                    },
+                  ]
+                : [],
 
             ...(image && {
               image: {
