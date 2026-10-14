@@ -679,8 +679,8 @@ router.put(
       const parsedCategoryIds = JSON.parse(categoryIds || "[]");
       const retainedImages = JSON.parse(existingImages || "[]");
       const uploadedImages = req.files?.images ?? [];
-      const parsedVariations = JSON.parse(req.body.variation || "[]");
-      const hasVariations = parasedVariations.length > 0;
+      const parsedVariations = JSON.parse(req.body.variations || "[]");
+      const hasVariations = parsedVariations.length > 0;
 
       const params = {
         consumer_key: process.env.WC_CONSUMER_KEY,
