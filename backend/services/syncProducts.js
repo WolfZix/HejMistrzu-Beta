@@ -29,6 +29,12 @@ const syncProduct = async (id) => {
   );
 
   const product = response.data;
+  //TEMP
+  console.log("[syncProduct] WooCommerce:", {
+    id: product.id,
+    name: product.name,
+  });
+
   const preorderMeta = product.meta_data?.find((meta) => meta.key === "_hejmistrzu_preorder");
   const preorder = preorderMeta?.value === true || preorderMeta?.value === "true";
   const query = `
@@ -102,6 +108,12 @@ const syncProduct = async (id) => {
   ];
 
   const result = await pool.query(query, values);
+  //TEMP
+  console.log("[syncProduct] PostgreSQL:", {
+    id: result.rows[0]?.woocommerce_id,
+    name: result.rows[0]?.name,
+  });
+  
   return result.rows[0];
 };
 
