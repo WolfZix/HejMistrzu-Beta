@@ -24,7 +24,7 @@ router.get("/", async (_req, res) => {
         pool.query(`
           SELECT *
           FROM products
-          WHERE status = 'publish' OR 'private'
+          WHERE status = 'publish' OR status = 'private'
           ORDER BY id
         `),
 
