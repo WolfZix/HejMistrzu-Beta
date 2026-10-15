@@ -758,12 +758,11 @@ router.put(
       );   
 
       //TEMP
-      console.log("[PUT] WooCommerce response:", {
-        id: response.data.id,
-        name: response.data.name,
-        slug: response.data.slug,
-        date_modified: response.data.date_modified,
-      });
+      console.log("[PUT] inpostMethods z formularza:", inpostMethods);
+      console.log(
+        "[PUT] inpostMethods po parsowaniu:",
+        JSON.parse(inpostMethods || "[]")
+      );
       //
 
       const rawVariationImageIndexes = req.body.variationImageIndexes;
