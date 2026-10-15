@@ -764,7 +764,7 @@ router.put(
         date_modified: response.data.date_modified,
       });
       //
-      
+
       const rawVariationImageIndexes = req.body.variationImageIndexes;
       const variationImageIndexes = 
         rawVariationImageIndexes == null ? []
@@ -874,6 +874,5 @@ router.put(
     }
   }
 );
-
 
 module.exports = router;

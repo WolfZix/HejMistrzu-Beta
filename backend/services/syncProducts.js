@@ -21,17 +21,12 @@ const axiosWithRetry = async (url, config, retries = 3) => {
 };
 
 const syncProduct = async (id) => {
-  await delay(500);
   const response = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products/${id}?_sync=${Date.now()}`,
     {
       params: {
         consumer_key: process.env.WC_CONSUMER_KEY,
         consumer_secret: process.env.WC_CONSUMER_SECRET
       },
-      headers: {
-        "Cache-Control": "no-cache",
-        Pragma: "no-cache"
-      }
     }
   );
 
