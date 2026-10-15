@@ -103,7 +103,7 @@ const saveProductToDatabase = async (product) => {
 
 const syncProduct = async (id) => {
   const response = await axiosWithRetry(
-    `${process.env.WC_URL}/wp-json/wc/v3/products/${id}?_sync=${Date.now()}`,
+    `${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
     {
       params: {
         consumer_key: process.env.WC_CONSUMER_KEY,
