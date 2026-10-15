@@ -113,15 +113,6 @@ const syncProduct = async (id) => {
     }
   );
 
-  //TEMP
-  console.log("[syncProduct] ID:", id);
-  console.log("[syncProduct] Pobrana nazwa:", response.data.name);
-  console.log(
-    "[syncProduct] Data modyfikacji:",
-    response.data.date_modified
-  );
-  //
-
   return saveProductToDatabase(response.data);
 };
 
@@ -148,18 +139,6 @@ const syncVariations = async (id) => {
   );
 
   const variations = response.data;
-
-  //TEMP
-  console.log(
-    "[syncVariations] WooCommerce:",
-    JSON.stringify(variations.map(v => ({
-      id: v.id,
-      name: v.name,
-      attributes: v.attributes,
-      price: v.price,
-      image: v.image?.src,
-    })), null, 2)
-  );
 
   const variationIds = variations.map((variation) => variation.id);
   for (const variation of variations) {

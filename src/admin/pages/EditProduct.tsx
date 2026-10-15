@@ -51,16 +51,6 @@ export default function EditProduct() {
         const data = await response.json();
         const product = data.product;
 
-        //TEMP
-        console.log(
-          "[EditProduct] InPost metadata:",
-          product.meta_data?.filter(
-            (meta: any) =>
-              meta.key === "woo_inpost_shipping_methods_allowed"
-          )
-        );
-        //
-
         const variations: ProductVariationFormData[] = data.variations.map((variation: any) => ({
           id: variation.woocommerce_id,
             name: variation.name,
@@ -82,10 +72,6 @@ export default function EditProduct() {
         const inpostMeta = product.meta_data?.find((meta: any) => meta.key === "woo_inpost_shipping_methods_allowed");
         const inpostMethods = inpostMeta?.value ?? initialProductFormData.inpostMethods;
         const normalizedInpostMethods = typeof inpostMethods === "string" ? JSON.parse(inpostMethods || "[]") : inpostMethods;
-
-        //TEMP
-        console.log("[InPost] wartości z API:",normalizedInpostMethods);
-        //
 
         setFormData({
           ...initialProductFormData,

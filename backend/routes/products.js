@@ -758,20 +758,6 @@ router.put(
         { params }
       );   
 
-      //TEMP
-      console.log(
-        "[PUT] InPost meta_data po zapisie:",
-        response.data.meta_data?.filter(
-          (meta) => meta.key === "woo_inpost_shipping_methods_allowed"
-        )
-      );
-      console.log("[PUT] inpostMethods z formularza:", inpostMethods);
-      console.log(
-        "[PUT] inpostMethods po parsowaniu:",
-        JSON.parse(inpostMethods || "[]")
-      );
-      //
-
       const rawVariationImageIndexes = req.body.variationImageIndexes;
       const variationImageIndexes = 
         rawVariationImageIndexes == null ? []
@@ -851,10 +837,6 @@ router.put(
       await syncVariations(Number(id));
       await syncCategories(Number(id));
       await syncImages(Number(id));
-
-      //TEMP
-      console.log("[PUT] WooCommerce response:", response.data.name);
-      //
 
       res.json({
         success: true,
