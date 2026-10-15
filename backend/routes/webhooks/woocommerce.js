@@ -65,13 +65,6 @@ router.post("/", async (req, res) => {
     if (parentId) { console.log(`Webhook WooCommerce: wariant ${productId} → produkt ${parentId}`) }
     else { console.log(`Webhook WooCommerce: produkt ${productId}`) }
 
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    //TEMP
-    console.log("[WEBHOOK] Nazwa z payloadu:", req.body.name);
-    console.log("[WEBHOOK] Data modyfikacji:", req.body.date_modified);
-    //
-
     if (!parentId && req.body.name) await saveProductToDatabase(req.body)
     await syncVariations(syncId);
     await syncCategories(syncId);

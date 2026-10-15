@@ -51,6 +51,16 @@ export default function EditProduct() {
         const data = await response.json();
         const product = data.product;
 
+        //TEMP
+        console.log(
+          "[EditProduct] InPost metadata:",
+          product.meta_data?.filter(
+            (meta: any) =>
+              meta.key === "woo_inpost_shipping_methods_allowed"
+          )
+        );
+        //
+
         const variations: ProductVariationFormData[] = data.variations.map((variation: any) => ({
           id: variation.woocommerce_id,
             name: variation.name,
