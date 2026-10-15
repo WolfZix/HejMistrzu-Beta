@@ -83,6 +83,10 @@ export default function EditProduct() {
         const inpostMethods = inpostMeta?.value ?? initialProductFormData.inpostMethods;
         const normalizedInpostMethods = typeof inpostMethods === "string" ? JSON.parse(inpostMethods || "[]") : inpostMethods;
 
+        //TEMP
+        console.log("[InPost] wartości z API:",normalizedInpostMethods);
+        //
+
         setFormData({
           ...initialProductFormData,
           name: product.name ?? "",
