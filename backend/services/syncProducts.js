@@ -101,6 +101,7 @@ const saveProductToDatabase = async (product) => {
   return result.rows[0];
 };
 
+
 const syncProduct = async (id) => {
   const response = await axiosWithRetry(
     `${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
@@ -112,8 +113,18 @@ const syncProduct = async (id) => {
     }
   );
 
+  //TEMP
+  console.log("[syncProduct] ID:", id);
+  console.log("[syncProduct] Pobrana nazwa:", response.data.name);
+  console.log(
+    "[syncProduct] Data modyfikacji:",
+    response.data.date_modified
+  );
+  //
+
   return saveProductToDatabase(response.data);
 };
+
 
 const syncVariations = async (id) => {
   const productResult = await pool.query(
