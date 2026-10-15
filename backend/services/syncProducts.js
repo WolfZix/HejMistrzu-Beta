@@ -1,8 +1,6 @@
 const axios = require("axios");
 const pool = require("../config/db");
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const toNumberOrNull = (value) => {
     if (value === "" || value === null || value === undefined) return null;
     const number = Number(value);
@@ -20,29 +18,15 @@ const axiosWithRetry = async (url, config, retries = 3) => {
   }
 };
 
-const syncProduct = async (id) => {
-  const response = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products/${id}?_sync=${Date.now()}`,
-    {
-      params: {
-        consumer_key: process.env.WC_CONSUMER_KEY,
-        consumer_secret: process.env.WC_CONSUMER_SECRET
-      },
-    }
+const saveProductToDatabase = async (product) => {
+  const preorderMeta = product.meta_data?.find(
+    (meta) => meta.key === "_hejmistrzu_preorder"
   );
 
-  const product = response.data;
+  const preorder =
+    preorderMeta?.value === true ||
+    preorderMeta?.value === "true";
 
-  //TEMP
-  console.log("[syncProduct] ID:", id);
-  console.log("[syncProduct] WooCommerce name:", product.name);
-  console.log("[syncProduct] API URL:", `${process.env.WC_URL}/wp-json/wc/v3/products/${id}`);
-  console.log("[syncProduct] API response:", response.status);
-  console.log("[syncProduct] WooCommerce name:", product.name);
-  console.log("[syncProduct] WooCommerce modified:", product.date_modified);
-  //
-
-  const preorderMeta = product.meta_data?.find((meta) => meta.key === "_hejmistrzu_preorder");
-  const preorder = preorderMeta?.value === true || preorderMeta?.value === "true";
   const query = `
     INSERT INTO products (
       woocommerce_id,
@@ -110,11 +94,25 @@ const syncProduct = async (id) => {
     product.manage_stock,
     product.stock_quantity,
     product.stock_status,
-    preorder
+    preorder,
   ];
 
   const result = await pool.query(query, values);
   return result.rows[0];
+};
+
+const syncProduct = async (id) => {
+  const response = await axiosWithRetry(
+    `${process.env.WC_URL}/wp-json/wc/v3/products/${id}?_sync=${Date.now()}`,
+    {
+      params: {
+        consumer_key: process.env.WC_CONSUMER_KEY,
+        consumer_secret: process.env.WC_CONSUMER_SECRET,
+      },
+    }
+  );
+
+  return saveProductToDatabase(response.data);
 };
 
 const syncVariations = async (id) => {
@@ -466,6 +464,7 @@ const syncAllProducts = async () => {
 
 module.exports = {
   axiosWithRetry,
+  saveProductToDatabase,
   syncProduct,
   syncVariations,
   syncCategories,

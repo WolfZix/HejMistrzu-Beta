@@ -14,6 +14,7 @@ const {
   syncFullProduct,
   syncAllProducts,
   syncChangedProducts,
+  saveProductToDatabase
 } = require("../services/syncProducts");
 
 
@@ -840,7 +841,10 @@ router.put(
           await axios.post(variationUrl, variationPayload, { params });
         }
       }
-      await syncFullProduct(Number(id));
+      await saveProductToDatabase(response.data);
+      await syncVariations(Number(id));
+      await syncCategories(Number(id));
+      await syncImages(Number(id));
 
       //TEMP
       console.log("[PUT] WooCommerce response:", response.data.name);
