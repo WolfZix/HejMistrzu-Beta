@@ -69,6 +69,10 @@ export default function EditProduct() {
           }))
         );
 
+        const inpostMeta = product.meta_data?.find((meta: any) => meta.key === "woo_inpost_shipping_methods_allowed");
+        const inpostMethods = inpostMeta?.value ?? initialProductFormData.inpostMethods;
+        const normalizedInpostMethods = typeof inpostMethods === "string" ? JSON.parse(inpostMethods || "[]") : inpostMethods;
+
         setFormData({
           ...initialProductFormData,
           name: product.name ?? "",
@@ -96,11 +100,7 @@ export default function EditProduct() {
           purchaseNote: product.purchase_note ?? "",
           menuOrder: String(product.menu_order ?? 0),
           variations,
-          inpostMethods: (
-            product.meta_data?.find(
-              (meta: any) => meta.key === "woo_inpost_shipping_methods_allowed"
-            )?.value ?? initialProductFormData.inpostMethods
-          ),
+          inpostMethods: normalizedInpostMethods,
         });
       } catch (error) {
         console.error(error);
