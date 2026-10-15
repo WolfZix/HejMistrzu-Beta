@@ -755,6 +755,16 @@ router.put(
         },
         { params }
       );   
+
+      //TEMP
+      console.log("[PUT] WooCommerce response:", {
+        id: response.data.id,
+        name: response.data.name,
+        slug: response.data.slug,
+        date_modified: response.data.date_modified,
+      });
+      //
+      
       const rawVariationImageIndexes = req.body.variationImageIndexes;
       const variationImageIndexes = 
         rawVariationImageIndexes == null ? []
@@ -835,7 +845,7 @@ router.put(
       //TEMP
       console.log("[PUT] WooCommerce response:", response.data.name);
       //
-      
+
       res.json({
         success: true,
         product: response.data,
