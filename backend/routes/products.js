@@ -831,6 +831,11 @@ router.put(
         }
       }
       await syncFullProduct(Number(id));
+
+      //TEMP
+      console.log("[PUT] WooCommerce response:", response.data.name);
+      //
+      
       res.json({
         success: true,
         product: response.data,
