@@ -29,6 +29,12 @@ const syncProduct = async (id) => {
   );
 
   const product = response.data;
+
+  //TEMP
+  console.log("[syncProduct] ID:", id);
+  console.log("[syncProduct] WooCommerce name:", product.name);
+  //
+
   const preorderMeta = product.meta_data?.find((meta) => meta.key === "_hejmistrzu_preorder");
   const preorder = preorderMeta?.value === true || preorderMeta?.value === "true";
   const query = `
