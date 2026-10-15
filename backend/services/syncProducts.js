@@ -33,6 +33,8 @@ const syncProduct = async (id) => {
   //TEMP
   console.log("[syncProduct] ID:", id);
   console.log("[syncProduct] WooCommerce name:", product.name);
+  console.log("[syncProduct] API URL:", `${process.env.WC_URL}/wp-json/wc/v3/products/${id}`);
+  console.log("[syncProduct] API response:", response.status);
   //
 
   const preorderMeta = product.meta_data?.find((meta) => meta.key === "_hejmistrzu_preorder");
