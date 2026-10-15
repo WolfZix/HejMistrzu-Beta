@@ -3,7 +3,12 @@ const crypto = require("crypto");
 
 const router = express.Router();
 const pool = require("../../config/db");
-const { syncFullProduct } = require("../../services/syncProducts");
+const {
+  saveProductToDatabase,
+  syncVariations,
+  syncCategories,
+  syncImages,
+} = require("../../services/syncProducts");
 
 router.post("/", async (req, res) => {
   try {
@@ -66,8 +71,12 @@ router.post("/", async (req, res) => {
     console.log("[WEBHOOK] Nazwa z payloadu:", req.body.name);
     console.log("[WEBHOOK] Data modyfikacji:", req.body.date_modified);
     //
-    
-    await syncFullProduct(syncId);
+
+    if (!parentId && req.body.name) await saveProductToDatabase(req.body)
+    await syncVariations(syncId);
+    await syncCategories(syncId);
+    await syncImages(syncId);
+
     console.log(`✓ Webhook: zsynchronizowano produkt ${syncId}`);
     return res.status(200).json({
       success: true,
