@@ -94,38 +94,36 @@ export function DeliverySection({ formData, setFormData }: DeliverySectionProps)
 
         <div className="grid grid-cols-2 gap-3">
           {[
-            "Paczkomat 24/7",
-            "Kurier",
-            "Paczkomat Pobranie",
-            "Kurier Pobranie",
-          ].map((method) => {
-            const isChecked = formData.inpostMethods.includes(method);
+            { label: "Paczkomat 24/7", value: "easypack_parcel_machines:9" },
+            { label: "Kurier", value: "easypack_shipping_courier_c2c:4" },
+            { label: "Paczkomat Pobranie", value: "easypack_parcel_machines_cod:3" },
+            { label: "Kurier Pobranie", value: "easypack_shipping_courier_c2c_cod:5" },
+          ].map(({ label, value }) => {
+            const isChecked = formData.inpostMethods.includes(value);
 
             return (
               <label
-                key={method}
+                key={value}
                 onClick={() => {
                   setFormData((prev) => ({
                     ...prev,
-                    inpostMethods: prev.inpostMethods.includes(method)
-                      ? prev.inpostMethods.filter((item) => item !== method)
-                      : [...prev.inpostMethods, method],
+                    inpostMethods: prev.inpostMethods.includes(value) ? prev.inpostMethods.filter((item) => item !== value)
+                      : [...prev.inpostMethods, value],
                   }));
                 }}
                 className={`
                   flex cursor-pointer items-center gap-3
-                  rounded-lg border
-                  px-4 py-3 text-sm text-white
+                  rounded-lg border px-4 py-3 text-sm text-white
                   transition-colors hover:border-primary/40
-                  ${isChecked ? "bg-primary/10 border-primary" : "border-primary/20 bg-background/50"}
+                  ${
+                    isChecked
+                      ? "bg-primary/10 border-primary"
+                      : "border-primary/20 bg-background/50"
+                  }
                 `}
               >
-                {isChecked ? (
-                  <CheckIcon className="h-4 w-4" />
-                ) : (
-                  <X className="h-4 w-4" />
-                )}
-                {method}
+                {isChecked ? ( <CheckIcon className="h-4 w-4" /> ) : ( <X className="h-4 w-4" /> )}
+                {label}
               </label>
             );
           })}
