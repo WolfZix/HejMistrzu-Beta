@@ -25,6 +25,10 @@ const syncProduct = async (id) => {
         consumer_key: process.env.WC_CONSUMER_KEY,
         consumer_secret: process.env.WC_CONSUMER_SECRET
       },
+      headers: {
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+      },
     }
   );
 
