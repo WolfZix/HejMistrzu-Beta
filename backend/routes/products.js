@@ -758,6 +758,12 @@ router.put(
       );   
 
       //TEMP
+      console.log(
+        "[PUT] InPost meta_data po zapisie:",
+        response.data.meta_data?.filter(
+          (meta) => meta.key === "woo_inpost_shipping_methods_allowed"
+        )
+      );
       console.log("[PUT] inpostMethods z formularza:", inpostMethods);
       console.log(
         "[PUT] inpostMethods po parsowaniu:",
