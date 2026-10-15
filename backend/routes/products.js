@@ -252,6 +252,7 @@ router.get("/:id/edit", verifyToken, requireAdmin, async (req, res) => {
         params: {
           consumer_key: process.env.WC_CONSUMER_KEY,
           consumer_secret: process.env.WC_CONSUMER_SECRET,
+          _sync: Date.now(),
         },
       }
     );
