@@ -116,14 +116,12 @@ const syncVariations = async (id) => {
 
   if (productResult.rows.length === 0) { throw new Error(`Produkt WooCommerce ${id} nie istnieje w bazie`) }
   const localProductId = productResult.rows[0].id;
-  const response = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations`,
+  const response = await axiosWithRetry(`/products/${id}/variations`,
     {
       params: {
-        consumer_key: process.env.WC_CONSUMER_KEY,
-        consumer_secret: process.env.WC_CONSUMER_SECRET,
         per_page: 100,
-        page: 1
-      }
+        page: 1,
+      },
     }
   );
 
@@ -244,14 +242,7 @@ const syncCategories = async (id) => {
   if (productResult.rows.length === 0) { throw new Error(`Produkt WooCommerce ${id} nie istnieje w bazie`) }
 
   const localProductId = productResult.rows[0].id;
-  const response = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
-    {
-      params: {
-        consumer_key: process.env.WC_CONSUMER_KEY,
-        consumer_secret: process.env.WC_CONSUMER_SECRET
-      }
-    }
-  );
+  const response = await axiosWithRetry(`/products/${id}`);
 
   const categories = response.data.categories || [];
   const localCategoryIds = [];
@@ -323,14 +314,7 @@ const syncImages = async (id) => {
 
   if (productResult.rows.length === 0) { throw new Error(`Produkt WooCommerce ${id} nie istnieje w bazie`) }
   const localProductId = productResult.rows[0].id;
-  const response = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
-    {
-      params: {
-        consumer_key: process.env.WC_CONSUMER_KEY,
-        consumer_secret: process.env.WC_CONSUMER_SECRET
-      }
-    }
-  );
+  const response = await axiosWithRetry(`/products/${id}`);
 
   const images = response.data.images || [];
   const imageIds = images.map((image) => image.id);
@@ -401,18 +385,16 @@ const syncAllProducts = async () => {
     page: 1
   };
 
-  const firstPage = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products`, { params });
+  const firstPage = await axiosWithRetry("/products", { params });
   const totalPages = Number(firstPage.headers["x-wp-totalpages"]);
   let products = [...firstPage.data];
   for (let page = 2; page <= totalPages; page++) {
-    const response = await axiosWithRetry(`${process.env.WC_URL}/wp-json/wc/v3/products`,
-      {
-        params: {
-          ...params,
-          page
-        }
-      }
-    );
+    const response = await axiosWithRetry("/products", {
+      params: {
+        ...params,
+        page,
+      },
+    });
     products.push(...response.data);
   }
 

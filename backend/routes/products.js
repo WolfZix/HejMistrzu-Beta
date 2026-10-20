@@ -17,7 +17,6 @@ const {
   saveProductToDatabase
 } = require("../services/syncProducts");
 
-
 router.get("/", async (_req, res) => {
   try {
     const [productsResult, variationsResult, categoriesResult, imagesResult] =
@@ -348,8 +347,7 @@ router.post(
       const variationImages = req.files?.variationImages ?? [];
       const images = productImages.map((file) => ({ src: `${process.env.SERVER_URL}/uploads/${file.filename}` }));
 
-      const response = await axios.post(
-        `${process.env.WC_URL}/wp-json/wc/v3/products`,
+      const response = await woocommerce.post(`/products`,
         {
           name,
           type: parsedVariations.length > 0 ? "variable" : "simple",
@@ -407,20 +405,14 @@ router.post(
           value: inpostMethods,
         }]
         },
-        {
-          params: {
-            consumer_key: process.env.WC_CONSUMER_KEY,
-            consumer_secret: process.env.WC_CONSUMER_SECRET,
-          },
-        }
       );
       for (const variation of parsedVariations) {
         const image = variation.imageIndex !== null
           ? variationImages[variation.imageIndex]
           : null;
 
-        await axios.post(
-          `${process.env.WC_URL}/wp-json/wc/v3/products/${response.data.id}/variations`,
+        await woocommerce.post(
+          `/products/${response.data.id}/variations`,
           {
             regular_price: String(variation.price ?? ""),
             sale_price: String(variation.salePrice ?? ""),
@@ -451,12 +443,6 @@ router.post(
               },
             }),
           },
-          {
-            params: {
-              consumer_key: process.env.WC_CONSUMER_KEY,
-              consumer_secret: process.env.WC_CONSUMER_SECRET,
-            },
-          }
         );
       }
       
@@ -693,8 +679,7 @@ router.put(
         })),
       ];
 
-      const response = await axios.put(
-        `${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
+      const response = await woocommerce.put(`/products/${id}`,
         {
           name,
           description,
@@ -760,15 +745,11 @@ router.put(
             : [rawVariationImageIndexes];
 
       const variationImageFiles = req.files?.variationImages ?? [];
-      const existingVariationsResponse = await axios.get(
-        `${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations`,
-        {
-          params: {
-            ...params,
-            per_page: 100,
-          },
-        }
-      );
+      const existingVariationsResponse = await woocommerce.get(`/products/${id}/variations`, {
+        params: {
+          per_page: 100,
+        },
+      });
 
       const existingVariations = existingVariationsResponse.data;
       const submittedIds = parsedVariations
@@ -777,13 +758,9 @@ router.put(
 
       for (const existingVariation of existingVariations) {
         if (!submittedIds.includes(existingVariation.id)) {
-          await axios.delete(
-            `${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations/${existingVariation.id}`,
+          await woocommerce.delete(`/products/${id}/variations/${existingVariation.id}`,
             {
-              params: {
-                ...params,
-                force: true,
-              },
+              params: { force: true },
             }
           );
         }
@@ -818,15 +795,9 @@ router.put(
           };
         }
 
-        const variationUrl = variation.id
-          ? `${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations/${variation.id}`
-          : `${process.env.WC_URL}/wp-json/wc/v3/products/${id}/variations`;
+        if (variation.id) await woocommerce.put(`/products/${id}/variations/${variation.id}`, variationPayload);
+        else await woocommerce.post(`/products/${id}/variations`, variationPayload);
 
-        if (variation.id) {
-          await axios.put(variationUrl, variationPayload, { params });
-        } else {
-          await axios.post(variationUrl, variationPayload, { params });
-        }
       }
       await saveProductToDatabase(response.data);
       await syncVariations(Number(id));
