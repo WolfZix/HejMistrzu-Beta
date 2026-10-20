@@ -60,7 +60,6 @@ export default function Products() {
     { value: "price-asc", label: "Cena rosnąco" }, { value: "price-desc", label: "Cena malejąco" },
   ];
 
-  const [formData, setFormData] = useState<ProductFormData>(initialProductFormData);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -77,6 +76,31 @@ export default function Products() {
   useEffect(() => {
     setCurrentPage(1)
   }, [search]);
+
+  const handleDeleteProduct = async () => {
+    if (!selectedProduct) return;
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/products/${selectedProduct.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Nie udało się usunąć produktu");
+
+      setProducts((prev) => prev.filter((product) => product.id !== selectedProduct.id));
+      setSelectedProduct(null);
+      setIsDeleteOpen(false);
+    } catch (error) {
+      console.error("Błąd usuwania produktu:", error);
+    }
+  };
 
   return (
     <>
@@ -207,10 +231,7 @@ export default function Products() {
           setSelectedProduct(null);
           setIsDeleteOpen(false);
         }}
-        onConfirm={() => {
-          setSelectedProduct(null);
-          setIsDeleteOpen(false);
-        }}
+        onConfirm={handleDeleteProduct}
       />
     )}
     </>

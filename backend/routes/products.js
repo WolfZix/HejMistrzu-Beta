@@ -833,4 +833,25 @@ router.put(
   }
 );
 
+router.delete("/:id", verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await woocommerce.delete(`/products/${id}`, {
+      params: { force: true },
+    });
+    await pool.query("DELETE FROM products WHERE woocommerce_id = $1", [id]);
+    return res.json({
+      success: true,
+      message: `Produkt ${id} został usunięty`,
+    });
+  } catch (error) {
+    console.error("Błąd usuwania produktu", error.response?.data || error.message);
+    return res.status(error.response?.data || 500).json({
+      success: false,
+      message: "Nie udało się usunąć produktu",
+      error: error.response?.data || error.message,
+    });
+  }
+});
+
 module.exports = router;

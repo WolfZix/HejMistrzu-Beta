@@ -364,17 +364,17 @@ const syncImages = async (id) => {
 };
 
 const syncFullProduct = async (id) => {
-    const product = await syncProduct(id);
-    const variations = await syncVariations(id);
-    const categories = await syncCategories(id);
-    const images = await syncImages(id);
+  const product = await syncProduct(id);
+  const variations = await syncVariations(id);
+  const categories = await syncCategories(id);
+  const images = await syncImages(id);
 
-    return {
-        product,
-        variations,
-        categories,
-        images
-    };
+  return {
+    product,
+    variations,
+    categories,
+    images
+  };
 };
 
 const syncAllProducts = async () => {
