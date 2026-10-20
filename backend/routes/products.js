@@ -260,6 +260,17 @@ router.get("/:id/edit", verifyToken, requireAdmin, async (req, res) => {
       via: productResponse.headers["via"],
       xCache: productResponse.headers["x-cache"],
     });
+
+    const freshResponse = await woocommerce.get(`/products/${id}`);
+
+    console.log("InPost meta comparison:", {
+      withSync: productResponse.data.meta_data?.find(
+        (meta) => meta.key === "woo_inpost_shipping_methods_allowed"
+      )?.value,
+      withoutSync: freshResponse.data.meta_data?.find(
+        (meta) => meta.key === "woo_inpost_shipping_methods_allowed"
+      )?.value,
+    });
     //
 
     const product = productResponse.data;
