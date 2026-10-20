@@ -252,15 +252,6 @@ router.get("/:id/edit", verifyToken, requireAdmin, async (req, res) => {
     });
 
     //TEMP
-    console.log("WooCommerce response headers:", {
-      cacheControl: productResponse.headers["cache-control"],
-      age: productResponse.headers["age"],
-      etag: productResponse.headers["etag"],
-      lastModified: productResponse.headers["last-modified"],
-      via: productResponse.headers["via"],
-      xCache: productResponse.headers["x-cache"],
-    });
-
     const freshResponse = await woocommerce.get(`/products/${id}`);
 
     console.log("InPost meta comparison:", {
@@ -701,13 +692,6 @@ router.put(
         })),
       ];
 
-      //TEMP
-      console.log(
-        "InPost methods received:",
-        JSON.parse(inpostMethods || "[]")
-      );
-      //
-
       const response = await woocommerce.put(`/products/${id}`,
         {
           name,
@@ -765,8 +749,16 @@ router.put(
           ],
         },
         { params }
-      );   
+      );
 
+      //TEMP
+      console.log(
+        "InPost meta after PUT:",
+        response.data.meta_data?.filter(
+          (meta) => meta.key === "woo_inpost_shipping_methods_allowed"
+        )
+      );
+      //
       const rawVariationImageIndexes = req.body.variationImageIndexes;
       const variationImageIndexes = 
         rawVariationImageIndexes == null ? []
