@@ -262,6 +262,11 @@ router.get("/:id/edit", verifyToken, requireAdmin, async (req, res) => {
         (meta) => meta.key === "woo_inpost_shipping_methods_allowed"
       )?.value,
     });
+
+    console.log("Product comparison:", {
+      withSync: productResponse.data.name,
+      withoutSync: freshResponse.data.name,
+    });
     //
 
     const product = productResponse.data;
