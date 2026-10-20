@@ -109,6 +109,7 @@ export default function AddProduct() {
       alert("Nie udało się utworzyć produktu.");
       return;
     }
+    alert("Produkt został utworzony.");
   }
 
   function closePage() {

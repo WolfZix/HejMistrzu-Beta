@@ -251,6 +251,17 @@ router.get("/:id/edit", verifyToken, requireAdmin, async (req, res) => {
       },
     });
 
+    //TEMP
+    console.log("WooCommerce response headers:", {
+      cacheControl: productResponse.headers["cache-control"],
+      age: productResponse.headers["age"],
+      etag: productResponse.headers["etag"],
+      lastModified: productResponse.headers["last-modified"],
+      via: productResponse.headers["via"],
+      xCache: productResponse.headers["x-cache"],
+    });
+    //
+
     const product = productResponse.data;
 
     // PSQL
