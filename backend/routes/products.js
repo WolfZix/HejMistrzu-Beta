@@ -701,6 +701,13 @@ router.put(
         })),
       ];
 
+      //TEMP
+      console.log(
+        "InPost methods received:",
+        JSON.parse(inpostMethods || "[]")
+      );
+      //
+
       const response = await woocommerce.put(`/products/${id}`,
         {
           name,
