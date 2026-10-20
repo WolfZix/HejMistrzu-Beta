@@ -1,5 +1,5 @@
 require("dotenv").config();
-const axios = require("axios");
+const woocommerce = require("../config/wc");
 const express = require("express");
 const pool = require("../config/db");
 const router = express.Router();
@@ -246,16 +246,11 @@ router.get("/:id/edit", verifyToken, requireAdmin, async (req, res) => {
     const databaseProduct = result.rows[0];
 
     // WC
-    const productResponse = await axios.get(
-      `${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
-      {
-        params: {
-          consumer_key: process.env.WC_CONSUMER_KEY,
-          consumer_secret: process.env.WC_CONSUMER_SECRET,
-          _sync: Date.now(),
-        },
-      }
-    );
+    const productResponse = await woocommerce.get(`/products/${id}`, {
+      params: {
+        _sync: Date.now(),
+      },
+    });
 
     const product = productResponse.data;
 
