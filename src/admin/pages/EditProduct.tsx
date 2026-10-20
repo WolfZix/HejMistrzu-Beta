@@ -71,7 +71,24 @@ export default function EditProduct() {
 
         const inpostMeta = product.meta_data?.find((meta: any) => meta.key === "woo_inpost_shipping_methods_allowed");
         const inpostMethods = inpostMeta?.value ?? initialProductFormData.inpostMethods;
-        const normalizedInpostMethods = typeof inpostMethods === "string" ? JSON.parse(inpostMethods || "[]") : inpostMethods;
+        const parsedInpostMethods = typeof inpostMethods === "string" ? JSON.parse(inpostMethods || "[]") : inpostMethods;
+
+        const inpostMethodMap: Record<string, string> = {
+          "Paczkomat 24/7": "easypack_parcel_machines:9",
+          "Kurier": "easypack_shipping_courier_c2c:4",
+          "Paczkomat Pobranie": "easypack_parcel_machines_cod:3",
+          "Kurier Pobranie": "easypack_shipping_courier_c2c_cod:5",
+        };
+
+        const normalizedInpostMethods = [
+          ...new Set(
+            (Array.isArray(parsedInpostMethods) ? parsedInpostMethods : [])
+              .map((method: string) => inpostMethodMap[method] ?? method)
+              .filter((method: string) =>
+                Object.values(inpostMethodMap).includes(method)
+              )
+          ),
+        ];
 
         setFormData({
           ...initialProductFormData,
