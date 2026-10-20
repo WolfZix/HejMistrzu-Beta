@@ -1,4 +1,4 @@
-const axios = require("axios");
+const woocommerce = require("../config/wc");
 const pool = require("../config/db");
 
 const toNumberOrNull = (value) => {
@@ -9,7 +9,7 @@ const toNumberOrNull = (value) => {
 
 const axiosWithRetry = async (url, config, retries = 3) => {
   for (let attempt = 1; attempt <= retries; attempt++) {
-    try { return await axios.get(url, config) }
+    try { return await woocommerce.get(url, config) }
     catch (error) {
       if (attempt === retries) { throw error }
       console.log(`Request nieudany. Próba ${attempt}/${retries}. Ponawiam...`);
@@ -101,21 +101,10 @@ const saveProductToDatabase = async (product) => {
   return result.rows[0];
 };
 
-
 const syncProduct = async (id) => {
-  const response = await axiosWithRetry(
-    `${process.env.WC_URL}/wp-json/wc/v3/products/${id}`,
-    {
-      params: {
-        consumer_key: process.env.WC_CONSUMER_KEY,
-        consumer_secret: process.env.WC_CONSUMER_SECRET,
-      },
-    }
-  );
-
+  const response = await axiosWithRetry(`/products/${id}`);
   return saveProductToDatabase(response.data);
 };
-
 
 const syncVariations = async (id) => {
   const productResult = await pool.query(
