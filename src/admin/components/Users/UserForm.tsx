@@ -103,9 +103,10 @@ export default function UserForm({
             hover:bg-primary
             transition-all
             duration-200
+            flex-nowrap
           "
         >
-          {!isSubmitting ? (<> <LoaderCircle size={14} className="animate-spin" /> "Zapisywanie"</>) : "Zapisz"}
+          {!isSubmitting ? (<> <LoaderCircle size={18} className="animate-spin" /> Zapisywanie</>) : "Zapisz"}
         </button>
       </div>
     </form>
