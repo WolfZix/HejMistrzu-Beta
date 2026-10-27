@@ -5,13 +5,13 @@ import { createPortal } from "react-dom";
 import type { User } from "@/types/user";
 
 type ViewUserModalProps = {
-  selectedUser: User;
+  user: User | null;
   isOpen: boolean;
   onClose: () => void;
 };
 
 export default function ViewUserModal({
-  selectedUser,
+  user,
   isOpen,
   onClose,
 }: ViewUserModalProps) {
@@ -93,7 +93,7 @@ export default function ViewUserModal({
               <X size={18} />
             </button>
             <div>
-              {selectedUser.name[0]}
+              {user?.name[0]}
             </div>
 
           </motion.div>

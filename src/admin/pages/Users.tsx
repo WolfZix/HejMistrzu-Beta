@@ -8,6 +8,7 @@ import TableFilters from "../components/TableFilters";
 import { normalizeText } from "@/utils";
 import DeleteModal from "../components/DeleteModal";
 import EditUserModal from "../components/Users/EditUserModal";
+import ViewUserModal from "../components/Users/ViewUserModal";
 
 const USERS_PER_PAGE = 6;
 
@@ -351,6 +352,9 @@ export default function Users() {
     )}
     {isEditOpen && (
       <EditUserModal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} user={selectedUser} />
+    )}
+    {isViewOpen && (
+      <ViewUserModal isOpen={isViewOpen} onClose={() => setIsViewOpen(false)} user={selectedUser} />
     )}
     </div>
   );
