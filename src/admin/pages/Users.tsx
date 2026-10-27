@@ -215,6 +215,10 @@ export default function Users() {
                 <td className="p-4">
                   <div className="flex justify-center gap-2">
                     <button
+                      onClick={() => {
+                        setSelectedUser(user);
+                        setIsViewOpen(true);
+                      }}
                       className="
                         p-2
                         rounded-lg
