@@ -1,10 +1,9 @@
 import { Shield, User } from "lucide-react";
-import { useEffect } from "react";
 
 type ProfileHeroProps = {
   username: string | undefined;
   role: string;
-  createdAt: string;
+  createdAt?: string;
 };
 
 export default function ProfileHero({
@@ -12,10 +11,6 @@ export default function ProfileHero({
   role,
   createdAt,
 }: ProfileHeroProps) {
-
-  useEffect(() => {
-
-  }, []);
 
   return (
     <div className="col-span-1">
@@ -49,7 +44,13 @@ export default function ProfileHero({
           @{username?.toLowerCase()}
         </p>
         <p className="text-sm text-muted-foreground">
-          {createdAt}
+          {createdAt
+            ? `Dołączył ${new Date(createdAt).toLocaleDateString("pl-PL", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}`
+            : "Data rejestracji niedostępna"}
         </p>
           <span
             className="

@@ -10,13 +10,7 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const role = user?.role ?? "user";
   const username = user?.username ?? "User";
-  const createdAt = user?.createdAt ?? new Date().toLocaleDateString("pl-PL",
-    {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-  );
+  const createdAt = user?.createdAt;
 
   return (
     <section className="container mx-auto max-w-7xl px-4 py-24 md:py-28">
