@@ -17,6 +17,8 @@ export default function EditUserModal({
   onClose,
 }: EditUserModalProps) {
   const [formData, setFormData] = useState<UserFormData>({
+    name: "",
+    surname: "",
     username: "",
     email: "",
     role: "user",
@@ -25,6 +27,8 @@ export default function EditUserModal({
   useEffect(() => {
     if (!user) return;
     setFormData({
+      name: user.name,
+      surname: user.surname,
       username: user.username,
       email: user.email,
       role: user.role,
@@ -43,6 +47,8 @@ export default function EditUserModal({
 
   function closeModal() {
     setFormData({ 
+      name: "",
+      surname: "",
       username: "",
       email: "",
       role: "user",

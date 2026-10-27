@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LoaderCircle } from "lucide-react";
 
 type AddUserFormProps = {
   name: string;
@@ -23,6 +23,8 @@ type AddUserFormProps = {
   isRoleOpen: boolean;
   setIsRoleOpen: React.Dispatch<React.SetStateAction<boolean>>;
 
+  isSubmitting: boolean;
+  error: string;
   handleSubmit: (e: React.FormEvent) => void;
   closeModal: () => void;
 };
@@ -92,8 +94,8 @@ export default function AddUserForm({
   password, setPassword,
   role, setRole,
   isRoleOpen, setIsRoleOpen,
-  handleSubmit,
-  closeModal,
+  handleSubmit, isSubmitting,
+  closeModal, error
 }: AddUserFormProps) {
   return (
     <form
@@ -208,6 +210,8 @@ export default function AddUserForm({
         </AnimatePresence>
       </div>
 
+      {error.trim().length > 0 && ( <span>{error}</span> )}
+
       <div className="flex gap-3 mt-2">
         <button
           type="button"
@@ -243,7 +247,7 @@ export default function AddUserForm({
             hover:shadow-[0_0_8px_4px_hsl(43,50%,30%)]
             "
         >
-          Dodaj
+          {isSubmitting ? (<><LoaderCircle size={14} className="animate-spin" /> "Dodawanie..."</>) : "Dodaj"}
         </button>
         </div>
     </form>

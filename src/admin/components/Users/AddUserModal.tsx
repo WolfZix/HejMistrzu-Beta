@@ -177,6 +177,8 @@ export default function AddUserModal({
               isRoleOpen={isRoleOpen}
               setIsRoleOpen={setIsRoleOpen}
               handleSubmit={handleSubmit}
+              isSubmitting={isSubmitting}
+              error={error}
               closeModal={closeModal}
             />
           </motion.div>
