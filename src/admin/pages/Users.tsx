@@ -20,6 +20,8 @@ export default function Users() {
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("default");
@@ -102,6 +104,43 @@ export default function Users() {
       setUsers(data);
     }).catch(console.error);
   }, []);
+
+  async function handleDelete() {
+    if (!selectedUser) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/users/${selectedUser.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Nie udało się usunąć użytkownika"
+        );
+      }
+
+      setSelectedUser(null);
+      setIsDeleteOpen(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Błąd usuwania użytkownika:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Wystąpił nieoczekiwany błąd"
+      );
+    }
+  }
 
   return (
     <div className="space-y-6 min-h-[45rem] relative">
@@ -305,10 +344,7 @@ export default function Users() {
           setSelectedUser(null);
           setIsDeleteOpen(false);
         }}
-        onConfirm={() => {
-          setSelectedUser(null);
-          setIsDeleteOpen(false);
-        }}
+        onConfirm={handleDelete}
       />
     )}
     {isEditOpen && (

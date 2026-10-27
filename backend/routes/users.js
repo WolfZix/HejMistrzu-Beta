@@ -132,6 +132,13 @@ router.patch("/:id", verifyToken, requireAdmin, async (req, res) => {
       });
     }
 
+    if (id === "1") {
+      return res.status(403).json({
+        success: false,
+        message: "Nie można edytować tego użytkownika",
+      });
+    }
+
     const allowedFields = [
       "name",
       "surname",
@@ -267,6 +274,51 @@ router.patch("/:id", verifyToken, requireAdmin, async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Nie udało się zaktualizować użytkownika",
+    });
+  }
+});
+
+router.delete("/:id", verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!/^\d+$/.test(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Nieprawidłowe ID użytkownika",
+      });
+    }
+
+    if (id === "1") {
+      return res.status(403).json({
+        success: false,
+        message: "Nie można usunąć tego użytkownika",
+      });
+    }
+
+    const result = await pool.query(
+      `DELETE FROM users WHERE id = $1 RETURNING id, username, email`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Nie znaleziono użytkownika",
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Użytkownik został usunięty",
+      user: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Błąd usuwania użytkownika:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Nie udało się usunąć użytkownika",
     });
   }
 });
