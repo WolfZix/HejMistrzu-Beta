@@ -21,6 +21,14 @@ Dashboard:
 - najpopularniejsze produkty
 - laczna liczba zamowien
 
+Rezerwacje:
+
+- Dodać obsługę rezerwacji
+
+Wydarzenia:
+
+- Naprawić błąd z Unauthorized po próbie dodania wydarzenia
+
 ---
 
 Sklep:
