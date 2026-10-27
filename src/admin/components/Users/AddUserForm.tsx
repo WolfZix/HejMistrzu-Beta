@@ -210,7 +210,7 @@ export default function AddUserForm({
         </AnimatePresence>
       </div>
 
-      {error.trim().length > 0 && ( <span>{error}</span> )}
+      {error.trim().length > 0 && ( <span className="text-red-500 text-sm">{error}</span> )}
 
       <div className="flex gap-3 mt-2">
         <button

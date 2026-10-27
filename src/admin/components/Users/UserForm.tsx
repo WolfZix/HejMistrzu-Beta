@@ -1,15 +1,21 @@
 import FormInput from "@/components/Forms/FormInput";
 import FormSelect from "@/components/Forms/FormSelect";
 import type { UserFormData } from "@/types/user";
+import { LoaderCircle } from "lucide-react";
 
 type UsersFormProps = {
   formData: UserFormData;
   setFormData: React.Dispatch<React.SetStateAction<UserFormData>>;
   handleSubmit: (e: React.FormEvent) => void;
+  isSubmitting: boolean;
   closeModal: () => void;
 }
 
-export default function UserForm({ formData, setFormData, handleSubmit, closeModal}: UsersFormProps) {
+export default function UserForm({
+  formData, setFormData,
+  handleSubmit, isSubmitting,
+  closeModal
+}: UsersFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
@@ -99,7 +105,7 @@ export default function UserForm({ formData, setFormData, handleSubmit, closeMod
             duration-200
           "
         >
-          Zapisz
+          {!isSubmitting ? (<> <LoaderCircle size={14} className="animate-spin" /> "Zapisywanie"</>) : "Zapisz"}
         </button>
       </div>
     </form>

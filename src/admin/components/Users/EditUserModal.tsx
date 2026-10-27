@@ -23,6 +23,9 @@ export default function EditUserModal({
     email: "",
     role: "user",
   })
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (!user) return;
@@ -56,9 +59,45 @@ export default function EditUserModal({
     onClose();
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    closeModal();
+    if (!user) return;
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      const token = localStorage.getItem("token");
+      const payload = {
+        ...formData,
+        ...(password ? { password } : {}),
+      };
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/users/${user.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) { throw new Error(data.message || "Nie udało się zaktualizować użytkownika") }
+
+      closeModal();
+      window.location.reload();
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Wystąpił nieoczekiwany błąd"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return createPortal(
@@ -139,6 +178,7 @@ export default function EditUserModal({
               setFormData={setFormData}
               handleSubmit={handleSubmit}
               closeModal={closeModal}
+              isSubmitting={isSubmitting}
             />
 
           </motion.div>
