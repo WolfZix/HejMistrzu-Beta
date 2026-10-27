@@ -2,6 +2,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 type AddUserFormProps = {
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+
+  surname: string;
+  setSurname: React.Dispatch<React.SetStateAction<string>>;
+
   username: string;
   setUsername: React.Dispatch<React.SetStateAction<string>>;
 
@@ -21,6 +27,21 @@ type AddUserFormProps = {
   closeModal: () => void;
 };
 
+const inputClassName = `
+  w-full
+  bg-background/50
+  border border-primary/20
+  rounded-lg
+  p-3
+  outline-none
+  focus:border-primary
+  focus:ring-2
+  focus:ring-primary/50
+  transition-all
+  duration-300
+  text-primary
+`;
+
 const roleOptions = [
   {
     value: "user",
@@ -32,7 +53,40 @@ const roleOptions = [
   },
 ];
 
+type FormInputProps = {
+  label: string;
+  type: string;
+  value: string;
+  onChange: (value: string) => void;
+  autoComplete?: string;
+};
+
+function FormInput({
+  label,
+  type,
+  value,
+  onChange,
+  autoComplete = "off",
+}: FormInputProps) {
+  return (
+    <div>
+      <label className="mb-1 block">{label}</label>
+
+      <input
+        required
+        type={type}
+        value={value}
+        autoComplete={autoComplete}
+        onChange={(e) => onChange(e.target.value)}
+        className={inputClassName}
+      />
+    </div>
+  );
+}
+
 export default function AddUserForm({
+  name, setName,
+  surname, setSurname,
   username, setUsername,
   email, setEmail,
   password, setPassword,
@@ -46,95 +100,44 @@ export default function AddUserForm({
       onSubmit={handleSubmit}
       className="flex flex-col gap-4"
     >
-      <div>
-        <label className="mb-1 block">
-          Nazwa użytkownika
-        </label>
 
-        <input
-          required
-          type="text"
-          value={username}
-          autoComplete="none"
-          onChange={(e) =>
-            setUsername(e.target.value)
-          }
-          className="
-            w-full
-            bg-background/50
-            border border-primary/20
-            rounded-lg
-            p-3
-            outline-none
-            focus:border-primary
-            focus:ring-2
-            focus:ring-primary/50
-            transition-all
-            duration-300
-            text-primary
-          "
-        />
-      </div>
+      <FormInput
+        label="Imię"
+        type="text"
+        value={name}
+        onChange={setName}
+        autoComplete="given-name"
+      />
 
-      <div>
-        <label className="mb-1 block">
-          Email
-        </label>
+      <FormInput
+        label="Nazwisko"
+        type="text"
+        value={surname}
+        onChange={setSurname}
+        autoComplete="family-name"
+      />
 
-        <input
-          required
-          type="email"
-          value={email}
-          autoComplete="none"
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-          className="
-            w-full
-            bg-background/50
-            border border-primary/20
-            rounded-lg
-            p-3
-            outline-none
-            focus:border-primary
-            focus:ring-2
-            focus:ring-primary/50
-            transition-all
-            duration-300
-            text-primary
-          "
-        />
-      </div>
+      <FormInput
+        label="Nazwa użytkownika"
+        type="text"
+        value={username}
+        onChange={setUsername}
+      />
 
-      <div>
-        <label className="mb-1 block">
-          Hasło
-        </label>
+      <FormInput
+        label="Email"
+        type="email"
+        value={email}
+        onChange={setEmail}
+      />
 
-        <input
-          required
-          type="password"
-          value={password}
-          autoComplete="none"
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-          className="
-            w-full
-            bg-background/50
-            border border-primary/20
-            rounded-lg
-            p-3
-            outline-none
-            focus:border-primary
-            focus:ring-2
-            focus:ring-primary/50
-            transition-all
-            duration-300
-            text-primary
-          "
-        />
-      </div>
+      <FormInput
+        label="Hasło"
+        type="password"
+        value={password}
+        onChange={setPassword}
+        autoComplete="new-password"
+      />
 
       <div className="relative">
         <label className="mb-1 block">
@@ -143,60 +146,26 @@ export default function AddUserForm({
 
         <button
           type="button"
-          onClick={() =>
-            setIsRoleOpen(!isRoleOpen)
-          }
-          className="
-            w-full
-            bg-background/50
-            border border-primary/20
-            rounded-lg
-            p-3
-            flex
-            items-center
-            justify-between
-            transition-all
-            duration-300
-            hover:border-primary/40
-          "
+          onClick={() => setIsRoleOpen(!isRoleOpen)}
+          className={inputClassName}
         >
           <span>
-            {
-              roleOptions.find(
-                (option) =>
-                  option.value === role
-              )?.label
-            }
+            { roleOptions.find((option) => option.value === role)?.label }
           </span>
 
           <ChevronDown
             size={18}
-            className={`transition-transform ${
-              isRoleOpen
-                ? "rotate-180"
-                : ""
-              }`}
+            className={`transition-transform ${isRoleOpen ? "rotate-180" : ""}`}
           />
         </button>
 
         <AnimatePresence>
           {isRoleOpen && (
             <motion.div
-              initial={{
-                opacity: 0,
-                y: -10,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                y: -10,
-              }}
-              transition={{
-                duration: 0.2,
-              }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
               className="
                 absolute
                 top-full
@@ -216,8 +185,8 @@ export default function AddUserForm({
                     key={option.value}
                     type="button"
                     onClick={() => {
-                    setRole(option.value);
-                    setIsRoleOpen(false);
+                      setRole(option.value);
+                      setIsRoleOpen(false);
                     }}
                     className="
                       w-full

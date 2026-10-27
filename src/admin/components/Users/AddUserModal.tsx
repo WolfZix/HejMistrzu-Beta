@@ -12,9 +12,13 @@ export default function AddUserModal({
   isOpen,
   onClose,
 }: AddUserModalProps) {
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const [role, setRole] = useState("user");
   const [isRoleOpen, setIsRoleOpen] = useState(false);
@@ -30,6 +34,8 @@ export default function AddUserModal({
   }, [isOpen]);
 
   function closeModal() {
+    setName("");
+    setSurname("");
     setUsername("");
     setEmail("");
     setPassword("");
@@ -39,9 +45,46 @@ export default function AddUserModal({
     onClose();
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    closeModal();
+
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/users`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name,
+            surname,
+            username,
+            email,
+            password,
+            role,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message || "Nie udało się utworzyć użytkownika")
+
+      closeModal();
+      window.location.reload();
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message
+          : "Wystąpił nieoczekiwany błąd"
+      );
+    } finally { setIsSubmitting(false) }
   }
 
   return (
@@ -118,6 +161,10 @@ export default function AddUserModal({
             </div>
 
             <AddUserForm
+              name={name}
+              setName={setName}
+              surname={surname}
+              setSurname={setSurname}
               username={username}
               setUsername={setUsername}
               email={email}
