@@ -4,11 +4,13 @@ import { useEffect } from "react";
 type ProfileHeroProps = {
   username: string | undefined;
   role: string;
+  createdAt: string;
 };
 
 export default function ProfileHero({
   username,
   role,
+  createdAt,
 }: ProfileHeroProps) {
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function ProfileHero({
           @{username?.toLowerCase()}
         </p>
         <p className="text-sm text-muted-foreground">
-          {}
+          {createdAt}
         </p>
           <span
             className="

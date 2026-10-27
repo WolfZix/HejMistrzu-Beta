@@ -101,6 +101,7 @@ router.post("/login", async (req,res) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        createdAt: user.createdAt,
       },
     });
   } catch (error) {
@@ -115,7 +116,7 @@ router.post("/login", async (req,res) => {
 router.get("/me", verifyToken, async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT id, username, email, role FROM users WHERE id = $1`,
+      `SELECT id, username, email, role, created_at AS "createdAt" FROM users WHERE id = $1`,
       [req.user.id]
     );
 

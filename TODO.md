@@ -21,10 +21,6 @@ Dashboard:
 - najpopularniejsze produkty
 - laczna liczba zamowien
 
-Użytkownicy:
-
-- zrobić reszte endpointów
-
 ---
 
 Sklep:
