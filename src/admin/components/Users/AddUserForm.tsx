@@ -147,7 +147,9 @@ export default function AddUserForm({
         <button
           type="button"
           onClick={() => setIsRoleOpen(!isRoleOpen)}
-          className={inputClassName}
+          aria-haspopup="listbox"
+          aria-expanded={isRoleOpen}
+          className={`${inputClassName} flex items-center justify-between gap-3 cursor-pointer`}
         >
           <span>
             { roleOptions.find((option) => option.value === role)?.label }
@@ -155,7 +157,7 @@ export default function AddUserForm({
 
           <ChevronDown
             size={18}
-            className={`transition-transform ${isRoleOpen ? "rotate-180" : ""}`}
+            className={`shrink-0 transition-transform ${isRoleOpen ? "rotate-180" : ""}`}
           />
         </button>
 
