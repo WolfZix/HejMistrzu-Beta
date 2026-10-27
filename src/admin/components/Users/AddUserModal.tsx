@@ -130,6 +130,8 @@ export default function AddUserModal({
               my-auto
               w-full
               max-w-md
+              max-h-[calc(100dvh-2rem)]
+              overflow-y-auto
               relative
               rounded-xl
               border
