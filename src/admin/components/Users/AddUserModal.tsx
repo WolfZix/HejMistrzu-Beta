@@ -98,10 +98,11 @@ export default function AddUserModal({
           className="
             fixed
             inset-0
-            z-50
+            z-[9999]
             flex
             items-center
             justify-center
+            overflow-y-auto
             bg-black/60
             backdrop-blur-sm
             p-4
@@ -126,6 +127,7 @@ export default function AddUserModal({
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             className="
+              my-auto
               w-full
               max-w-md
               relative
