@@ -3,11 +3,13 @@ import { Shield, User } from "lucide-react";
 type ProfileHeroProps = {
   username: string | undefined;
   role: string;
+  createdAt: string;
 };
 
 export default function ProfileHero({
   username,
   role,
+  createdAt,
 }: ProfileHeroProps) {
   return (
     <div className="col-span-1">
@@ -41,11 +43,7 @@ export default function ProfileHero({
           @{username?.toLowerCase()}
         </p>
         <p className="text-sm text-muted-foreground">
-          dołączył: {new Date().toLocaleDateString("pl-PL", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+          {createdAt}
         </p>
           <span
             className="

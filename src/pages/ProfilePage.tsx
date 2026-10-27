@@ -10,6 +10,13 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const role = user?.role ?? "user";
   const username = user?.username ?? "User";
+  const createdAt = user?.createdAt ?? new Date().toLocaleDateString("pl-PL",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }
+  );
 
   return (
     <section className="container mx-auto max-w-7xl px-4 py-24 md:py-28">
@@ -26,7 +33,7 @@ export default function ProfilePage() {
             lg:sticky lg:-top-28
           "
         >
-          <ProfileHero username={username} role={role} />
+          <ProfileHero username={username} role={role} createdAt={createdAt} />
           <ProfileButtons role={role} />
           <ProfileStats
             events={17}
