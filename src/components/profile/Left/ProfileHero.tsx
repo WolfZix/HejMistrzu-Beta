@@ -75,7 +75,6 @@ export default function ProfileHero({
               </>
             )}
           </span>
-
       </div>
       <div className="border-t border-border my-6" />
     </div>
