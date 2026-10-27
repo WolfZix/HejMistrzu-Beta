@@ -1,16 +1,20 @@
 import { Shield, User } from "lucide-react";
+import { useEffect } from "react";
 
 type ProfileHeroProps = {
   username: string | undefined;
   role: string;
-  createdAt: string;
 };
 
 export default function ProfileHero({
   username,
   role,
-  createdAt,
 }: ProfileHeroProps) {
+
+  useEffect(() => {
+
+  }, []);
+
   return (
     <div className="col-span-1">
       <div className="flex flex-col items-center">
@@ -43,7 +47,7 @@ export default function ProfileHero({
           @{username?.toLowerCase()}
         </p>
         <p className="text-sm text-muted-foreground">
-          {createdAt}
+          {}
         </p>
           <span
             className="
