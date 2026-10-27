@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import type { User, UserFormData } from "@/types/user";
 import UserForm from "./UserForm";
+import { createPortal } from "react-dom";
 
 type EditUserModalProps = {
   isOpen: boolean;
@@ -54,7 +55,7 @@ export default function EditUserModal({
     closeModal();
   }
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -137,6 +138,7 @@ export default function EditUserModal({
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

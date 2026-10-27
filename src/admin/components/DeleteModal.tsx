@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { TriangleAlert, X } from "lucide-react";
+import { createPortal } from "react-dom";
 
 type DeleteModalProps = {
   isOpen: boolean;
@@ -17,7 +18,7 @@ export default function DeleteModal({
   onClose,
   onConfirm,
 }: DeleteModalProps) {
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -128,6 +129,7 @@ export default function DeleteModal({
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
