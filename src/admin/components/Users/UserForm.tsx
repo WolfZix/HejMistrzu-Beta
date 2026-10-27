@@ -110,7 +110,7 @@ export default function UserForm({
             gap-2
           "
         >
-          {!isSubmitting ? (<> <LoaderCircle size={18} className="animate-spin" /> Zapisywanie...</>) : "Zapisz"}
+          {isSubmitting ? (<> <LoaderCircle size={18} className="animate-spin" /> Zapisywanie...</>) : "Zapisz"}
         </button>
       </div>
     </form>

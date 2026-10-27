@@ -249,7 +249,7 @@ export default function AddUserForm({
             flex-nowrap
             items-center
             justify-center
-            gap-4
+            gap-2
             "
         >
           {isSubmitting ? (<><LoaderCircle size={18} className="animate-spin" /> Dodawanie...</>) : "Dodaj"}
