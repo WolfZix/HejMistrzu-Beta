@@ -20,8 +20,6 @@ export default function Users() {
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState("");
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("default");

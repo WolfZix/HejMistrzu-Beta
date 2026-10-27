@@ -179,6 +179,7 @@ export default function EditUserModal({
               handleSubmit={handleSubmit}
               closeModal={closeModal}
               isSubmitting={isSubmitting}
+              error={error}
             />
 
           </motion.div>

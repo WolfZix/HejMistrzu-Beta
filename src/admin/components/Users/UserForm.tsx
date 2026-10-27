@@ -8,13 +8,14 @@ type UsersFormProps = {
   setFormData: React.Dispatch<React.SetStateAction<UserFormData>>;
   handleSubmit: (e: React.FormEvent) => void;
   isSubmitting: boolean;
+  error: string;
   closeModal: () => void;
 }
 
 export default function UserForm({
   formData, setFormData,
   handleSubmit, isSubmitting,
-  closeModal
+  closeModal, error,
 }: UsersFormProps) {
   return (
     <form
@@ -72,6 +73,8 @@ export default function UserForm({
           />
         </div>
       </div>
+
+      {error.trim().length > 0 && ( <span className="text-red-500 text-sm">{error}</span> )}
     
       <div className="flex gap-3 pt-2">
         <button
