@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import AddUserForm from "./AddUserForm";
+import { createPortal } from "react-dom";
 
 type AddUserModalProps = {
   isOpen: boolean;
@@ -87,7 +88,7 @@ export default function AddUserModal({
     } finally { setIsSubmitting(false) }
   }
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -182,6 +183,7 @@ export default function AddUserModal({
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
