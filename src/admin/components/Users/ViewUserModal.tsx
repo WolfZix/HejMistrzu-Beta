@@ -113,7 +113,7 @@ export default function ViewUserModal({
                   hover:shadow-[0_0_8px_2px_hsl(43,40%,20%)]
                 "
               >
-                {user?.username[0].toUpperCase()}
+                {user?.username ? user?.username[0].toUpperCase() : "G"}
               </div>
               <h1 className="font-heading text-2xl mt-5">
                 {user?.username}
@@ -122,11 +122,11 @@ export default function ViewUserModal({
                 @{user?.username.toLowerCase()}
               </p>
               <p className="text-sm text-muted-foreground">
-                dołączył: {new Date().toLocaleDateString("pl-PL", {
+                Dołączył:{" "}{user?.createdAt ? new Date(user.createdAt).toLocaleDateString("pl-PL", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
-                })}
+                }) : "Brak danych"}
               </p>
                 <span
                   className="
@@ -157,9 +157,9 @@ export default function ViewUserModal({
                   )}
                 </span>
             </div>
-            <div className="flex flex-col items-center space-y-4 mt-6">
-              <h1 className="text-2xl font-heading mb-2">Informacje</h1>
-              <div>
+            <div className="flex flex-col items-center mt-6">
+              <h2 className="text-2xl font-heading mb-2">Informacje</h2>
+              <div className="space-y-4">
                 <p><b>Email:</b> {user?.email}</p>
                 <p><b>Imię i nazwisko:</b> {user?.name} {user?.surname}</p>
               </div>
