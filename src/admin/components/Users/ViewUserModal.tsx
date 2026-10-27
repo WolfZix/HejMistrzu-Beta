@@ -157,10 +157,12 @@ export default function ViewUserModal({
                   )}
                 </span>
             </div>
-            <div className="flex flex-col space-y-4 mt-6">
-              <h1 className="text-2xl font-heading mb-4">Informacje</h1>
-              <p>Imię i nazwisko: {user?.name} {user?.surname}</p>
-              <p>Email: {user?.email}</p>
+            <div className="flex flex-col items-center space-y-4 mt-6">
+              <h1 className="text-2xl font-heading mb-2">Informacje</h1>
+              <div>
+                <p><b>Email:</b> {user?.email}</p>
+                <p><b>Imię i nazwisko:</b> {user?.name} {user?.surname}</p>
+              </div>
             </div>
 
           </motion.div>
