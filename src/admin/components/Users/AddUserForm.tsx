@@ -245,9 +245,14 @@ export default function AddUserForm({
             duration-300
             hover:bg-primary
             hover:shadow-[0_0_8px_4px_hsl(43,50%,30%)]
+            flex
+            flex-nowrap
+            items-center
+            justify-center
+            gap-4
             "
         >
-          {isSubmitting ? (<><LoaderCircle size={14} className="animate-spin" /> "Dodawanie..."</>) : "Dodaj"}
+          {isSubmitting ? (<><LoaderCircle size={18} className="animate-spin" /> Dodawanie...</>) : "Dodaj"}
         </button>
         </div>
     </form>
