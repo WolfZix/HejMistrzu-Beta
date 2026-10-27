@@ -55,6 +55,7 @@ export default function AddUserForm({
           required
           type="text"
           value={username}
+          autoComplete="none"
           onChange={(e) =>
             setUsername(e.target.value)
           }
@@ -84,6 +85,7 @@ export default function AddUserForm({
           required
           type="email"
           value={email}
+          autoComplete="none"
           onChange={(e) =>
             setEmail(e.target.value)
           }
@@ -113,6 +115,7 @@ export default function AddUserForm({
           required
           type="password"
           value={password}
+          autoComplete="none"
           onChange={(e) =>
             setPassword(e.target.value)
           }
