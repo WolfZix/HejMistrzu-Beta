@@ -157,11 +157,9 @@ export default function ViewUserModal({
                   )}
                 </span>
             </div>
-            <div className="flex flex-col items-center space-y-4">
-              <h1>Informacje</h1>
-              <hr />
-              <p>Imię: {user?.name}</p>
-              <p>Nazwisko: {user?.surname}</p>
+            <div className="flex flex-col space-y-4 mt-6">
+              <h1 className="text-2xl font-heading mb-4">Informacje</h1>
+              <p>Imię i nazwisko: {user?.name} {user?.surname}</p>
               <p>Email: {user?.email}</p>
             </div>
 
