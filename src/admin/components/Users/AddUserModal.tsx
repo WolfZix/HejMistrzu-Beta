@@ -98,14 +98,14 @@ export default function AddUserModal({
           className="
             fixed
             inset-0
-            z-[9999]
+            z-50
             flex
             items-center
             justify-center
-            overflow-y-auto
             bg-black/60
             backdrop-blur-sm
             p-4
+            !my-0
           "
         >
           <motion.div
@@ -127,11 +127,8 @@ export default function AddUserModal({
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             className="
-              my-auto
               w-full
               max-w-md
-              max-h-[calc(100dvh-2rem)]
-              overflow-y-auto
               relative
               rounded-xl
               border
