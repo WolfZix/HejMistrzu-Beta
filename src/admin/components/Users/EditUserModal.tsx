@@ -85,6 +85,9 @@ export default function EditUserModal({
       );
 
       const data = await response.json();
+      if (response.status === 403) {
+        alert(error)
+      }
       if (!response.ok) { throw new Error(data.message || "Nie udało się zaktualizować użytkownika") }
 
       closeModal();
