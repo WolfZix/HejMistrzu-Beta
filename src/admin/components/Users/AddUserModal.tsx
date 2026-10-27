@@ -106,7 +106,6 @@ export default function AddUserModal({
             bg-black/60
             backdrop-blur-sm
             p-4
-            !my-0
           "
         >
           <motion.div
