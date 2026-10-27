@@ -107,7 +107,7 @@ export default function UserForm({
             flex-nowrap
             items-center
             justify-center
-            gap-4
+            gap-2
           "
         >
           {!isSubmitting ? (<> <LoaderCircle size={18} className="animate-spin" /> Zapisywanie...</>) : "Zapisz"}
