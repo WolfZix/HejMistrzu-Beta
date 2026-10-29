@@ -481,6 +481,21 @@ export default function EventParticipants() {
                           {participant.email}
                         </td>
                         <td className="p-3">
+                          {participant.attended ? (
+                            <span className="text-green-500 font-medium">
+                              Obecny
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              className="rounded-lg bg-primary px-3 py-2 text-primary-foreground hover:opacity-90 transition-opacity"
+                              onClick={() => handleConfirmAttendance(participant.id)}
+                            >
+                              Potwierdź
+                            </button>
+                          )}
+                        </td>
+                        <td className="p-3">
                           <div className="flex justify-center">
                             <button
                               type="button"
