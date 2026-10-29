@@ -292,7 +292,15 @@ router.post("/admin", verifyToken, requireAdmin, async (req, res) => {
       duration,
       peopleCount,
       notes,
+      status,
     } = req.body;
+
+    if (!["Potwierdzona", "Oczekująca"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Nieprawidłowy status rezerwacji.",
+      });
+    }
 
     const isRpgReservation = duration !== null;
 
@@ -305,6 +313,7 @@ router.post("/admin", verifyToken, requireAdmin, async (req, res) => {
       duration,
       peopleCount,
       notes,
+      status,
     });
 
     if (validationError) {
@@ -373,7 +382,7 @@ router.post("/admin", verifyToken, requireAdmin, async (req, res) => {
         duration,
         peopleCount,
         notes,
-        "Potwierdzona",
+        status,
       ]
     );
 

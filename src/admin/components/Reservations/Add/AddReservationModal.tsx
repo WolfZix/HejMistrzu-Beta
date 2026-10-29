@@ -12,7 +12,7 @@ type AddReservationModalProps = {
 
 const BOOKING_OPTIONS = ['Gralnia', 'Sesja RPG']
 const PEOPLE_COUNT_OPTIONS = [1, 2, 3, 4];
-const STATUS_OPTIONS = ['Potwierdzona', 'Anulowana'];
+const STATUS_OPTIONS = ['Oczekująca'];
 const DURATION_OPTIONS = [
   {value: 3, label: "3 godziny"},
   {value: 5, label: "5 godzin"},
@@ -36,7 +36,7 @@ const INITIAL_FORM_DATA: ReservationFormData = {
   duration: null,
   peopleCount: null,
   notes: '',
-  status: '',
+  status: 'Potwierdzona',
 }
 
 export default function AddReservationModal({
