@@ -11,6 +11,12 @@ Dashboard:
 
 ---
 
+Battlepass:
+
+- Zrobić obsługę battlepassa
+
+---
+
 Sklep:
 
 - Powiedzieć im, żeby naprawili nazwy wariantów tak, aby nie zawierały nazwy produktu głównego

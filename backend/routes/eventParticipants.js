@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
+const verifyToken = require("../middleware/verifyToken");
+const requireAdmin = require("../middleware/requireAdmin");
 
 const mapParticipant = (participant) => ({
   id: participant.id,
@@ -12,6 +14,7 @@ const mapParticipant = (participant) => ({
   nickname: participant.nickname,
   username: participant.username,
   email: participant.email,
+  attended: participant.attended,
   createdAt: participant.created_at,
 });
 
@@ -153,5 +156,101 @@ router.delete("/:id", async (req, res) => {
     });
   }
 })
+
+router.patch("/:id/attendance", verifyToken, requireAdmin, async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const { id } = req.params;
+    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Niepoprawne ID uczestnika",
+      });
+    }
+
+    await client.query("BEGIN");
+    const participantResult = await client.query(
+      `
+        SELECT id, event_id, user_id, attended
+        FROM event_participants
+        WHERE id = $1
+        FOR UPDATE
+      `,
+      [id]
+    );
+
+    if (participantResult.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({
+        success: false,
+        message: "Nie znaleziono uczestnika",
+      });
+    }
+
+    const participant = participantResult.rows[0];
+    if (participant.attended) {
+      await client.query("ROLLBACK");
+      return res.status(409).json({
+        success: false,
+        message: "Obecność została już potwierdzona",
+      });
+    }
+
+    await client.query(
+      `
+        UPDATE event_participants
+        SET attended = TRUE
+        WHERE id = $1
+      `,
+      [id]
+    );
+
+    let pointsAwarded = 0;
+    if (participant.user_id !== null) {
+      const pointsResult = await client.query(
+        `
+          INSERT INTO battlepass_points (
+            user_id,
+            points,
+            source_type,
+            source_id,
+            description
+          )
+          VALUES ($1, 10, 'event', $2, $3)
+          ON CONFLICT (user_id, source_type, source_id)
+            WHERE source_id IS NOT NULL AND points > 0
+          DO NOTHING
+          RETURNING id
+        `,
+        [
+          participant.user_id,
+          participant.event_id,
+          `Udział w wydarzeniu ID ${participant.event_id}`,
+        ]
+      );
+
+      pointsAwarded = pointsResult.rowCount > 0 ? 10 : 0;
+    }
+
+    await client.query("COMMIT");
+    return res.json({
+      success: true,
+      message: "Obecność została potwierdzona",
+      attended: true,
+      pointsAwarded,
+    });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Nie udało się potwierdzić obecności",
+    });
+  } finally {
+    client.release();
+  }
+});
 
 module.exports = router;

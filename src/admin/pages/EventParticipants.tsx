@@ -161,6 +161,36 @@ export default function EventParticipants() {
     }
   }
 
+  async function handleConfirmAttendance(participantId: number) {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/eventParticipants/${participantId}/attendance`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Nie udało się potwierdzić obecności")
+
+      setSelectedParticipants((prev) =>
+        prev.map((participant) =>
+          participant.id === participantId
+            ? { ...participant, attended: true }
+            : participant
+        )
+      );
+      console.log(`Potwierdzono obecność. Przyznane punkty: ${data.pointsAwarded}`);
+    } catch (error) {
+      console.error("Nie udało się potwierdzić obecności:", error);
+    }
+  }
+
   async function fetchParticipants(eventId: number | null) {
     try {
       if (eventId === null) {
@@ -431,6 +461,9 @@ export default function EventParticipants() {
                         </th>
                         <th className="p-3">
                           Email
+                        </th>
+                        <th className="p-3">
+                          Obecność
                         </th>
                         <th className="p-3 w-20"></th>
                       </tr>

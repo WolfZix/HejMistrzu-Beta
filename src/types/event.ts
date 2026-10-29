@@ -51,4 +51,5 @@ export type EventParticipant = {
   username: string | null;
   email: string | null;
   createdAt: string;
+  attended: boolean;
 }
