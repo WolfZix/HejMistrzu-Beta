@@ -117,6 +117,23 @@ export default function Events() {
     }
   }
 
+  async function handleDeleteEvent() {
+    if (!selectedEvent) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`${import.meta.env.VITE_API_URL}/events/${selectedEvent.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setEvents((prev) => prev.filter((event) => event.id !== selectedEvent.id));
+      setIsDeleteOpen(false);
+      setSelectedEvent(null);
+    } catch (error) {
+      console.error("Nie udało się usunąć wydarzenia:", error);
+    }
+  }
+
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -403,10 +420,7 @@ export default function Events() {
                 setSelectedEvent(null);
                 setIsDeleteOpen(false);
               }}
-              onConfirm={() => {
-                setSelectedEvent(null);
-                setIsDeleteOpen(false);
-              }}
+              onConfirm={handleDeleteEvent}
             />
           )}
         </>

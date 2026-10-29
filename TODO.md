@@ -9,10 +9,6 @@ Dashboard:
 
 - Podpiąć statystyki pod dynamiczne dane
 
-Rezerwacje:
-
-- Dodać obsługę rezerwacji
-
 ---
 
 Sklep:
