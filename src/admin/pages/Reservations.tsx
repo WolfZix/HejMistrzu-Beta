@@ -354,19 +354,19 @@ export default function Reservations() {
           </div>
         )}
       </div>
+      {isAddOpen && (
+        <AddReservationModal
+        isOpen={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        onReservationUpdated={async () => {
+          setIsAddOpen(false);
+          setCurrentPage(1);
+          await fetchReservations();
+        }}
+        />
+      )}
       {selectedReservation && (
         <>
-        {isAddOpen && (
-          <AddReservationModal
-          isOpen={isAddOpen}
-          onClose={() => setIsAddOpen(false)}
-          onReservationUpdated={async () => {
-            setIsAddOpen(false);
-            setCurrentPage(1);
-            await fetchReservations();
-          }}
-          />
-        )}
         {isEditOpen && (
           <EditReservationModal 
             isOpen={isEditOpen}
