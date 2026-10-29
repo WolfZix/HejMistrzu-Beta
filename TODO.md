@@ -7,27 +7,11 @@ Backend:
 
 Dashboard:
 
-- SEKCJA WYDARZEN:
-- ile jest wydarzen w tym miesiącu
-- ile jest wydarzen w tym roku
-- najpopularniejszy event
-
-- SEKCJA UZYTKOWNIKOW:
-- ile lacznie jest uzytkownikow
-- ile przybylo w tym miesiącu
-- ile przybylo w tym roku
-
-- SEKCJA SKLEPU:
-- najpopularniejsze produkty
-- laczna liczba zamowien
+- Podpiąć statystyki pod dynamiczne dane
 
 Rezerwacje:
 
 - Dodać obsługę rezerwacji
-
-Wydarzenia:
-
-- Naprawić błąd z Unauthorized po próbie dodania wydarzenia
 
 ---
 
@@ -38,3 +22,10 @@ Sklep:
 - Jeśli ktoś jest na stronie zamówienia to po usunięciu wszystkiego z koszyka przeniosło go automatycznie na stronę sklepu
 - Galeria zdjęć w produktach i wariantach
 - Naprawić responsywność i animacje
+
+Na koniec:
+
+- Zrobić testy wydajności
+- Zrobić testy użytkowania
+- Przepiąć wszystkie dane na dane ich sklepu
+- Przepiąć wszystko na produkcyjną bazę danych

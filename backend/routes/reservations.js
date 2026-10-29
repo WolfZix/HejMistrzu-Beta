@@ -281,6 +281,113 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.post("/admin", verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const {
+      fullName,
+      email,
+      phone,
+      reservationDate,
+      reservationTime,
+      duration,
+      peopleCount,
+      notes,
+    } = req.body;
+
+    const isRpgReservation = duration !== null;
+
+    const validationError = validateReservation({
+      fullName,
+      email,
+      phone,
+      reservationDate,
+      reservationTime,
+      duration,
+      peopleCount,
+      notes,
+    });
+
+    if (validationError) {
+      return res.status(400).json({
+        success: false,
+        message: validationError,
+      });
+    }
+
+    if (!isRpgReservation) {
+      const occupiedSlots = await pool.query(
+        `
+          SELECT COALESCE(SUM(people_count), 0) AS booked_slots
+          FROM reservations
+          WHERE duration IS NULL
+            AND reservation_date = $1
+            AND reservation_time = $2
+        `,
+        [reservationDate, reservationTime]
+      );
+
+      const bookedSlots = Number(occupiedSlots.rows[0].booked_slots);
+
+      if (bookedSlots + Number(peopleCount) > 20) {
+        return res.status(409).json({
+          success: false,
+          message: "Nie ma wolnych miejsc w wybranym terminie.",
+        });
+      }
+    } else {
+      const validation = await validateRpgReservation({
+        reservationDate,
+        reservationTime,
+        duration,
+      });
+
+      if (!validation.success) {
+        return res.status(validation.status).json(validation);
+      }
+    }
+
+    const result = await pool.query(
+      `
+        INSERT INTO reservations (
+          user_id,
+          full_name,
+          email,
+          phone,
+          reservation_date,
+          reservation_time,
+          duration,
+          people_count,
+          notes,
+          status
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        RETURNING *
+      `,
+      [
+        null,
+        fullName,
+        email,
+        phone,
+        reservationDate,
+        reservationTime,
+        duration,
+        peopleCount,
+        notes,
+        "Potwierdzona",
+      ]
+    );
+
+    return res.status(201).json(mapReservation(result.rows[0]));
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Nie udało się stworzyć rezerwacji",
+    });
+  }
+});
+
 router.put("/:id", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
@@ -401,8 +508,8 @@ router.delete("/:id", verifyToken, requireAdmin, async (req, res) => {
 
     const result = await pool.query(
       `DELETE FROM reservations
-       WHERE id = $1
-       RETURNING *`,
+      WHERE id = $1
+      RETURNING *`,
       [id]
     );
 

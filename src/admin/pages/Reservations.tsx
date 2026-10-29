@@ -5,6 +5,7 @@ import PageLoader from "@/pages/PageLoader";
 import axios from "axios";
 import type { Reservation } from "@/types/reservation";
 import { normalizeText } from "@/utils";
+import AddReservationModal from "../components/Reservations/Add/AddReservationModal";
 import EditReservationModal from "../components/Reservations/Edit/EditReservationModal";
 import DeleteModal from "../components/DeleteModal";
 import ViewReservationModal from "../components/Reservations/ViewReservationModal";
@@ -46,6 +47,7 @@ export default function Reservations() {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("default");
   const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -151,6 +153,7 @@ export default function Reservations() {
           sortOptions={SORT_OPTIONS}
           button={
             <button
+            onClick={() => setIsAddOpen(true)}
             className="
             flex
             items-center
@@ -353,6 +356,17 @@ export default function Reservations() {
       </div>
       {selectedReservation && (
         <>
+        {isAddOpen && (
+          <AddReservationModal
+          isOpen={isAddOpen}
+          onClose={() => setIsAddOpen(false)}
+          onReservationUpdated={async () => {
+            setIsAddOpen(false);
+            setCurrentPage(1);
+            await fetchReservations();
+          }}
+          />
+        )}
         {isEditOpen && (
           <EditReservationModal 
             isOpen={isEditOpen}
