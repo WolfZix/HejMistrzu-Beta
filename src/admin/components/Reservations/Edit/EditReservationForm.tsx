@@ -114,7 +114,10 @@ export default function EditReservationForm({
     setServerError("");
     if (!validateForm(formData)) { return }
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL}/reservations/${reservation.id}`, formData);
+      const token = localStorage.getItem("token");
+      await axios.put(`${import.meta.env.VITE_API_URL}/reservations/${reservation.id}`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       onReservationUpdated();
       closeModal();
     } catch (error) {
