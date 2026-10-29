@@ -123,13 +123,17 @@ export default function EventRegistrationForm({event, freeSlots, onClose, previe
       slots,
     };
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/eventRegistrations`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(registrationData),
-      });
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/eventRegistrations`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(registrationData),
+        }
+      );
     const data = await response.json();
     if (!response.ok) {
       setErrorMessage(data.message || "Przepraszamy, coś poszło nie tak!");
