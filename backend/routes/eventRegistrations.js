@@ -56,7 +56,11 @@ router.get("/", verifyToken, requireAdmin, async (req, res) => {
   }
 })
 
-router.post("/", async (req, res) => {
+router.post("/", (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) return next()
+  return verifyToken(req, res, next);
+}, async (req, res) => {
   const { eventId, name, surname, email, pokemonId, nickname, slots } = req.body;
   try {
     if (!(await doesEventExist(eventId))) return res.status(404).json({ message: "Nie znaleziono takiego wydarzenia" })
@@ -64,11 +68,12 @@ router.post("/", async (req, res) => {
     const freeSlots = await getFreeSlots(eventId);
     if (slots > freeSlots) return res.status(409).json({ message: `Brakuje wolnych miejsc. Wolne miejsca: ${freeSlots}`});
 
+    const userId = req.user?.id ?? null;
     const result = await pool.query(`
-      INSERT INTO event_registrations(event_id, name, surname, email, pokemon_id, nickname, slots)
-      VALUES($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO event_registrations(event_id, user_id, name, surname, email, pokemon_id, nickname, slots)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
-      `, [eventId, name, surname, email, pokemonId, nickname, slots]);
+    `, [eventId, userId, name, surname, email, pokemonId, nickname, slots]);
     res.status(201).json(mapRegistration(result.rows[0]));
   } catch(error) {
     console.error(error);
