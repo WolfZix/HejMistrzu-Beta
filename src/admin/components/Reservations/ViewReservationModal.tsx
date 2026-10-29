@@ -128,7 +128,7 @@ export default function ViewReservationModal({
                 </div>
                 <div className="flex gap-8 border-b pb-4">
                   <h1>Godzina:</h1>
-                  <span className="text-white">{reservation.reservationTime}</span>
+                  <span className="text-white">{reservation.reservationTime.slice(0,5)}</span>
                 </div>
                 <div className="flex gap-8 border-b pb-4">
                   {reservation.duration !== null ? (
