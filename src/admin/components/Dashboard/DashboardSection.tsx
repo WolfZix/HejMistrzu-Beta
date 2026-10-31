@@ -86,12 +86,14 @@ export default function DashboardSection({
               <>
                 <div className="my-5 border-t border-border" />
 
+                <div className="flex justify-between">
                 <h3 className="mb-3 text-sm font-medium text-muted-foreground">
                   Top 5
                 </h3>
-                <h3 className="mb-3 text-sm font-medium text-muted-foreground">
+                <h4 className="mb-3 text-sm font-medium text-muted-foreground">
                   Wykupione wejściówki
-                </h3>
+                </h4>
+                </div>
 
                 <div className="space-y-2">
                   {ranking.map((item, index) => (
