@@ -66,7 +66,12 @@ export default function EventParticipants() {
     async function fetchEvents() {
       try {
         setIsLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/events`);
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
         if (!response.ok) {
           throw new Error("Nie udało się pobrać wydarzeń");
         }
