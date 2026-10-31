@@ -134,6 +134,7 @@ router.post("/", (req, res, next) => {
     const freeSlots = await getFreeSlots(eventId);
     if (slots > freeSlots) return res.status(409).json({ message: `Brakuje wolnych miejsc. Wolne miejsca: ${freeSlots}`});
 
+    const userId = req.user?.id ?? null;
     const result = await pool.query(`
       INSERT INTO event_registrations(event_id, user_id, name, surname, email, pokemon_id, nickname, slots)
       VALUES($1, $2, $3, $4, $5, $6, $7, $8)
