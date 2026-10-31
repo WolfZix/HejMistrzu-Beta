@@ -15,7 +15,7 @@ export default function EventModal({ event, onClose, months, onRegistrationSucce
   return createPortal(
   <div
   onClick={onClose}
-  className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+  className="fixed inset-0 bg-black/70 flex items-center justify-center z-[9999]">
     <div
     onClick={(e) => e.stopPropagation()}
     className="
