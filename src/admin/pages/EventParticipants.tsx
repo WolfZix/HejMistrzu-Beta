@@ -166,23 +166,29 @@ export default function EventParticipants() {
     }
   }
 
-  async function handleConfirmAttendance(participantId: number) {
+  async function handleConfirmAttendance(participantId: string | number) {
     try {
       const token = localStorage.getItem("token");
+      const isRegistration = String(participantId).startsWith("registration-");
+      const id = isRegistration
+        ? String(participantId).replace("registration-", "")
+        : participantId;
+
+      const endpoint = isRegistration
+        ? "eventRegistrations"
+        : "eventParticipants";
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/eventParticipants/${participantId}/attendance`,
+        `${import.meta.env.VITE_API_URL}/${endpoint}/${id}/attendance`,
         {
           method: "PATCH",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Nie udało się potwierdzić obecności")
-
       setSelectedParticipants((prev) =>
         prev.map((participant) =>
           participant.id === participantId
