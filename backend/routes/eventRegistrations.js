@@ -83,10 +83,10 @@ router.get("/event/:eventId", verifyToken, requireAdmin, async (req, res) => {
     );
 
     for (const registration of registrationsResult.rows) {
-      await client.query(
-        `INSERT INTO event_participants (event_id, user_id, name, surname, pokemon_id, nickname, email)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        ON CONFLICT (event_id, user_id) DO NOTHING`,
+      await client.query(`
+        INSERT INTO event_participants (event_id, user_id, name, surname, pokemon_id, nickname, email, registration_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        ON CONFLICT DO NOTHING`,
         [
           registration.event_id,
           registration.user_id,
@@ -95,6 +95,7 @@ router.get("/event/:eventId", verifyToken, requireAdmin, async (req, res) => {
           registration.pokemon_id,
           registration.nickname,
           registration.email,
+          registration.id,
         ]
       );
     }
@@ -146,90 +147,5 @@ router.post("/", (req, res, next) => {
     res.status(500).json({ message: "Nie udało się utworzyć zapisu" })
   }
 })
-
-router.patch("/:id/attendance", verifyToken, requireAdmin, async (req, res) => {
-  const client = await pool.connect();
-  try {
-    const { id } = req.params;
-    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Niepoprawne ID rejestracji",
-      });
-    }
-
-    await client.query("BEGIN");
-    const result = await client.query(`
-      SELECT id, event_id, user_id, attended
-      FROM event_registrations
-      WHERE id = $1
-      FOR UPDATE`,
-      [id]
-    );
-
-    if (result.rowCount === 0) {
-      await client.query("ROLLBACK");
-      return res.status(404).json({
-        success: false,
-        message: "Nie znaleziono rejestracji",
-      });
-    }
-
-    const registration = result.rows[0];
-
-    if (registration.attended) {
-      await client.query("ROLLBACK");
-      return res.status(409).json({
-        success: false,
-        message: "Obecność została już potwierdzona",
-      });
-    }
-
-    await client.query(`
-      UPDATE event_registrations
-      SET attended = TRUE
-      WHERE id = $1`,
-      [id]
-    );
-
-    let pointsAwarded = 0;
-    if (registration.user_id !== null) {
-      const pointsResult = await client.query(
-        `INSERT INTO battlepass_points (
-          user_id, points, source_type, source_id, description
-        )
-        VALUES ($1, 10, 'event', $2, $3)
-        ON CONFLICT (user_id, source_type, source_id)
-          WHERE source_id IS NOT NULL AND points > 0
-        DO NOTHING
-        RETURNING id`,
-        [
-          registration.user_id,
-          registration.event_id,
-          `Udział w wydarzeniu ID ${registration.event_id}`,
-        ]
-      );
-
-      pointsAwarded = pointsResult.rowCount > 0 ? 10 : 0;
-    }
-
-    await client.query("COMMIT");
-    return res.json({
-      success: true,
-      message: "Obecność została potwierdzona",
-      attended: true,
-      pointsAwarded,
-    });
-  } catch (error) {
-    await client.query("ROLLBACK");
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Nie udało się potwierdzić obecności",
-    });
-  } finally {
-    client.release();
-  }
-});
 
 module.exports = router;
