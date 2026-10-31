@@ -59,7 +59,7 @@ export default function AddEventForm({ formData, setFormData, closeModal, onEven
     }
     if (data.time.trim() === "") { newErrors.time = "Wybierz godzinę" }
     if (data.price.trim() === "") { newErrors.price = "Podaj cenę" }
-    else if (Number(data.price) <= 0) { newErrors.price = "Cena musi być większa od 0" }
+    else if (Number(data.price) < 0) { newErrors.price = "Cena musi być nieujemna" }
     if (data.totalSlots.trim() === "") { newErrors.totalSlots = "Podaj liczbę miejsc" }
     else if (Number(data.totalSlots) <= 0) { newErrors.totalSlots = "Liczba miejsc musi być większa od 0" }
     if (data.link.trim() !== "" && !/^https?:\/\/.+/i.test(data.link.trim())) { newErrors.link = "Podaj poprawny adres URL" }

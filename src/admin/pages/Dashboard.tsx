@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import DashboardSection from "../components/Dashboard/DashboardSection";
 import InventorySection from "../components/Dashboard/InventorySection";
 import type { User } from "@/types/user";
-import { StoreProduct } from "@/types/store";
+import type { StoreProduct } from "@/types/store";
+import type { Event as EventType} from "@/types/event";
 
 export default function Dashboard() {
   const [openSections, setOpenSections] = useState<string[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [products, setProducts] = useState<StoreProduct[]>([]);
+  const [events, setEvents] = useState<EventType[]>([]);
 
   const SECTION_USERS = "Użytkownicy";
   const SECTION_EVENTS = "Eventy";
@@ -18,7 +20,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     fetch(`${import.meta.env.VITE_API_URL}/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -34,6 +35,18 @@ export default function Dashboard() {
       .then((res) => res.json())
       .then((data: StoreProduct[]) => setProducts(data))
       .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    fetch(`${import.meta.env.VITE_API_URL}/events`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => res.json())
+    .then((data: EventType[]) => setEvents(data))
+    .catch(console.error);
   }, []);
 
   function toggleSection(section: string) {
@@ -58,17 +71,30 @@ export default function Dashboard() {
     );
   }).length;
 
-  const adminCount = users.filter(
-    (user) => user.role === "admin"
-  ).length
+  const eventsThisMonth = events.filter((event) => {
+    const date = new Date(event.date);
 
-  const outOfStock = products.filter(
-    (product) => product.stock === 0
-  );
+    return (
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+    );
+  }).length;
 
-  const lowStock = products.filter(
-    (product) => product.stock > 0 && product.stock <= 5
-  );
+  const eventsThisYear = events.filter((event) => {
+    return new Date(event.date).getFullYear() === now.getFullYear();
+  }).length;
+
+  const topEvents = [...events]
+    .map((event) => ({
+      name: event.title,
+      value: event.maxSlots - event.freeSlots,
+    }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5);
+
+  const adminCount = users.filter((user) => user.role === "admin").length
+  const outOfStock = products.filter((product) => product.stock === 0);
+  const lowStock = products.filter((product) => product.stock > 0 && product.stock <= 5);
 
   return (
     <div className="space-y-6">
@@ -145,41 +171,20 @@ export default function Dashboard() {
             isOpen={openSections.includes(SECTION_EVENTS)}
             onToggle={() => toggleSection(SECTION_EVENTS)}
             stats={[
-              {
-                label: "W tym miesiącu",
-                value: 8,
-              },
-              {
-                label: "W tym roku",
-                value: 42,
-              },
-              {
-                label: "Top wydarzenie",
-                value: "Friday Night Magic",
-              },
-            ]}
-            ranking={[
-              {
-                name: "Friday Night Magic",
-                value: 42,
-              },
-              {
-                name: "Pokemon League",
-                value: 37,
-              },
-              {
-                name: "Warhammer 40k",
-                value: 31,
-              },
-              {
-                name: "D&D One Shot",
-                value: 28,
-              },
-              {
-                name: "Lorcana Tournament",
-                value: 22,
-              },
-            ]}
+            {
+              label: "W tym miesiącu",
+              value: eventsThisMonth,
+            },
+            {
+              label: "W tym roku",
+              value: eventsThisYear,
+            },
+            {
+              label: "Top wydarzenie",
+              value: topEvents[0]?.name ?? "Brak danych",
+            },
+          ]}
+          ranking={topEvents}
           />
         </div>
         <div className="flex flex-col gap-6">
@@ -215,14 +220,6 @@ export default function Dashboard() {
               {
                 label: "Zamówienia w tym roku",
                 value: 521,
-              },
-              {
-                label: "Przychód w tym miesiącu",
-                value: "4 320 zł",
-              },
-              {
-                label: "Przychód w tym roku",
-                value: "52 700 zł",
               },
               {
                 label: "Top produkt",

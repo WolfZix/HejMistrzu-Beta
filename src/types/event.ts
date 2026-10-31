@@ -11,6 +11,7 @@ export type Event = {
   freeSlots: number;
   price: number;
   link: string;
+  createdAt?: string;
 };
 
 export type EventFormData = {
