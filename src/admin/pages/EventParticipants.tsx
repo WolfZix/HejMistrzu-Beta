@@ -66,12 +66,7 @@ export default function EventParticipants() {
     async function fetchEvents() {
       try {
         setIsLoading(true);
-        const token = localStorage.getItem("token");
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        });
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/events`);
         if (!response.ok) {
           throw new Error("Nie udało się pobrać wydarzeń");
         }
@@ -93,7 +88,12 @@ export default function EventParticipants() {
       return
     }
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/users?email=${encodeURIComponent(normalizeText(searchEmail))}`);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/users?email=${encodeURIComponent(normalizeText(searchEmail))}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       if (!response.ok) {
         throw new Error("Nie udało się wyszukać użytkownika");
       }
