@@ -15,6 +15,7 @@ type DashboardSectionProps = {
   title: string;
   stats: Stat[];
   ranking?: RankingItem[];
+  countLabel?: string;
   isOpen: boolean;
   onToggle: () => void;
 };
@@ -25,6 +26,7 @@ export default function DashboardSection({
   ranking,
   isOpen,
   onToggle,
+  countLabel,
 }: DashboardSectionProps) {
 
   return (
@@ -91,7 +93,7 @@ export default function DashboardSection({
                   Top 5
                 </h3>
                 <h4 className="mb-3 text-sm font-medium text-muted-foreground">
-                  Wykupione wejściówki
+                  {countLabel}
                 </h4>
                 </div>
 

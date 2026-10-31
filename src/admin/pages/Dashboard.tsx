@@ -133,6 +133,7 @@ export default function Dashboard() {
             title="Battlepass"
             isOpen={openSections.includes(SECTION_BATTLEPASS)}
             onToggle={() => toggleSection(SECTION_BATTLEPASS)}
+            countLabel="Poziom"
             stats={[
               {
                 label: "Najwyższy poziom",
@@ -170,6 +171,7 @@ export default function Dashboard() {
             title="Eventy"
             isOpen={openSections.includes(SECTION_EVENTS)}
             onToggle={() => toggleSection(SECTION_EVENTS)}
+            countLabel="Wykupione wejściówki"
             stats={[
             {
               label: "W tym miesiącu",
@@ -212,6 +214,7 @@ export default function Dashboard() {
             title="Sklep"
             isOpen={openSections.includes(SECTION_SHOP)}
             onToggle={() => toggleSection(SECTION_SHOP)}
+            countLabel="Ilość zamówień"
             stats={[
               {
                 label: "Zamówienia w tym miesiącu",
