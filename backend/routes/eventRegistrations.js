@@ -7,6 +7,8 @@ const requireAdmin = require("../middleware/requireAdmin");
 const mapRegistration = (registration) => ({
   id: registration.id,
   eventId: registration.event_id,
+  userId: registration.user_id,
+  username: registration.username ?? null,
   name: registration.name,
   surname: registration.surname,
   email: registration.email,
@@ -48,13 +50,59 @@ async function getFreeSlots(eventId) {
 
 router.get("/", verifyToken, requireAdmin, async (req, res) => {
   try {
-    const result = await pool.query(`SELECT * FROM event_registrations`);
+    const result = await pool.query(`
+      SELECT er.*, u.username 
+      FROM event_registrations er 
+      LEFT JOIN users u ON u.id = er.user_id
+      ORDER BY er.id DESC
+    `);
     const registrations = result.rows.map(mapRegistration)
     res.json(registrations);
   } catch (error) {
     console.error(error);
   }
 })
+
+router.get("/event/:eventId", verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const { eventId } = req.params;
+
+    if (!Number.isInteger(Number(eventId)) || Number(eventId) <= 0) {
+      return res.status(400).json({
+        message: "Niepoprawne ID wydarzenia",
+      });
+    }
+
+    const result = await pool.query(
+      `
+        SELECT
+          er.id,
+          er.event_id,
+          er.user_id,
+          er.name,
+          er.surname,
+          er.email,
+          er.pokemon_id,
+          er.nickname,
+          er.slots,
+          er.user_id,
+          u.username
+        FROM event_registrations er
+        LEFT JOIN users u ON u.id = er.user_id
+        WHERE er.event_id = $1
+        ORDER BY er.id DESC
+      `,
+      [eventId]
+    );
+
+    res.json(result.rows.map(mapRegistration));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Nie udało się pobrać rezerwacji wydarzenia",
+    });
+  }
+});
 
 router.post("/", (req, res, next) => {
   const token = req.headers.authorization;

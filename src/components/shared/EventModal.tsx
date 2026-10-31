@@ -2,6 +2,7 @@ import type { Event } from "@/types/event";
 import { X } from "lucide-react";
 import type { Months } from "@/pages/Reservations";
 import EventModalContent from "./EventModalContent";
+import { createPortal } from "react-dom";
 
 type EventModalProps = {
   months: Months;
@@ -11,7 +12,7 @@ type EventModalProps = {
 }
 
 export default function EventModal({ event, onClose, months, onRegistrationSuccess }: EventModalProps) {
-  return (
+  return createPortal(
   <div
   onClick={onClose}
   className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
@@ -34,6 +35,7 @@ export default function EventModal({ event, onClose, months, onRegistrationSucce
         <X className="w-4 h-4" />
       </button>
     </div>
-  </div>
-  )
+  </div>,
+  document.body
+  );
 }
