@@ -64,43 +64,61 @@ router.get("/", verifyToken, requireAdmin, async (req, res) => {
 })
 
 router.get("/event/:eventId", verifyToken, requireAdmin, async (req, res) => {
+  const client = await pool.connect();
+
   try {
     const { eventId } = req.params;
-
     if (!Number.isInteger(Number(eventId)) || Number(eventId) <= 0) {
       return res.status(400).json({
         message: "Niepoprawne ID wydarzenia",
       });
     }
 
-    const result = await pool.query(
-      `
-        SELECT
-          er.id,
-          er.event_id,
-          er.user_id,
-          er.name,
-          er.surname,
-          er.email,
-          er.pokemon_id,
-          er.nickname,
-          er.slots,
-          er.user_id,
-          u.username
-        FROM event_registrations er
-        LEFT JOIN users u ON u.id = er.user_id
-        WHERE er.event_id = $1
-        ORDER BY er.id DESC
-      `,
+    await client.query("BEGIN");
+    const registrationsResult = await client.query(
+      `SELECT *
+      FROM event_registrations
+      WHERE event_id = $1`,
       [eventId]
     );
 
-    res.json(result.rows.map(mapRegistration));
+    for (const registration of registrationsResult.rows) {
+      await client.query(
+        `INSERT INTO event_participants (event_id, user_id, name, surname, pokemon_id, nickname, email)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        ON CONFLICT (event_id, user_id) DO NOTHING`,
+        [
+          registration.event_id,
+          registration.user_id,
+          registration.name,
+          registration.surname,
+          registration.pokemon_id,
+          registration.nickname,
+          registration.email,
+        ]
+      );
+    }
+
+    await client.query("COMMIT");
+    const participantsResult = await client.query(
+      `SELECT ep.*, u.username
+      FROM event_participants ep
+      LEFT JOIN users u ON u.id = ep.user_id
+      WHERE ep.event_id = $1
+      ORDER BY ep.created_at DESC`,
+      [eventId]
+    );
+
+    res.json(participantsResult.rows);
   } catch (error) {
+    await client.query("ROLLBACK");
     console.error(error);
+
     res.status(500).json({
-      message: "Nie udało się pobrać rezerwacji wydarzenia",
+      message: "Nie udało się pobrać uczestników wydarzenia",
     });
+  } finally {
+    client.release();
   }
 });
 

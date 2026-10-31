@@ -209,28 +209,24 @@ export default function EventParticipants() {
         return;
       }
 
-      const [participantsResponse, registrationsResponse] = await Promise.all([
-        fetch(`${import.meta.env.VITE_API_URL}/eventParticipants?eventId=${eventId}`),
-        fetch(`${import.meta.env.VITE_API_URL}/eventRegistrations/event/${eventId}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }),
-      ]);
+      const token = localStorage.getItem("token");
 
-      if (!participantsResponse.ok || !registrationsResponse.ok) throw new Error("Nie udało się pobrać uczestników wydarzenia")
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/eventRegistrations/event/${eventId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      const participants = await participantsResponse.json();
-      const registrations = await registrationsResponse.json();
+      if (!response.ok) {
+        throw new Error("Nie udało się pobrać uczestników wydarzenia");
+      }
 
-      setSelectedParticipants([
-        ...participants,
-        ...registrations.map((registration: any) => ({
-          ...registration,
-          id: `registration-${registration.id}`,
-          registrationId: registration.id,
-          attended: false,
-          isRegistration: true,
-        })),
-      ]);
+      const participants = await response.json();
+
+      setSelectedParticipants(participants);
     } catch (error) {
       console.error(error);
     }
