@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BattlepassGem from "./BattlepassGem";
 
 const rewards = [
   {
-    events: 1,
+    events: 0,
     title: "Start",
     claimed: true,
   },
@@ -33,11 +33,27 @@ export default function BattlepassCard() {
   const currentEvents = 15;
   const START_LEVEL = 1;
   const maxEvents = rewards[rewards.length - 1].events - START_LEVEL;
-  const nextReward = rewards.find(
-    (reward) => reward.events > currentEvents
-  )
+  const nextReward = rewards.find((reward) => reward.events > currentEvents)
 
   const [selectedReward, setSelectedReward] = useState(rewards[0]);
+  const [battlepassPoints, setBattlepassPoints] = useState(0);
+
+  async function fetchBattlepassPoints() {
+    const result = await fetch(`${import.meta.env.VITE_API_URL}/battlepass/me`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
+    });
+
+    if (!result.ok) throw new Error("Nie udało się pobrać punktów battlepassa");
+    return result.json();
+  }
+
+  useEffect(() => {
+    fetchBattlepassPoints()
+    .then((data) => setBattlepassPoints(data.points / 10))
+    .catch(console.error);
+  }, []);
 
   return (
     <div className="bg-transparent border glass rounded-2xl p-6 col-span-3">
@@ -45,7 +61,7 @@ export default function BattlepassCard() {
         Battlepass
       </h2>
       <p className="text-sm text-muted-foreground mb-5">
-        {currentEvents} / {rewards[rewards.length - 1].events} odwiedzonych wydarzeń
+        {battlepassPoints} / {rewards[rewards.length - 1].events} odwiedzonych wydarzeń
       </p>
       <div className="relative mt-10 mb-10">
 
@@ -54,7 +70,7 @@ export default function BattlepassCard() {
           <div
             className="h-full rounded-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 transition-all duration-700"
             style={{
-              width: `${((currentEvents - START_LEVEL) / maxEvents) * 100}%`,
+              width: `${((battlepassPoints - START_LEVEL) / maxEvents) * 100}%`,
             }}
           />
         </div>
@@ -67,7 +83,7 @@ export default function BattlepassCard() {
 
           if (reward.claimed) {
             state = "claimed";
-          } else if (currentEvents < reward.events) {
+          } else if (battlepassPoints < reward.events) {
             state = "locked";
           }
 
