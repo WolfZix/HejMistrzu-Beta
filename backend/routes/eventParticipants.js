@@ -79,13 +79,13 @@ router.post("/", async (req, res) => {
   } = req.body;
 
   try {
+    console.log("TEST POST EVENT PARTICIPANTS");
     if (!(await doesEventExist(eventId))) {
       return res.status(404).json({
         message: "Nie znaleziono takiego wydarzenia",
       });
     }
-    
-    console.log({eventId, userId, name, surname, pokemonId, nickname, email});
+
     if (!validateParticipant({ name, surname })) {
       return res.status(400).json({
         message: "Wprowadzono niepoprawne dane",
