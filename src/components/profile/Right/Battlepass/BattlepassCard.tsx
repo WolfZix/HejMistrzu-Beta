@@ -138,7 +138,7 @@ export default function BattlepassCard() {
         })}
       </div>
 
-      <div className="mt-8 min-h-32">
+      <div className="mt-8 min-h-28">
         <h3 className="font-heading text-lg">
           {selectedReward.title}
         </h3>
