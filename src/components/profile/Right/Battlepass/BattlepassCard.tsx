@@ -51,7 +51,7 @@ export default function BattlepassCard() {
 
   useEffect(() => {
     fetchBattlepassPoints()
-    .then(setBattlepassPoints)
+    .then((data) => setBattlepassPoints(data.points))
     .catch(console.error);
   }, []);
 
