@@ -99,7 +99,7 @@ export default function BattlepassCard() {
         {/* Pasek */}
         <div className="h-2 rounded-full bg-muted overflow-hidden">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-purple-800 via-violet-600 to-purple-500 transition-all duration-700"
+            className="h-full rounded-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 transition-all duration-700"
             style={{ width: `${Math.min((battlepassPoints / 40) * 100, 100)}%` }}
           />
         </div>
