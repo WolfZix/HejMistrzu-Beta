@@ -51,7 +51,7 @@ export default function BattlepassCard() {
 
   useEffect(() => {
     fetchBattlepassPoints()
-    .then((data) => setBattlepassPoints(data.points))
+    .then((data) => setBattlepassPoints(data.totalPoints))
     .catch(console.error);
   }, []);
 
@@ -69,9 +69,7 @@ export default function BattlepassCard() {
         <div className="h-2 rounded-full bg-muted overflow-hidden">
           <div
             className="h-full rounded-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 transition-all duration-700"
-            style={{
-              width: `${((battlepassPoints - START_LEVEL) / maxEvents) * 100}%`,
-            }}
+            style={{ width: `${Math.min((battlepassPoints / 400) * 100, 100)}%` }}
           />
         </div>
 
