@@ -3,7 +3,7 @@ import BattlepassGem from "./BattlepassGem";
 
 const rewards = [
   {
-    events: 0,
+    events: 1,
     title: "Start",
     claimed: true,
   },
@@ -51,7 +51,7 @@ export default function BattlepassCard() {
 
   useEffect(() => {
     fetchBattlepassPoints()
-    .then((data) => setBattlepassPoints(data.points / 10))
+    .then(setBattlepassPoints)
     .catch(console.error);
   }, []);
 
