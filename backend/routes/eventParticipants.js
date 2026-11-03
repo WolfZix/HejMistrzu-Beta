@@ -84,14 +84,14 @@ router.post("/", async (req, res) => {
         message: "Nie znaleziono takiego wydarzenia",
       });
     }
-
+    
+    console.log({eventId, userId, name, surname, pokemonId, nickname, email});
     if (!validateParticipant({ name, surname })) {
       return res.status(400).json({
         message: "Wprowadzono niepoprawne dane",
       });
     }
 
-    console.log({eventId, userId, name, surname, pokemonId, nickname, email});
 
     const result = await pool.query(`
       INSERT INTO event_participants (
