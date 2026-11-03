@@ -7,13 +7,13 @@ Backend:
 
 Dashboard:
 
-- Podpiąć statystyki pod dynamiczne dane
+- Podpiąć statystyki (Battlepass, Rezerwacje, Sklep) pod dynamiczne dane
 
 ---
 
 Battlepass:
 
-- Zrobić obsługę battlepassa
+- Zrobić logikę battlepassa
 
 ---
 

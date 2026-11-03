@@ -18,14 +18,12 @@ const mapParticipant = (participant) => ({
   createdAt: participant.created_at,
 });
 
-function validateParticipant({ name, surname, email }) {
+function validateParticipant({ name, surname }) {
   if (
     !name ||
     !surname ||
-    !email ||
     name.trim() === "" ||
-    surname.trim() === "" ||
-    email.trim() === ""
+    surname.trim() === ""
   ) {
     return false;
   }
@@ -88,7 +86,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (!validateParticipant({ name, surname, email })) {
+    if (!validateParticipant({ name, surname })) {
       return res.status(400).json({
         message: "Wprowadzono niepoprawne dane",
       });
@@ -113,7 +111,7 @@ router.post("/", async (req, res) => {
       surname,
       pokemonId || null,
       nickname || null,
-      email
+      email || null
     ]);
 
     res.status(201).json(mapParticipant(result.rows[0]));

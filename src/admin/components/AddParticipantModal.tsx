@@ -53,7 +53,7 @@ export default function AddParticipantModal({
       userId: null,
       name: formData.name,
       surname: formData.surname,
-      email: formData.email,
+      email: formData.email || null,
       pokemonId: formData.pokemonId || null,
       nickname: formData.nickname || null,
     };
