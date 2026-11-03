@@ -494,7 +494,7 @@ export default function EventParticipants() {
                           {participant.name} {participant.surname}
                         </td>
                         <td className="p-3 text-muted-foreground">
-                          {participant.email}
+                          {participant.email ?? "-"}
                         </td>
                         <td className="p-3">
                           {participant.attended ? (

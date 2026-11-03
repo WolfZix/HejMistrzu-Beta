@@ -79,7 +79,6 @@ router.post("/", async (req, res) => {
   } = req.body;
 
   try {
-    console.log("TEST POST EVENT PARTICIPANTS");
     if (!(await doesEventExist(eventId))) {
       return res.status(404).json({
         message: "Nie znaleziono takiego wydarzenia",
@@ -91,7 +90,6 @@ router.post("/", async (req, res) => {
         message: "Wprowadzono niepoprawne dane",
       });
     }
-
 
     const result = await pool.query(`
       INSERT INTO event_participants (
