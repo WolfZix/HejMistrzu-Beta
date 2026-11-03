@@ -176,7 +176,6 @@ export default function AddParticipantModal({
               <FormInput
               label="Email"
               value={formData.email}
-              required={true}
               onChange={(value) => setFormData((prev) => ({
                 ...prev,
                 email: value
