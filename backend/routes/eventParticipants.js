@@ -27,7 +27,6 @@ function validateParticipant({ name, surname }) {
   ) {
     return false;
   }
-
   return true;
 }
 
@@ -91,6 +90,8 @@ router.post("/", async (req, res) => {
         message: "Wprowadzono niepoprawne dane",
       });
     }
+
+    console.log({eventId, userId, name, surname, pokemonId, nickname, email});
 
     const result = await pool.query(`
       INSERT INTO event_participants (
