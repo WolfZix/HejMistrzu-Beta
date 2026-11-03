@@ -51,7 +51,7 @@ export default function BattlepassCard() {
 
   useEffect(() => {
     fetchBattlepassPoints()
-    .then((data) => setBattlepassPoints(data.totalPoints))
+    .then((data) => setBattlepassPoints(data.totalPoints / 10))
     .catch(console.error);
   }, []);
 
@@ -77,12 +77,11 @@ export default function BattlepassCard() {
         {rewards.map((reward) => {
           const left = ((reward.events - START_LEVEL) / maxEvents) * 100;
 
-          let state: "locked" | "claimed" = "locked";
-
+          let state: "locked" | "unlocked" | "claimed" = "locked";
           if (reward.claimed) {
             state = "claimed";
-          } else if (battlepassPoints < reward.events) {
-            state = "locked";
+          } else if (battlepassPoints >= reward.events) {
+            state = "unlocked";
           }
 
           return (
