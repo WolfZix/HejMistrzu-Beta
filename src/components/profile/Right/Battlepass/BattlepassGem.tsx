@@ -13,12 +13,12 @@ export default function BattlepassGem({
       bottom: "hsl(var(--card))",
       glow: "none",
     },
-    unlocked: {
+    claimed: {
       top: "#d78cff",
       bottom: "#7d2cff",
       glow: "drop-shadow(0px 0px 10px rgba(185, 92, 255, .9))",
     },
-    claimed: {
+    unlocked: {
       top: "#FFE08A",
       bottom: "#D99A24",
       glow: "drop-shadow(0px 0px 10px rgba(217, 154, 36, .8))",
