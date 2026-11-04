@@ -114,7 +114,7 @@ export default function BattlepassCard() {
               >
                 <BattlepassGem state={state} />
               </button>
-              {!claimError && (
+              {claimError && (
                 <p className="text-sm text-red-400 mt-2">
                   {claimError}
                 </p>
