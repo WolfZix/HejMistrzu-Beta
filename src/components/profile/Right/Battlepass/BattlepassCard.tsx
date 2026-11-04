@@ -1,33 +1,6 @@
 import { useState, useEffect } from "react";
 import BattlepassGem from "./BattlepassGem";
-
-const rewards = [
-  {
-    events: 1,
-    title: "Start",
-    claimed: true,
-  },
-  {
-    events: 10,
-    title: "10% rabatu",
-    claimed: true,
-  },
-  {
-    events: 20,
-    title: "Koszulka Hej Mistrzu",
-    claimed: false,
-  },
-  {
-    events: 30,
-    title: "Koszulka Hej Mistrzu",
-    claimed: false,
-  },
-  {
-    events: 40,
-    title: "Ekskluzywna figurka",
-    claimed: false,
-  },
-];
+import { rewards } from "@/data/battlepass";
 
 export default function BattlepassCard() {
   const START_LEVEL = 1;
@@ -36,6 +9,7 @@ export default function BattlepassCard() {
   const [selectedReward, setSelectedReward] = useState(rewards[0]);
   const [battlepassPoints, setBattlepassPoints] = useState(0);
   const [claimedRewards, setClaimedRewards] = useState<number[]>([]);
+  const [isClaiming, setIsClaiming] = useState(false);
 
   async function fetchBattlepassPoints() {
     const result = await fetch(`${import.meta.env.VITE_API_URL}/battlepass/me`, {
@@ -49,24 +23,32 @@ export default function BattlepassCard() {
   }
 
   async function handleClaimReward() {
-  const result = await fetch(`${import.meta.env.VITE_API_URL}/battlepass/claims`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        rewardLevel: selectedReward.events,
-      }),
-    }
-  );
+    if (isClaiming) return;
+    setIsClaiming(true);
 
-  if (!result.ok) {
-    const error = await result.json();
-    throw new Error(error.message || "Nie udało się odebrać nagrody");
+    try {
+      const result = await fetch(
+        `${import.meta.env.VITE_API_URL}/battlepass/claims`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            rewardLevel: selectedReward.events,
+          }),
+        }
+      );
+
+      if (!result.ok) {
+        const error = await result.json();
+        throw new Error(error.message || "Nie udało się odebrać nagrody");
+      }
+      setClaimedRewards((prev) => [...prev, selectedReward.events]);
+
+    } finally { setIsClaiming(false) }
   }
-  setClaimedRewards((prev) => [...prev, selectedReward.events]);
-}
 
   useEffect(() => {
     fetchBattlepassPoints()
@@ -92,7 +74,7 @@ export default function BattlepassCard() {
         Battlepass
       </h2>
       <p className="text-sm text-muted-foreground mb-5">
-        {battlepassPoints} / {rewards[rewards.length - 1].events} odwiedzonych wydarzeń
+        {battlepassPoints} / {rewards[rewards.length - 1].events} punktów
       </p>
       <div className="relative mt-10 mb-10">
 
@@ -100,7 +82,7 @@ export default function BattlepassCard() {
         <div className="h-2 rounded-full bg-muted overflow-hidden">
           <div
             className="h-full rounded-full bg-gradient-to-r from-purple-700 via-violet-600 to-fuchsia-500 transition-all duration-700"
-            style={{ width: `${Math.min((battlepassPoints / 40) * 100, 100)}%` }}
+            style={{ width: `${Math.min((battlepassPoints / rewards[rewards.length - 1].events) * 100, 100)}%` }}
           />
         </div>
 
@@ -144,19 +126,29 @@ export default function BattlepassCard() {
         </h3>
 
         <p className="text-sm text-muted-foreground mt-2">
-          Odblokowanie po {selectedReward.events} wydarzeniach
+          Odblokowanie po {selectedReward.events} punktach
         </p>
 
         {claimedRewards.includes(selectedReward.events) 
         ? (<p className="text-purple-400 mt-3">Nagroda odebrana!</p>) 
         : battlepassPoints >= selectedReward.events 
           ? (
-          <button
-            onClick={() => handleClaimReward().catch(console.error)}
-            className="mt-4 rounded-lg bg-amber-500 px-4 py-2 text-black hover:bg-amber-400 transition-colors"
-          >
-            Odbierz nagrodę
-          </button>
+            <button
+              disabled={isClaiming}
+              onClick={() => handleClaimReward().catch(console.error)}
+              className="
+              mt-4 
+              rounded-lg 
+              bg-amber-500 
+              px-4 py-2 
+              text-black 
+              hover:bg-amber-400 
+              transition-colors 
+              disabled:opacity-50 
+              disabled:cursor-not-allowed"
+            >
+              {isClaiming ? "Odbieranie..." : "Odbierz nagrodę"}
+            </button>
           ) : (
           <p className="text-muted-foreground mt-3">
             Brakuje {selectedReward.events - battlepassPoints} punktów do odblokowania.
