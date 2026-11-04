@@ -10,6 +10,7 @@ export default function BattlepassCard() {
   const [battlepassPoints, setBattlepassPoints] = useState(0);
   const [claimedRewards, setClaimedRewards] = useState<number[]>([]);
   const [isClaiming, setIsClaiming] = useState(false);
+  const [claimError, setClaimError] = useState<string | null>(null);
 
   async function fetchBattlepassPoints() {
     const result = await fetch(`${import.meta.env.VITE_API_URL}/battlepass/me`, {
@@ -17,7 +18,6 @@ export default function BattlepassCard() {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       }
     });
-
     if (!result.ok) throw new Error("Nie udało się pobrać punktów battlepassa");
     return result.json();
   }
@@ -25,6 +25,7 @@ export default function BattlepassCard() {
   async function handleClaimReward() {
     if (isClaiming) return;
     setIsClaiming(true);
+    setClaimError(null);
 
     try {
       const result = await fetch(
@@ -45,9 +46,10 @@ export default function BattlepassCard() {
         const error = await result.json();
         throw new Error(error.message || "Nie udało się odebrać nagrody");
       }
-      setClaimedRewards((prev) => [...prev, selectedReward.events]);
 
-    } finally { setIsClaiming(false) }
+      setClaimedRewards((prev) => [...prev, selectedReward.events]);
+    } catch (error) { setClaimError(error instanceof Error ? error.message : "Wystąpił nieznany błąd") }
+    finally { setIsClaiming(false) }
   }
 
   useEffect(() => {
@@ -112,6 +114,11 @@ export default function BattlepassCard() {
               >
                 <BattlepassGem state={state} />
               </button>
+              {!claimError && (
+                <p className="text-sm text-red-400 mt-2">
+                  {claimError}
+                </p>
+              )}
               <p className="mt-1 text-center text-xs text-muted-foreground">
                 {reward.events}
               </p>
