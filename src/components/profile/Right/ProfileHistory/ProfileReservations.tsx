@@ -46,12 +46,12 @@ export default function ProfileReservations({
                 {reservation.date}
               </span>
 
-              <span className="text-right sm:text-center">
-                {reservation.time}
+              <span className="text-center truncate min-w-0">
+                {reservation.title}
               </span>
 
-              <span className="col-span-2 text-left sm:col-span-1 sm:text-center">
-                {reservation.title}
+              <span className="text-right whitespace-nowrap">
+                {reservation.time}
               </span>
             </div>
           ))}

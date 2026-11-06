@@ -267,7 +267,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/my", verifyToken, async (req, res) => {
+router.get("/myOrders", verifyToken, async (req, res) => {
   try {
     const userResult = await pool.query(
       "SELECT email FROM users WHERE id = $1",

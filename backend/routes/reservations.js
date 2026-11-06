@@ -180,7 +180,7 @@ router.get("/", verifyToken, requireAdmin, async (req, res) => {
   }
 });
 
-router.get("/my", verifyToken, async (req, res) => {
+router.get("/myReservations", verifyToken, async (req, res) => {
   try {
     const result = await pool.query(
       `
