@@ -24,6 +24,16 @@ type Order = {
   items: OrderItem[];
 };
 
+const COLORS = {
+  background: [15, 17, 21] as [number, number, number],
+  card: [24, 27, 34] as [number, number, number],
+  border: [43, 47, 56] as [number, number, number],
+  gold: [199, 155, 59] as [number, number, number],
+  white: [245, 245, 245] as [number, number, number],
+  gray: [184, 184, 184] as [number, number, number],
+  muted: [153, 153, 153] as [number, number, number],
+};
+
 export async function exportOrdersPdf() {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/order/myOrders/export`,
@@ -80,11 +90,23 @@ export async function exportOrdersPdf() {
       styles: {
         font: "Arial",
         fontStyle: "normal",
+        textColor: COLORS.white,
+        fillColor: COLORS.card,
+        lineColor: COLORS.border,
+        lineWidth: 0.2,
+        cellPadding: 3,
       },
 
       headStyles: {
         font: "Arial",
         fontStyle: "bold",
+        textColor: COLORS.gold,
+        fillColor: [16, 18, 22],
+        lineColor: COLORS.border,
+      },
+
+      alternateRowStyles: {
+        fillColor: [20, 23, 29],
       },
     });
     currentY = (doc as any).lastAutoTable.finalY + 12;
