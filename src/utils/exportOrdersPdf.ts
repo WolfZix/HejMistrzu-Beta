@@ -112,7 +112,7 @@ export async function exportOrdersPdf() {
       drawPageBackground();
       currentY = 25;
     }
-    
+
     // Separator zamówienia
     doc.setDrawColor(...COLORS.border);
     doc.setLineWidth(0.3);
@@ -141,10 +141,6 @@ export async function exportOrdersPdf() {
         `${Number(item.price).toFixed(2)} zł`,
       ]),
       theme: "grid",
-      willDrawPage: () => {
-        drawPageBackground();
-      },
-
       styles: {
         font: "Arial",
         fontStyle: "normal",
