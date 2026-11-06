@@ -1,5 +1,5 @@
 import { Download, ShoppingBag } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 
 type ProfileOrdersProps = {
@@ -18,16 +18,14 @@ export default function ProfileOrders({
   buttonClass,
   isLoading,
 }: ProfileOrdersProps) {
-  const titleRef = useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = useState<{
     text: string;
     x: number;
     y: number;
   } | null>(null);
 
-  function showTooltip(text: string) {
-    if (!titleRef.current) return;
-    const rect = titleRef.current.getBoundingClientRect();
+  function showTooltip(text: string, element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
     setTooltip({
       text,
       x: rect.left + rect.width / 2,
@@ -78,9 +76,8 @@ export default function ProfileOrders({
                 </span>
                 <div className="col-span-2 min-w-0 text-left sm:col-span-1 sm:order-2 sm:text-center">
                   <div
-                    ref={titleRef}
                     className="truncate cursor-default"
-                    onMouseEnter={() => showTooltip(order.title)}
+                    onMouseEnter={(e) => showTooltip(order.title, e.currentTarget)}
                     onMouseLeave={() => setTooltip(null)}
                   >
                     {order.title}
