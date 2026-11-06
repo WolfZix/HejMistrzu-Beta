@@ -77,20 +77,13 @@ export default function ProfileOrders({
                   {order.status}
                 </span>
                 <div className="col-span-2 min-w-0 text-left sm:col-span-1 sm:order-2 sm:text-center">
-                  <div className="relative group">
-                    <div className="truncate">
-                      {order.title}
-                    </div>
-                    <div className="col-span-2 min-w-0 text-left sm:col-span-1 sm:order-2 sm:text-center">
-                      <div
-                        ref={titleRef}
-                        className="truncate cursor-default"
-                        onMouseEnter={() => showTooltip(order.title)}
-                        onMouseLeave={() => setTooltip(null)}
-                      >
-                        {order.title}
-                      </div>
-                    </div>
+                  <div
+                    ref={titleRef}
+                    className="truncate cursor-default"
+                    onMouseEnter={() => showTooltip(order.title)}
+                    onMouseLeave={() => setTooltip(null)}
+                  >
+                    {order.title}
                   </div>
                 </div>
               </div>
