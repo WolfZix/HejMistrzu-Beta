@@ -57,9 +57,36 @@ export default function ProfileOrders({
                 <span className="text-right sm:order-3 sm:text-right">
                   {order.status}
                 </span>
-                <span className="col-span-2 text-left sm:col-span-1 sm:order-2 sm:text-center truncate min-w-0 max-w-[250px]">
-                  {order.title}
-                </span>
+                <div className="col-span-2 min-w-0 text-left sm:col-span-1 sm:order-2 sm:text-center">
+                  <div className="relative group">
+                    <div className="truncate">
+                      {order.title}
+                    </div>
+                    <div
+                      className="
+                        hidden
+                        group-hover:block
+                        absolute
+                        left-0
+                        right-0
+                        w-fit
+                        mx-auto
+                        bottom-full
+                        mb-1
+                        z-50
+                        rounded-md
+                        bg-zinc-900
+                        px-2
+                        py-1
+                        text-sm
+                        whitespace-nowrap
+                        shadow-lg
+                      "
+                    >
+                      {order.title}
+                    </div>
+                  </div>
+                </div>
               </div>
             ))
           )}
