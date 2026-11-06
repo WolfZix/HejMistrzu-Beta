@@ -38,7 +38,7 @@ export default function ProfileReservations({
                 gap-y-1
                 px-4
                 py-2
-                sm:grid-cols-3
+                sm:grid-cols-[minmax(0,30%)_minmax(0,45%)_minmax(0,25%)]
                 sm:items-center
               "
             >
