@@ -1,6 +1,7 @@
 import { Download, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { exportOrdersPdf } from "@/utils/exportOrdersPdf";
 
 type ProfileOrdersProps = {
   orders: {
@@ -31,6 +32,12 @@ export default function ProfileOrders({
       x: rect.left + rect.width / 2,
       y: rect.top - 8,
     });
+  }
+
+  async function handleExport() {
+    try {
+      await exportOrdersPdf();
+    } catch (error) { console.error("Błąd eksportowania historii zamówień:", error) }
   }
 
   return (
@@ -89,7 +96,7 @@ export default function ProfileOrders({
         </div>
       </div>
 
-      <button className={buttonClass}>
+      <button className={buttonClass} onClick={handleExport}>
         <Download size={16} className="text-primary shrink-0" />
         Pobierz pełną historię
       </button>

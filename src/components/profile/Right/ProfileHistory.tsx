@@ -88,11 +88,7 @@ export default function ProfileHistory() {
             },
           }
         );
-
-        if (!response.ok) {
-          throw new Error("Nie udało się pobrać zamówień");
-        }
-
+        if (!response.ok) { throw new Error("Nie udało się pobrać zamówień") }
         const data = await response.json();
         setOrders(data.orders);
       } catch (error) {
@@ -101,7 +97,6 @@ export default function ProfileHistory() {
         setOrdersLoading(false);
       }
     }
-
     fetchOrders();
   }, []);
 
@@ -116,11 +111,7 @@ export default function ProfileHistory() {
             },
           }
         );
-
-        if (!response.ok) {
-          throw new Error("Nie udało się pobrać rezerwacji");
-        }
-
+        if (!response.ok) { throw new Error("Nie udało się pobrać rezerwacji") }
         const data = await response.json();
         setReservations(data.reservations);
       } catch (error) {
@@ -129,7 +120,6 @@ export default function ProfileHistory() {
         setReservationsLoading(false);
       }
     }
-
     fetchReservations();
   }, []);
 

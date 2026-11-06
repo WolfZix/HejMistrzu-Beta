@@ -18,12 +18,6 @@ Profil użytkownika:
 
 ---
 
-Formularz rezerwacji:
-
-- Naprawić opcje "Bez limitu" (nie da sie jej wybrać)
-
----
-
 Rezerwacje na wydarzenia:
 
 - Zaprojektować lepszą architekturę

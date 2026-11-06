@@ -281,29 +281,28 @@ router.get("/myOrders", verifyToken, async (req, res) => {
       });
     }
 
-    const result = await pool.query(
-      `
-        SELECT
-          o.id,
-          o.created_at,
-          o.status,
-          o.total,
-          COALESCE(
-            json_agg(
-              json_build_object(
-                'product_name', oi.product_name,
-                'quantity', oi.quantity,
-                'price', oi.price
-              )
-            ) FILTER (WHERE oi.id IS NOT NULL),
-            '[]'
-          ) AS items
-        FROM orders o
-        LEFT JOIN order_items oi ON oi.order_id = o.id
-        WHERE LOWER(o.email) = LOWER($1)
-        GROUP BY o.id
-        ORDER BY o.created_at DESC
-      `,
+    const result = await pool.query(`
+      SELECT
+        o.id,
+        o.created_at,
+        o.status,
+        o.total,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'product_name', oi.product_name,
+              'quantity', oi.quantity,
+              'price', oi.price
+            )
+          ) FILTER (WHERE oi.id IS NOT NULL),
+          '[]'
+        ) AS items
+      FROM orders o
+      LEFT JOIN order_items oi ON oi.order_id = o.id
+      WHERE LOWER(o.email) = LOWER($1)
+      GROUP BY o.id
+      ORDER BY o.created_at DESC
+      LIMIT 5`,
       [userResult.rows[0].email]
     );
 
@@ -317,6 +316,64 @@ router.get("/myOrders", verifyToken, async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Nie udało się pobrać zamówień",
+    });
+  }
+});
+
+router.get("/myOrders/export", verifyToken, async (req, res) => {
+  try {
+    const userResult = await pool.query("SELECT email FROM users WHERE id = $1",[req.user.id]);
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Użytkownik nie istnieje",
+      });
+    }
+
+    const result = await pool.query(`
+      SELECT
+        o.id,
+        o.created_at,
+        o.status,
+        o.payment_status,
+        o.payment_method,
+        o.delivery_method,
+        o.subtotal,
+        o.shipping_price,
+        o.total,
+        o.inpost_point_name,
+        o.inpost_point_address,
+        o.inpost_point_city,
+        o.inpost_point_postal_code,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'product_name', oi.product_name,
+              'quantity', oi.quantity,
+              'price', oi.price
+            )
+          ) FILTER (WHERE oi.id IS NOT NULL),
+          '[]'
+        ) AS items
+      FROM orders o
+      LEFT JOIN order_items oi ON oi.order_id = o.id
+      WHERE LOWER(o.email) = LOWER($1)
+      GROUP BY o.id
+      ORDER BY o.created_at DESC`,
+      [userResult.rows[0].email]
+    );
+
+    res.status(200).json({
+      success: true,
+      orders: result.rows,
+    });
+  } catch (error) {
+    console.error("Błąd pobierania historii zamówień do eksportu:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Nie udało się pobrać historii zamówień",
     });
   }
 });
