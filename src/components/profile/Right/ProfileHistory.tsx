@@ -30,7 +30,7 @@ export default function ProfileHistory() {
   const [reservationsLoading, setReservationsLoading] = useState(true);
 
   const downloadButtonClass = `
-    mt-auto
+    mt-3
     mx-4
     w-fit
     rounded-lg
@@ -44,7 +44,8 @@ export default function ProfileHistory() {
     hover:bg-primary/5
     flex
     items-center
-    gap-3`;
+    gap-3
+  `;
 
   const displayedOrders = orders.slice(0, 5).map((order) => ({
     id: order.id,
