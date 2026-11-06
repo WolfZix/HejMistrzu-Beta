@@ -100,7 +100,7 @@ export async function exportOrdersPdf() {
       day: "numeric",
       month: "long",
       year: "numeric",
-    })}`, CONTENT_LEFT + SUMMARY_INDENT, 47
+    })}`, CONTENT_LEFT, 47
   );
 
   let currentY = 68;
@@ -134,7 +134,7 @@ export async function exportOrdersPdf() {
     });
 
     autoTable(doc, {
-      startY: currentY + 9,
+      startY: currentY + 6,
       head: [["Produkt", "Ilość", "Cena"]],
       body: order.items.map((item) => [
         item.product_name,
@@ -176,7 +176,7 @@ export async function exportOrdersPdf() {
     doc.text("Wartość produktów:", CONTENT_LEFT + SUMMARY_INDENT, currentY);
     doc.text(
       `${Number(order.subtotal).toFixed(2)} zł`,
-      CONTENT_RIGHT,
+      CONTENT_RIGHT - SUMMARY_INDENT,
       currentY,
       { align: "right" }
     );
@@ -185,7 +185,7 @@ export async function exportOrdersPdf() {
     doc.text("Koszt dostawy:", CONTENT_LEFT + SUMMARY_INDENT, currentY);
     doc.text(
       `${Number(order.shipping_price).toFixed(2)} zł`,
-      CONTENT_RIGHT,
+      CONTENT_RIGHT - SUMMARY_INDENT,
       currentY,
       { align: "right" }
     );
