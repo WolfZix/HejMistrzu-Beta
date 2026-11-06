@@ -103,7 +103,7 @@ export async function exportOrdersPdf() {
     })}`, CONTENT_LEFT, 47
   );
 
-  let currentY = 68;
+  let currentY = 60;
   data.orders.forEach((order) => {
     const estimatedTableHeight = order.items.length * 9 + 10;
     const estimatedOrderHeight = estimatedTableHeight + 43;
