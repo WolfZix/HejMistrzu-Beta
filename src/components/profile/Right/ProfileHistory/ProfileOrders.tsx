@@ -54,10 +54,10 @@ export default function ProfileOrders({
                 <span className="text-left whitespace-nowrap">
                   {order.date}
                 </span>
-                <span className="text-right sm:order-3 sm:text-right truncate max-w-[100px]">
+                <span className="text-right sm:order-3 sm:text-right">
                   {order.status}
                 </span>
-                <span className="col-span-2 text-left sm:col-span-1 sm:order-2 sm:text-center">
+                <span className="col-span-2 text-left sm:col-span-1 sm:order-2 sm:text-center truncate min-w-0 max-w-[100px]">
                   {order.title}
                 </span>
               </div>
