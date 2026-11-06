@@ -1,4 +1,4 @@
-import jsPDF from "jspdf";
+import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
 type OrderItem = {
@@ -38,6 +38,25 @@ export async function exportOrdersPdf() {
   if (!data.success) { throw new Error("Nie udało się pobrać historii zamówień") }
 
   const doc = new jsPDF();
+  const fontRegular = await fetch("/fonts/ARIAL.TTF").then((res) => {
+    if (!res.ok) throw new Error("Nie udało się załadować fontu Arial");
+    return res.arrayBuffer();
+  });
+
+  const fontBold = await fetch("/fonts/ARIALBD.TTF").then((res) => {
+    if (!res.ok) throw new Error("Nie udało się załadować pogrubionego fontu Arial");
+    return res.arrayBuffer();
+  });
+
+  const toBase64 = (buffer: ArrayBuffer) => btoa(new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte),""));
+
+  doc.addFileToVFS("Arial.ttf", toBase64(fontRegular));
+  doc.addFont("Arial.ttf", "Arial", "normal");
+
+  doc.addFileToVFS("Arial-Bold.ttf", toBase64(fontBold));
+  doc.addFont("Arial-Bold.ttf", "Arial", "bold");
+
+  doc.setFont("Arial", "normal");
   doc.setFontSize(18);
   doc.text("Historia zamówień - Gralnia", 14, 20);
   doc.setFontSize(10);
@@ -57,6 +76,16 @@ export async function exportOrdersPdf() {
         `${Number(item.price).toFixed(2)} zł`,
       ]),
       theme: "grid",
+
+      styles: {
+        font: "Arial",
+        fontStyle: "normal",
+      },
+
+      headStyles: {
+        font: "Arial",
+        fontStyle: "bold",
+      },
     });
     currentY = (doc as any).lastAutoTable.finalY + 12;
     if (currentY > 250) {
