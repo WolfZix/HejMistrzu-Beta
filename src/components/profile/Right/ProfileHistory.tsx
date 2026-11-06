@@ -34,7 +34,7 @@ export default function ProfileHistory() {
     items-center
     gap-3`;
 
-    const displayedOrders = orders.slice(0, 3).map((order) => ({
+    const displayedOrders = orders.slice(0, 5).map((order) => ({
       id: order.id,
       title: order.items
         .map((item) =>
