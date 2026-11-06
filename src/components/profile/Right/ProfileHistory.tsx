@@ -1,7 +1,22 @@
 import ProfileOrders from "./ProfileHistory/ProfileOrders";
 import ProfileReservations from "./ProfileHistory/ProfileReservations";
+import { useState, useEffect } from "react";
+
+type Order = {
+  id: number;
+  created_at: string;
+  status: string;
+  total: string;
+  items: {
+    product_name: string;
+    quantity: number;
+    price: string;
+  }[];
+};
 
 export default function ProfileHistory() {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
   const downloadButtonClass = `
     mt-auto
     mx-4
@@ -17,66 +32,54 @@ export default function ProfileHistory() {
     hover:bg-primary/5
     flex
     items-center
-    gap-3`
+    gap-3`;
 
-  const orders = [
-    {
-      id: 1532,
-      title: "Pokemon Booster",
-      status: "Dostarczone",
-      date: "12.07.2026",
-    },
-    {
-      id: 1632,
-      title: "Pokemon Mousepad",
-      status: "W trakcie realizacji",
-      date: "08.09.2026",
-    },
-    {
-      id: 1563,
-      title: "Pokemon Card Pack",
-      status: "Anulowane",
-      date: "05.12.2025",
-    },
-  ]
+    const displayedOrders = orders.slice(0, 3).map((order) => ({
+      id: order.id,
+      title: order.items
+        .map((item) =>
+          item.quantity > 1
+            ? `${item.product_name} x${item.quantity}`
+            : item.product_name
+        )
+        .join(", "),
+      status: order.status,
+      date: new Date(order.created_at).toLocaleDateString("pl-PL"),
+    }));
+    const displayedReservations: any = []; // Placeholder for reservations, implement as needed
 
-  const reservations = [
-    {
-      id: 1,
-      title: "Gralnia",
-      time: "2h",
-      date: "12.07.2026",
-    },
-    {
-      id: 2,
-      title: "Sesja RPG",
-      time: "5h",
-      date: "08.9.2026",
-    },
-    {
-      id: 3,
-      title: "Gralnia",
-      time: "2h",
-      date: "05.12.2025",
-    },
-    {
-      id: 4,
-      title: "Gralnia",
-      time: "Bez limitu",
-      date: "05.12.2025",
-    },
-    {
-      id: 5,
-      title: "Sesja RPG",
-      time: "Bez limitu",
-      date: "15.06.2025",
-    },
-  ]
+    useEffect(() => {
+      async function fetchOrders() {
+        try {
+          const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/order/my`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Nie udało się pobrać zamówień");
+          }
+
+          const data = await response.json();
+          setOrders(data.orders);
+        } catch (error) {
+          console.error("Błąd pobierania zamówień:", error);
+        } finally {
+          setOrdersLoading(false);
+        }
+      }
+
+      fetchOrders();
+    }, []);
   return (
     <div className="py-8">
       <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,55fr)_minmax(0,45fr)]">
-        <ProfileOrders orders={orders} buttonClass={downloadButtonClass} />
-        <ProfileReservations reservations={reservations} buttonClass={downloadButtonClass} />
+        <ProfileOrders orders={displayedOrders} buttonClass={downloadButtonClass} isLoading={ordersLoading} />
+        <ProfileReservations reservations={displayedReservations} buttonClass={downloadButtonClass} />
       </div>
     </div>
   );

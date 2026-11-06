@@ -8,11 +8,13 @@ type ProfileOrdersProps = {
     date: string;
   }[];
   buttonClass: string;
+  isLoading: boolean;
 };
 
 export default function ProfileOrders({
   orders,
   buttonClass,
+  isLoading,
 }: ProfileOrdersProps) {
   return (
     <div className="flex h-auto min-w-0 flex-col rounded-lg glass py-4 lg:h-[350px]">
@@ -26,33 +28,41 @@ export default function ProfileOrders({
         </div>
 
         <div className="custom-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto py-2">
-          {orders.map((order) => (
-            <div
-              key={order.id}
-              className="
-                grid
-                grid-cols-[1fr_auto]
-                gap-x-3
-                gap-y-1
-                px-4
-                py-2
-                sm:grid-cols-[minmax(0,20%)_minmax(0,45%)_minmax(0,35%)]
-                sm:items-center
-              "
-            >
-              <span className="text-left whitespace-nowrap">
-                {order.date}
-              </span>
-
-              <span className="text-right sm:order-3 sm:text-right">
-                {order.status}
-              </span>
-
-              <span className="col-span-2 text-left sm:col-span-1 sm:order-2 sm:text-center">
-                {order.title}
-              </span>
-            </div>
-          ))}
+          {isLoading ? (
+            <p className="px-4 py-4 text-sm text-muted-foreground">
+              Wczytywanie zamówień...
+            </p>
+          ) : orders.length === 0 ? (
+            <p className="px-4 py-4 text-sm text-muted-foreground">
+              Nie masz jeszcze żadnych zamówień.
+            </p>
+          ) : (
+            orders.map((order) => (
+              <div
+                key={order.id}
+                className="
+                  grid
+                  grid-cols-[1fr_auto]
+                  gap-x-3
+                  gap-y-1
+                  px-4
+                  py-2
+                  sm:grid-cols-[minmax(0,20%)_minmax(0,45%)_minmax(0,35%)]
+                  sm:items-center
+                "
+              >
+                <span className="text-left whitespace-nowrap">
+                  {order.date}
+                </span>
+                <span className="text-right sm:order-3 sm:text-right">
+                  {order.status}
+                </span>
+                <span className="col-span-2 text-left sm:col-span-1 sm:order-2 sm:text-center">
+                  {order.title}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

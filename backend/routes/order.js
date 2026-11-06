@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
 const { v4: uuidv4 } = require("uuid");
+const verifyToken = require("../middleware/verifyToken");
 
 const deliveryPrice = (deliveryMethod) => {
   return deliveryMethod === "InPost Paczkomat 24/7" ? 16.99
@@ -262,6 +263,60 @@ router.post("/", async (req, res) => {
     console.error("Bład podczas tworzenia zamówienia:", error);
     res.status(500).json({
       message: "Wystąpił bład podczas tworzenia zamówienia",
+    });
+  }
+});
+
+router.get("/my", verifyToken, async (req, res) => {
+  try {
+    const userResult = await pool.query(
+      "SELECT email FROM users WHERE id = $1",
+      [req.user.id]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Użytkownik nie istnieje",
+      });
+    }
+
+    const result = await pool.query(
+      `
+        SELECT
+          o.id,
+          o.created_at,
+          o.status,
+          o.total,
+          COALESCE(
+            json_agg(
+              json_build_object(
+                'product_name', oi.product_name,
+                'quantity', oi.quantity,
+                'price', oi.price
+              )
+            ) FILTER (WHERE oi.id IS NOT NULL),
+            '[]'
+          ) AS items
+        FROM orders o
+        LEFT JOIN order_items oi ON oi.order_id = o.id
+        WHERE LOWER(o.email) = LOWER($1)
+        GROUP BY o.id
+        ORDER BY o.created_at DESC
+      `,
+      [userResult.rows[0].email]
+    );
+
+    res.status(200).json({
+      success: true,
+      orders: result.rows,
+    });
+  } catch (error) {
+    console.error("Błąd pobierania zamówień użytkownika:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Nie udało się pobrać zamówień",
     });
   }
 });
