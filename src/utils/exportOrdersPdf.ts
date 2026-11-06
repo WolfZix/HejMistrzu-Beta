@@ -69,6 +69,10 @@ export async function exportOrdersPdf() {
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
+  const CONTENT_LEFT = 18;
+  const CONTENT_RIGHT = pageWidth - 18;
+  const SUMMARY_INDENT = 4;
+
   function drawPageBackground() {
     doc.setFillColor(...COLORS.background);
     doc.rect(0, 0, pageWidth, pageHeight, "F");
@@ -82,12 +86,12 @@ export async function exportOrdersPdf() {
   doc.setFont("Arial", "bold");
   doc.setFontSize(22);
   doc.setTextColor(...COLORS.gold);
-  doc.text("Hej Mistrzu!", 22, 29);
+  doc.text("Hej Mistrzu!", CONTENT_LEFT, 29);
 
   doc.setFont("Arial", "normal");
   doc.setFontSize(11);
   doc.setTextColor(...COLORS.gray);
-  doc.text("Historia zamówień", 22, 38);
+  doc.text("Historia zamówień", CONTENT_LEFT, 38);
 
   doc.setFontSize(9);
   doc.setTextColor(...COLORS.muted);
@@ -96,7 +100,7 @@ export async function exportOrdersPdf() {
       day: "numeric",
       month: "long",
       year: "numeric",
-    })}`, 22, 47
+    })}`, CONTENT_LEFT + SUMMARY_INDENT, 47
   );
 
   let currentY = 68;
@@ -113,19 +117,19 @@ export async function exportOrdersPdf() {
     // Separator zamówienia
     doc.setDrawColor(...COLORS.border);
     doc.setLineWidth(0.3);
-    doc.line(18, currentY - 5, pageWidth - 18, currentY - 5);
+    doc.line(CONTENT_LEFT, currentY - 5, CONTENT_RIGHT, currentY - 5);
 
     // Numer zamówienia
     doc.setFont("Arial", "bold");
     doc.setFontSize(13);
     doc.setTextColor(...COLORS.gold);
-    doc.text(`Zamówienie #${order.id}`, 18, currentY);
+    doc.text(`Zamówienie #${order.id}`, CONTENT_LEFT, currentY);
 
     // Status zamówienia
     doc.setFont("Arial", "normal");
     doc.setFontSize(9);
     doc.setTextColor(...COLORS.gray);
-    doc.text(`Status: ${order.status}`, pageWidth - 18, currentY, {
+    doc.text(`Status: ${order.status}`, CONTENT_RIGHT, currentY, {
       align: "right",
     });
 
@@ -137,6 +141,10 @@ export async function exportOrdersPdf() {
         String(item.quantity),
         `${Number(item.price).toFixed(2)} zł`,
       ]),
+      margin: {
+        left: CONTENT_LEFT,
+        right: pageWidth - CONTENT_RIGHT,
+      },
       theme: "grid",
       styles: {
         font: "Arial",
@@ -165,35 +173,35 @@ export async function exportOrdersPdf() {
     doc.setFontSize(9);
     doc.setTextColor(...COLORS.gray);
 
-    doc.text("Wartość produktów:", 18, currentY);
+    doc.text("Wartość produktów:", CONTENT_LEFT + SUMMARY_INDENT, currentY);
     doc.text(
       `${Number(order.subtotal).toFixed(2)} zł`,
-      pageWidth - 18,
+      CONTENT_RIGHT,
       currentY,
       { align: "right" }
     );
     currentY += 6;
 
-    doc.text("Koszt dostawy:", 18, currentY);
+    doc.text("Koszt dostawy:", CONTENT_LEFT + SUMMARY_INDENT, currentY);
     doc.text(
       `${Number(order.shipping_price).toFixed(2)} zł`,
-      pageWidth - 18,
+      CONTENT_RIGHT,
       currentY,
       { align: "right" }
     );
 
     currentY += 3;
     doc.setDrawColor(...COLORS.border);
-    doc.line(18, currentY, pageWidth - 18, currentY);
+    doc.line(CONTENT_LEFT, currentY, CONTENT_RIGHT, currentY);
     currentY += 7;
 
     doc.setFont("Arial", "bold");
     doc.setFontSize(12);
     doc.setTextColor(...COLORS.gold);
 
-    doc.text("ŁĄCZNIE:", 18, currentY);
+    doc.text("ŁĄCZNIE:", CONTENT_LEFT + SUMMARY_INDENT, currentY);
     doc.text(`${Number(order.total).toFixed(2)} zł`,
-      pageWidth - 18,
+      CONTENT_RIGHT - SUMMARY_INDENT,
       currentY,
       { align: "right" }
     );
