@@ -8,11 +8,13 @@ type ProfileReservationsProps = {
     date: string;
   }[];
   buttonClass: string;
+  isLoading: boolean;
 };
 
 export default function ProfileReservations({
   reservations,
   buttonClass,
+  isLoading,
 }: ProfileReservationsProps) {
   return (
     <div className="flex h-auto min-w-0 flex-col rounded-lg glass py-4 lg:h-[350px]">

@@ -14,9 +14,21 @@ type Order = {
   }[];
 };
 
+type Reservation = {
+  id: number;
+  reservation_date: string;
+  reservation_time: string;
+  duration: number | null;
+  people_count: number | null;
+  status: string;
+};
+
 export default function ProfileHistory() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [reservationsLoading, setReservationsLoading] = useState(true);
+
   const downloadButtonClass = `
     mt-auto
     mx-4
@@ -34,52 +46,99 @@ export default function ProfileHistory() {
     items-center
     gap-3`;
 
-    const displayedOrders = orders.slice(0, 5).map((order) => ({
-      id: order.id,
-      title: order.items
-        .map((item) =>
-          item.quantity > 1
-            ? `${item.product_name} x${item.quantity}`
-            : item.product_name
-        )
-        .join(", "),
-      status: order.status,
-      date: new Date(order.created_at).toLocaleDateString("pl-PL"),
-    }));
-    const displayedReservations: any = []; // Placeholder for reservations, implement as needed
+  const displayedOrders = orders.slice(0, 5).map((order) => ({
+    id: order.id,
+    title: order.items
+      .map((item) =>
+        item.quantity > 1
+          ? `${item.product_name} x${item.quantity}`
+          : item.product_name
+      )
+      .join(", "),
+    status: order.status,
+    date: new Date(order.created_at).toLocaleDateString("pl-PL"),
+  }));
 
-    useEffect(() => {
-      async function fetchOrders() {
-        try {
-          const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/order/my`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
+  const displayedReservations = reservations.slice(0, 5).map((reservation) => ({
+    id: reservation.id,
+    title:
+      reservation.duration === null
+        ? "Gralnia"
+        : `Sesja RPG ${
+            reservation.duration === 0
+              ? "Bez limitu"
+              : `${reservation.duration}h`
+          }`,
+    time:
+      reservation.duration === null
+        ? "Bez limitu"
+        : reservation.duration === 0
+          ? "Bez limitu"
+          : `${reservation.duration}h`,
+    date: reservation.reservation_date.split("T")[0].split("-").reverse().join("."),
+  }));
 
-          if (!response.ok) {
-            throw new Error("Nie udało się pobrać zamówień");
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/order/my`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
+        );
 
-          const data = await response.json();
-          setOrders(data.orders);
-        } catch (error) {
-          console.error("Błąd pobierania zamówień:", error);
-        } finally {
-          setOrdersLoading(false);
+        if (!response.ok) {
+          throw new Error("Nie udało się pobrać zamówień");
         }
-      }
 
-      fetchOrders();
-    }, []);
+        const data = await response.json();
+        setOrders(data.orders);
+      } catch (error) {
+        console.error("Błąd pobierania zamówień:", error);
+      } finally {
+        setOrdersLoading(false);
+      }
+    }
+
+    fetchOrders();
+  }, []);
+
+  useEffect(() => {
+    async function fetchReservations() {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/reservations/my`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Nie udało się pobrać rezerwacji");
+        }
+
+        const data = await response.json();
+        setReservations(data.reservations);
+      } catch (error) {
+        console.error("Błąd pobierania rezerwacji:", error);
+      } finally {
+        setReservationsLoading(false);
+      }
+    }
+
+    fetchReservations();
+  }, []);
+
   return (
     <div className="py-8">
       <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,55fr)_minmax(0,45fr)]">
         <ProfileOrders orders={displayedOrders} buttonClass={downloadButtonClass} isLoading={ordersLoading} />
-        <ProfileReservations reservations={displayedReservations} buttonClass={downloadButtonClass} />
+        <ProfileReservations reservations={displayedReservations} buttonClass={downloadButtonClass} isLoading={reservationsLoading} />
       </div>
     </div>
   );

@@ -206,6 +206,39 @@ router.get("/:id", verifyToken, requireAdmin, async (req, res) => {
   }
 });
 
+router.get("/my", verifyToken, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `
+        SELECT
+          id,
+          reservation_date,
+          reservation_time,
+          duration,
+          people_count,
+          status,
+          created_at
+        FROM reservations
+        WHERE user_id = $1
+        ORDER BY reservation_date DESC, reservation_time DESC
+      `,
+      [req.user.id]
+    );
+
+    return res.status(200).json({
+      success: true,
+      reservations: result.rows,
+    });
+  } catch (error) {
+    console.error("Błąd pobierania rezerwacji użytkownika:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Nie udało się pobrać rezerwacji",
+    });
+  }
+});
+
 router.post("/", async (req, res) => {
   try {
     const {
