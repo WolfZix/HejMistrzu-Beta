@@ -102,8 +102,17 @@ export async function exportOrdersPdf() {
     })}`, 22, 47
   );
 
-  let currentY = 40;
+  let currentY = 68;
   data.orders.forEach((order) => {
+    const estimatedTableHeight = order.items.length * 9 + 20;
+    const estimatedOrderHeight = estimatedTableHeight + 65;
+
+    if (currentY + estimatedOrderHeight > pageHeight - 25) {
+      doc.addPage();
+      drawPageBackground();
+      currentY = 25;
+    }
+    
     // Separator zamówienia
     doc.setDrawColor(...COLORS.border);
     doc.setLineWidth(0.3);
@@ -132,6 +141,9 @@ export async function exportOrdersPdf() {
         `${Number(item.price).toFixed(2)} zł`,
       ]),
       theme: "grid",
+      willDrawPage: () => {
+        drawPageBackground();
+      },
 
       styles: {
         font: "Arial",
