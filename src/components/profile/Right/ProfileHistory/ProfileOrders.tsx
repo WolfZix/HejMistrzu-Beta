@@ -41,7 +41,7 @@ export default function ProfileOrders({
   }
 
   return (
-    <div className="flex h-auto min-w-0 flex-col rounded-lg glass py-4 lg:h-[350px]">
+    <div className="flex h-auto min-w-0 flex-col rounded-lg glass py-4 lg:h-[360px]">
       <div className="flex min-h-0 flex-1 flex-col border-b">
         <div className="flex items-center gap-4 border-b px-4 pb-4">
           <ShoppingBag size={24} className="text-primary shrink-0" />
