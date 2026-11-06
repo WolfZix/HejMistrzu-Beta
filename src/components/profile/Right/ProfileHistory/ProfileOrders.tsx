@@ -71,9 +71,9 @@ export default function ProfileOrders({
                         right-0
                         w-fit
                         mx-auto
-                        top-full
-                        mt-1
-                        z-50
+                        bottom-full
+                        mb-1
+                        z-999
                         rounded-md
                         bg-zinc-900
                         px-2
