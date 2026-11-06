@@ -12,6 +12,13 @@ export default function BattlepassCard() {
   const [isClaiming, setIsClaiming] = useState(false);
   const [claimError, setClaimError] = useState<string | null>(null);
 
+  function getNextReward(claimed: number[]) {
+    return (
+      rewards.find((reward) => !claimed.includes(reward.events)) ??
+      rewards[rewards.length - 1]
+    );
+  }
+
   async function fetchBattlepassPoints() {
     const result = await fetch(`${import.meta.env.VITE_API_URL}/battlepass/me`, {
       headers: {
@@ -47,7 +54,11 @@ export default function BattlepassCard() {
         throw new Error(error.message || "Nie udało się odebrać nagrody");
       }
 
-      setClaimedRewards((prev) => [...prev, selectedReward.events]);
+      setClaimedRewards((prev) => {
+        const updated = [...prev, selectedReward.events];
+        setSelectedReward(getNextReward(updated));
+        return updated;
+      });
     } catch (error) { setClaimError(error instanceof Error ? error.message : "Wystąpił nieznany błąd") }
     finally { setIsClaiming(false) }
   }
@@ -66,7 +77,11 @@ export default function BattlepassCard() {
         if (!result.ok) throw new Error("Nie udało się pobrać nagród");
         return result.json();
       })
-      .then((data) => setClaimedRewards(data.map((reward: { reward_level: number }) => reward.reward_level)))
+      .then((data) => {
+        const claimed = data.map((reward: { reward_level: number }) => reward.reward_level);
+        setClaimedRewards(claimed);
+        setSelectedReward(getNextReward(claimed));
+      })
       .catch(console.error);
   }, []);
 
@@ -109,22 +124,28 @@ export default function BattlepassCard() {
               }}
             >
               <button
-              onClick={() => setSelectedReward(reward)}
-              className="transition-transform hover:scale-110"
+                onClick={() => setSelectedReward(reward)}
+                aria-pressed={selectedReward.events === reward.events}
+                className={`
+                  transition-all duration-300
+                  ${selectedReward.events === reward.events
+                    ? "scale-125 drop-shadow-[0_0_12px_rgba(255,255,255,0.5)]"
+                    : "scale-100 hover:scale-110"}
+                `}
               >
                 <BattlepassGem state={state} />
               </button>
-              {claimError && (
-                <p className="text-sm text-red-400 mt-2">
-                  {claimError}
-                </p>
-              )}
               <p className="mt-1 text-center text-xs text-muted-foreground">
                 {reward.events}
               </p>
             </div>
           );
         })}
+          {claimError && (
+            <p className="text-sm text-red-400 mt-2">
+              {claimError}
+            </p>
+          )}
       </div>
 
       <div className="mt-8 min-h-28">
