@@ -345,8 +345,12 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
                     }}
                     className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-11 rounded-xl"
                   >
-                    <span className={duration ? "" : "text-foreground/60"}>
-                      {duration || "3h, 5h czy bez limitu?"}
+                    <span className={duration !== null ? "" : "text-foreground/60"}>
+                      {
+                        duration === null ? "3h, 5h czy bez limitu?"
+                          : duration === 0 ? "Bez limitu"
+                            : `${duration}h`
+                      }
                     </span>
 
                     <ChevronDown
