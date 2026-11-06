@@ -93,7 +93,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
 
     if (!isValid) return;
     if (!reservationType) return;
-    if (requiresDuration && !duration) return;
+    if (requiresDuration && duration === null) return;
 
     setIsSubmitting(true);
     try {
@@ -166,7 +166,7 @@ export default function ReservationForm({ selectedDate }: ReservationFormProps) 
   formData.fullName &&
   formData.email &&
   reservationType &&
-  (!requiresDuration || duration);
+  (!requiresDuration || duration !== null);
 
   const formattedDate = new Intl.DateTimeFormat("pl-PL", {
     weekday: "short",
