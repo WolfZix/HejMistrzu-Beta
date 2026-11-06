@@ -79,9 +79,6 @@ export async function exportOrdersPdf() {
 
   drawPageBackground();
 
-  doc.setFillColor(16, 18, 22);
-  doc.roundedRect(14, 14, pageWidth - 28, 42, 3, 3, "F");
-
   doc.setFont("Arial", "bold");
   doc.setFontSize(22);
   doc.setTextColor(...COLORS.gold);
@@ -104,10 +101,10 @@ export async function exportOrdersPdf() {
 
   let currentY = 68;
   data.orders.forEach((order) => {
-    const estimatedTableHeight = order.items.length * 9 + 20;
-    const estimatedOrderHeight = estimatedTableHeight + 65;
+    const estimatedTableHeight = order.items.length * 9 + 10;
+    const estimatedOrderHeight = estimatedTableHeight + 43;
 
-    if (currentY + estimatedOrderHeight > pageHeight - 25) {
+    if (currentY + estimatedOrderHeight > pageHeight - 20) {
       doc.addPage();
       drawPageBackground();
       currentY = 25;
@@ -200,7 +197,7 @@ export async function exportOrdersPdf() {
       currentY,
       { align: "right" }
     );
-    currentY += 18;
+    currentY += 12;
   });
   doc.save(`historia-zamowien-hejmistrzu-${new Date().toISOString().split("T")[0]}.pdf`);
 }
