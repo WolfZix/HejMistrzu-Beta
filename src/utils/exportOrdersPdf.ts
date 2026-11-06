@@ -66,19 +66,65 @@ export async function exportOrdersPdf() {
   doc.addFileToVFS("Arial-Bold.ttf", toBase64(fontBold));
   doc.addFont("Arial-Bold.ttf", "Arial", "bold");
 
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  function drawPageBackground() {
+    doc.setFillColor(...COLORS.background);
+    doc.rect(0, 0, pageWidth, pageHeight, "F");
+    doc.setFillColor(...COLORS.card);
+    doc.setDrawColor(...COLORS.border);
+    doc.roundedRect(10, 10, pageWidth - 20, pageHeight - 20, 4, 4, "FD");
+  }
+
+  drawPageBackground();
+
+  doc.setFillColor(16, 18, 22);
+  doc.roundedRect(14, 14, pageWidth - 28, 42, 3, 3, "F");
+
+  doc.setFont("Arial", "bold");
+  doc.setFontSize(22);
+  doc.setTextColor(...COLORS.gold);
+  doc.text("Hej Mistrzu!", 22, 29);
+
   doc.setFont("Arial", "normal");
-  doc.setFontSize(18);
-  doc.text("Historia zamówień - Gralnia", 14, 20);
-  doc.setFontSize(10);
-  doc.text(`Data wygenerowania: ${new Date().toLocaleDateString("pl-PL")}`, 14, 28);
+  doc.setFontSize(11);
+  doc.setTextColor(...COLORS.gray);
+  doc.text("Historia zamówień", 22, 38);
+
+  doc.setFontSize(9);
+  doc.setTextColor(...COLORS.muted);
+  doc.text(`Wygenerowano: ${new Date().toLocaleDateString("pl-PL",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })}`, 22, 47
+  );
 
   let currentY = 40;
   data.orders.forEach((order) => {
-    doc.setFontSize(12);
-    doc.text(`Zamówienie #${order.id}`, 14, currentY);
+    // Separator zamówienia
+    doc.setDrawColor(...COLORS.border);
+    doc.setLineWidth(0.3);
+    doc.line(18, currentY - 5, pageWidth - 18, currentY - 5);
+
+    // Numer zamówienia
+    doc.setFont("Arial", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor(...COLORS.gold);
+    doc.text(`Zamówienie #${order.id}`, 18, currentY);
+
+    // Status zamówienia
+    doc.setFont("Arial", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...COLORS.gray);
+    doc.text(`Status: ${order.status}`, pageWidth - 18, currentY, {
+      align: "right",
+    });
 
     autoTable(doc, {
-      startY: currentY + 5,
+      startY: currentY + 9,
       head: [["Produkt", "Ilość", "Cena"]],
       body: order.items.map((item) => [
         item.product_name,
@@ -109,11 +155,44 @@ export async function exportOrdersPdf() {
         fillColor: [20, 23, 29],
       },
     });
-    currentY = (doc as any).lastAutoTable.finalY + 12;
-    if (currentY > 250) {
-      doc.addPage();
-      currentY = 20;
-    }
+    currentY = (doc as any).lastAutoTable.finalY + 7;
+    doc.setFont("Arial", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...COLORS.gray);
+
+    doc.text("Wartość produktów:", 18, currentY);
+    doc.text(
+      `${Number(order.subtotal).toFixed(2)} zł`,
+      pageWidth - 18,
+      currentY,
+      { align: "right" }
+    );
+    currentY += 6;
+
+    doc.text("Koszt dostawy:", 18, currentY);
+    doc.text(
+      `${Number(order.shipping_price).toFixed(2)} zł`,
+      pageWidth - 18,
+      currentY,
+      { align: "right" }
+    );
+
+    currentY += 3;
+    doc.setDrawColor(...COLORS.border);
+    doc.line(18, currentY, pageWidth - 18, currentY);
+    currentY += 7;
+
+    doc.setFont("Arial", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(...COLORS.gold);
+
+    doc.text("ŁĄCZNIE:", 18, currentY);
+    doc.text(`${Number(order.total).toFixed(2)} zł`,
+      pageWidth - 18,
+      currentY,
+      { align: "right" }
+    );
+    currentY += 18;
   });
-  doc.save("historia-zamowien-gralnia.pdf");
+  doc.save(`historia-zamowien-hejmistrzu-${new Date().toISOString().split("T")[0]}.pdf`);
 }
