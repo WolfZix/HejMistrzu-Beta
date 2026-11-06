@@ -180,32 +180,6 @@ router.get("/", verifyToken, requireAdmin, async (req, res) => {
   }
 });
 
-router.get("/:id", verifyToken, requireAdmin, async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (isNaN(Number(id))) {
-      return res.status(400).json({
-        success: false,
-        message: "Niepoprawny numer rezerwacji",
-      });
-    }
-    const result = await pool.query(`SELECT * FROM reservations WHERE id = $1`, [id])
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Nie znaleziono rezerwacji",
-      });
-    }
-    res.json(mapReservation(result.rows[0]));
-  } catch(error) {
-    console.error(error)
-    res.status(500).json({
-      success: false,
-      message: "Nie udało się pobrać rezerwacji",
-    });
-  }
-});
-
 router.get("/my", verifyToken, async (req, res) => {
   try {
     const result = await pool.query(
@@ -233,6 +207,32 @@ router.get("/my", verifyToken, async (req, res) => {
     console.error("Błąd pobierania rezerwacji użytkownika:", error);
 
     return res.status(500).json({
+      success: false,
+      message: "Nie udało się pobrać rezerwacji",
+    });
+  }
+});
+
+router.get("/:id", verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (isNaN(Number(id))) {
+      return res.status(400).json({
+        success: false,
+        message: "Niepoprawny numer rezerwacji",
+      });
+    }
+    const result = await pool.query(`SELECT * FROM reservations WHERE id = $1`, [id])
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Nie znaleziono rezerwacji",
+      });
+    }
+    res.json(mapReservation(result.rows[0]));
+  } catch(error) {
+    console.error(error)
+    res.status(500).json({
       success: false,
       message: "Nie udało się pobrać rezerwacji",
     });
