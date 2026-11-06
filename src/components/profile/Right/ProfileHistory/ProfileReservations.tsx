@@ -47,7 +47,7 @@ export default function ProfileReservations({
           </h1>
         </div>
 
-        <div className="custom-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto py-2">
+        <div className="flex flex-col gap-2 py-2">
           {isLoading ? (
             <p className="px-4 py-4 text-sm text-muted-foreground">
               Wczytywanie rezerwacji...
