@@ -1,4 +1,6 @@
 import { Download, ShoppingBag } from "lucide-react";
+import { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 
 type ProfileOrdersProps = {
   orders: {
@@ -16,6 +18,23 @@ export default function ProfileOrders({
   buttonClass,
   isLoading,
 }: ProfileOrdersProps) {
+  const titleRef = useRef<HTMLDivElement>(null);
+  const [tooltip, setTooltip] = useState<{
+    text: string;
+    x: number;
+    y: number;
+  } | null>(null);
+
+  function showTooltip(text: string) {
+    if (!titleRef.current) return;
+    const rect = titleRef.current.getBoundingClientRect();
+    setTooltip({
+      text,
+      x: rect.left + rect.width / 2,
+      y: rect.top - 8,
+    });
+  }
+
   return (
     <div className="flex h-auto min-w-0 flex-col rounded-lg glass py-4 lg:h-[350px]">
       <div className="border-b">
@@ -62,28 +81,15 @@ export default function ProfileOrders({
                     <div className="truncate">
                       {order.title}
                     </div>
-                    <div
-                      className="
-                        hidden
-                        group-hover:block
-                        absolute
-                        left-0
-                        right-0
-                        w-fit
-                        mx-auto
-                        bottom-full
-                        mb-1
-                        z-999
-                        rounded-md
-                        bg-zinc-900
-                        px-2
-                        py-1
-                        text-sm
-                        whitespace-nowrap
-                        shadow-lg
-                      "
-                    >
-                      {order.title}
+                    <div className="col-span-2 min-w-0 text-left sm:col-span-1 sm:order-2 sm:text-center">
+                      <div
+                        ref={titleRef}
+                        className="truncate cursor-default"
+                        onMouseEnter={() => showTooltip(order.title)}
+                        onMouseLeave={() => setTooltip(null)}
+                      >
+                        {order.title}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -97,6 +103,27 @@ export default function ProfileOrders({
         <Download size={16} className="text-primary shrink-0" />
         Pobierz pełną historię
       </button>
+      {tooltip &&
+        createPortal(
+          <div
+            className="
+              fixed
+              z-[9999]
+              rounded-md
+              bg-zinc-900
+              px-2
+              py-1
+              text-sm
+              whitespace-nowrap
+              shadow-lg
+              pointer-events-none"
+            style={{ left: tooltip.x, top: tooltip.y, transform: "translate(-50%, -100%)" }}
+          >
+            {tooltip.text}
+          </div>,
+          document.body
+        )
+      }
     </div>
   );
 }
