@@ -11,12 +11,6 @@ Dashboard:
 
 ---
 
-Battlepass:
-
-- Zrobić logikę battlepassa
-
----
-
 Rezerwacje na wydarzenia:
 
 - Zaprojektować lepszą architekturę
