@@ -81,7 +81,7 @@ export default function ProfileHistory() {
     async function fetchOrders() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/order/my`,
+          `${import.meta.env.VITE_API_URL}/order/myOrders`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -104,7 +104,7 @@ export default function ProfileHistory() {
     async function fetchReservations() {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/reservations/my`,
+          `${import.meta.env.VITE_API_URL}/reservations/myReservations`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
