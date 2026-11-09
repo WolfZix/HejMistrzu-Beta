@@ -255,7 +255,7 @@ export default function ProfileEdit() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1 shadow-xl"
+                        className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-background rounded-xl p-1 shadow-xl"
                       >
                         {paymentOptions.map((option) => (
                           <button
@@ -265,10 +265,10 @@ export default function ProfileEdit() {
                               setPreferredPayment(option.value);
                               setIsPaymentOpen(false);
                             }}
-                            className={`w-full text-left rounded-md p-2 transition-colors hover:bg-primary hover:text-black ${
+                            className={`w-full text-left rounded-lg p-2.5 transition-colors duration-200 hover:bg-primary/10 hover:text-primary ${
                               preferredPayment === option.value
                                 ? "bg-primary/10 text-primary"
-                                : "bg-transparent"
+                                : "text-foreground/80 bg-transparent"
                             }`}
                           >
                             {option.label}
@@ -316,7 +316,7 @@ export default function ProfileEdit() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1 shadow-xl"
+                        className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-background rounded-xl p-1 shadow-xl"
                       >
                         {deliveryOptions.map((option) => (
                           <button
@@ -326,10 +326,10 @@ export default function ProfileEdit() {
                               setPreferredDelivery(option.value);
                               setIsDeliveryOpen(false);
                             }}
-                            className={`w-full text-left rounded-md p-2 transition-colors hover:bg-primary hover:text-black ${
+                            className={`w-full text-left rounded-lg p-2.5 transition-colors duration-200 hover:bg-primary/10 hover:text-primary ${
                               preferredDelivery === option.value
                                 ? "bg-primary/10 text-primary"
-                                : "bg-transparent"
+                                : "text-foreground/80 bg-transparent"
                             }`}
                           >
                             {option.label}
