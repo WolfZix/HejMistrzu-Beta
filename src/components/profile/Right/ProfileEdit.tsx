@@ -265,7 +265,7 @@ export default function ProfileEdit() {
                               setPreferredPayment(option.value);
                               setIsPaymentOpen(false);
                             }}
-                            className={`w-full text-left rounded-lg p-2.5 transition-colors duration-200 hover:bg-primary/10 hover:text-primary ${
+                            className={`w-full text-left rounded-lg p-2.5 hover:bg-primary/10 hover:text-primary ${
                               preferredPayment === option.value
                                 ? "bg-primary/10 text-primary"
                                 : "text-foreground/80 bg-transparent"
@@ -326,7 +326,7 @@ export default function ProfileEdit() {
                               setPreferredDelivery(option.value);
                               setIsDeliveryOpen(false);
                             }}
-                            className={`w-full text-left rounded-lg p-2.5 transition-colors duration-200 hover:bg-primary/10 hover:text-primary ${
+                            className={`w-full text-left rounded-lg p-2.5 hover:bg-primary/10 hover:text-primary ${
                               preferredDelivery === option.value
                                 ? "bg-primary/10 text-primary"
                                 : "text-foreground/80 bg-transparent"
