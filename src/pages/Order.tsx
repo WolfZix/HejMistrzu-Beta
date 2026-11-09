@@ -145,7 +145,7 @@ export default function Order() {
         if (!response.ok) throw new Error("Nie udało się pobrać danych profilu")
 
         const data = await response.json();
-        
+
         //TEMP
         console.log("Dane profilu:", data);
         console.log("Domyślny paczkomat:", data.defaultInpostPoint);
@@ -165,7 +165,7 @@ export default function Order() {
           postalCode: data.postalCode || "",
           deliveryMethod: deliveryMethodMap[data.defaultDeliveryMethod] || prev.deliveryMethod,
           paymentMethod: paymentMethodMap[data.defaultPaymentMethod] || prev.paymentMethod,
-          inpostPoint: data.defaultInpostPoint || null,
+          inPostPoint: data.defaultInpostPoint || null,
         }));
       } catch (error) { console.error("Błąd pobierania profilu:", error);
       } finally { setIsProfileLoaded(true) }
