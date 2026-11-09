@@ -11,6 +11,8 @@ export type User = {
 export type ProfileData = {
   name: string;
   surname: string;
+  companyName: string;
+  nip: string;
   phone: string;
   country: string;
   city: string;

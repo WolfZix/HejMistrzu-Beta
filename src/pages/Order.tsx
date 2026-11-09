@@ -133,6 +133,8 @@ export default function Order() {
           ...prev,
           name: data.name || "",
           surname: data.surname || "",
+          companyName: data.companyName || "",
+          nip: data.nip || "",
           email: data.email || "",
           phone: data.phone || "",
           country: data.country || "",

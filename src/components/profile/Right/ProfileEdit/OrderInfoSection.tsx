@@ -3,6 +3,8 @@ type OrderInfoSectionProps = {
   profile: {
     name: string;
     surname: string;
+    companyName: string;
+    nip: string;
     phone: string;
     country: string;
     city: string;
@@ -36,6 +38,50 @@ export default function OrderInfoSection({ inputClass, profile, setProfile }: Or
             autoComplete="given-name"
             value={profile.name}
             onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+            className={inputClass}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="lastName" className="mb-2 block text-sm font-medium">
+            Nazwisko
+          </label>
+          <input
+            id="lastName"
+            name="lastName"
+            type="text"
+            autoComplete="family-name"
+            value={profile.surname}
+            onChange={(e) => setProfile({ ...profile, surname: e.target.value })}
+            className={inputClass}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="companyName" className="mb-2 block text-sm font-medium">
+            Nazwa firmy
+          </label>
+          <input
+            id="companyName"
+            name="companyName"
+            type="text"
+            autoComplete="organization"
+            value={profile.companyName}
+            onChange={(e) => setProfile({ ...profile, companyName: e.target.value })}
+            className={inputClass}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="nip" className="mb-2 block text-sm font-medium">
+            NIP
+          </label>
+          <input
+            id="nip"
+            name="nip"
+            type="text"
+            value={profile.nip}
+            onChange={(e) => setProfile({ ...profile, nip: e.target.value })}
             className={inputClass}
           />
         </div>

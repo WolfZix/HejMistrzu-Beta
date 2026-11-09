@@ -15,6 +15,8 @@ export default function ProfileEdit() {
   const [profile, setProfile] = useState<ProfileData>({
     name: "",
     surname: "",
+    companyName: "",
+    nip: "",
     phone: "",
     country: "Polska",
     city: "",
@@ -55,6 +57,8 @@ export default function ProfileEdit() {
         setProfile({
           name: data.name || "",
           surname: data.surname || "",
+          companyName: data.companyName || "",
+          nip: data.nip || "",
           phone: data.phone || "",
           country: data.country || "Polska",
           city: data.city || "",

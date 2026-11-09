@@ -122,6 +122,8 @@ router.get("/me", verifyToken, async (req, res) => {
       email,
       name,
       surname,
+      company_name AS "companyName",
+      nip,
       phone,
       country,
       city,
@@ -150,6 +152,8 @@ router.put("/profile", verifyToken, async (req, res) => {
     const {
       name,
       surname,
+      companyName,
+      nip,
       phone,
       country,
       city,
@@ -159,7 +163,7 @@ router.put("/profile", verifyToken, async (req, res) => {
       defaultDeliveryMethod,
     } = req.body;
 
-    const fields = { name: 100, surname: 100, phone: 30, country: 100, city: 100, postalCode: 20, address: 255 };
+    const fields = { name: 100, surname: 100, companyName: 100, nip: 20, phone: 30, country: 100, city: 100, postalCode: 20, address: 255 };
 
     for (const [field, maxLength] of Object.entries(fields)) {
       const value = req.body[field];
