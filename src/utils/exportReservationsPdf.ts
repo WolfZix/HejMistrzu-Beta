@@ -127,6 +127,11 @@ export async function exportReservationsPdf() {
     return `${duration}h`;
   };
 
+  const getPeople = (people_count: number | null) => {
+    if (people_count === null) return "—";
+    return people_count === 1 ? "1 osoba" : `${people_count} osoby`;
+  }
+
   const reservations = data.reservations;
 
   autoTable(doc, {
@@ -144,7 +149,7 @@ export async function exportReservationsPdf() {
       reservation.reservation_time.slice(0, 5),
       getReservationType(reservation.duration),
       getDuration(reservation.duration),
-      String(reservation.people_count),
+      getPeople(reservation.people_count),
       reservation.status,
     ]),
     theme: "grid",
