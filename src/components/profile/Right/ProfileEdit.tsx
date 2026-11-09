@@ -1,6 +1,27 @@
 import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function ProfileEdit() {
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
+  const [preferredPayment, setPreferredPayment] = useState("");
+  const [preferredDelivery, setPreferredDelivery] = useState("");
+
+  const paymentOptions = [
+    { value: "p24", label: "Przelewy24" },
+    { value: "card", label: "Karta kredytowa" },
+    { value: "google_pay", label: "Google Pay" },
+    { value: "blik", label: "BLIK" },
+    { value: "cod", label: "Płatność przy odbiorze" },
+  ];
+
+  const deliveryOptions = [
+    { value: "inpost_locker", label: "Paczkomat InPost" },
+    { value: "inpost_courier", label: "Kurier InPost" },
+    { value: "local_pickup", label: "Odbiór osobisty" },
+  ];
+
   const inputClass = `
     w-full
     rounded-lg
@@ -182,7 +203,9 @@ export default function ProfileEdit() {
               />
             </div>
           </div>
+
           {/* Preferencje zamówień */}
+
           <div className="mt-6 border-t border-border pt-6">
             <h4 className="font-heading text-xl mb-2">
               Preferencje zamówień
@@ -196,63 +219,127 @@ export default function ProfileEdit() {
             <div className="grid gap-4 md:grid-cols-2">
               {/* Metoda płatności */}
               <div>
-                <label
-                  htmlFor="preferredPayment"
-                  className="mb-2 block text-sm font-medium"
-                >
+                <label className="mb-2 block text-sm font-medium">
                   Preferowana metoda płatności
                 </label>
 
                 <div className="relative">
-                  <select
-                    id="preferredPayment"
-                    name="preferredPayment"
-                    defaultValue=""
-                    className={`${inputClass} appearance-none cursor-pointer pr-10`}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsDeliveryOpen(false);
+                      setIsPaymentOpen((prev) => !prev);
+                    }}
+                    className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-12 rounded-xl transition-colors"
                   >
-                    <option value="">Wybierz metodę płatności</option>
-                    <option value="p24">Przelewy24</option>
-                    <option value="cod">Płatność przy odbiorze</option>
-                  </select>
+                    <span className={preferredPayment ? "" : "text-muted-foreground"}>
+                      {paymentOptions.find(
+                        (option) => option.value === preferredPayment
+                      )?.label || "Wybierz metodę płatności"}
+                    </span>
 
-                  <ChevronDown
-                    size={18}
-                    className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-                  />
+                    <ChevronDown
+                      size={14}
+                      className={`text-foreground/30 transition-transform ${
+                        isPaymentOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  <AnimatePresence>
+                    {isPaymentOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1 shadow-xl"
+                      >
+                        {paymentOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => {
+                              setPreferredPayment(option.value);
+                              setIsPaymentOpen(false);
+                            }}
+                            className={`w-full text-left rounded-md p-2 transition-colors hover:bg-primary hover:text-black ${
+                              preferredPayment === option.value
+                                ? "bg-primary/10 text-primary"
+                                : "bg-transparent"
+                            }`}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
               {/* Metoda dostawy */}
               <div>
-                <label
-                  htmlFor="preferredDelivery"
-                  className="mb-2 block text-sm font-medium"
-                >
+                <label className="mb-2 block text-sm font-medium">
                   Preferowana metoda dostawy
                 </label>
 
                 <div className="relative">
-                  <select
-                    id="preferredDelivery"
-                    name="preferredDelivery"
-                    defaultValue=""
-                    className={`${inputClass} appearance-none cursor-pointer pr-10`}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsPaymentOpen(false);
+                      setIsDeliveryOpen((prev) => !prev);
+                    }}
+                    className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-12 rounded-xl transition-colors"
                   >
-                    <option value="">Wybierz metodę dostawy</option>
-                    <option value="inpost_locker">Paczkomat InPost</option>
-                    <option value="inpost_courier">Kurier InPost</option>
-                    <option value="local_pickup">Odbiór osobisty</option>
-                  </select>
+                    <span className={preferredDelivery ? "" : "text-muted-foreground"}>
+                      {deliveryOptions.find(
+                        (option) => option.value === preferredDelivery
+                      )?.label || "Wybierz metodę dostawy"}
+                    </span>
 
-                  <ChevronDown
-                    size={18}
-                    className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-                  />
+                    <ChevronDown
+                      size={14}
+                      className={`text-foreground/30 transition-transform ${
+                        isDeliveryOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  <AnimatePresence>
+                    {isDeliveryOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full mt-1 z-50 left-0 w-full text-sm flex flex-col border border-border items-start bg-card rounded-xl p-1 shadow-xl"
+                      >
+                        {deliveryOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => {
+                              setPreferredDelivery(option.value);
+                              setIsDeliveryOpen(false);
+                            }}
+                            className={`w-full text-left rounded-md p-2 transition-colors hover:bg-primary hover:text-black ${
+                              preferredDelivery === option.value
+                                ? "bg-primary/10 text-primary"
+                                : "bg-transparent"
+                            }`}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
         {/* Bezpieczeństwo */}
 
