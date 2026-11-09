@@ -117,7 +117,7 @@ export async function exportOrdersPdf() {
     // Separator zamówienia
     doc.setDrawColor(...COLORS.border);
     doc.setLineWidth(0.3);
-    doc.line(CONTENT_LEFT, currentY - 10, CONTENT_RIGHT, currentY - 10);
+    doc.line(CONTENT_LEFT, currentY - 7, CONTENT_RIGHT, currentY - 7);
 
     // Numer zamówienia
     doc.setFont("Arial", "bold");
