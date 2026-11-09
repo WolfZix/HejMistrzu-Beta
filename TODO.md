@@ -44,3 +44,4 @@ Na koniec:
 - Zrobić testy użytkowania
 - Przepiąć wszystkie dane na dane ich sklepu
 - Przepiąć wszystko na produkcyjną bazę danych
+- Stworzyć użytkownika Admin
