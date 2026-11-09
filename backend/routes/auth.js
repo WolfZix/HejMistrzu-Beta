@@ -115,10 +115,25 @@ router.post("/login", async (req,res) => {
 
 router.get("/me", verifyToken, async (req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT id, username, email, role, created_at AS "createdAt" FROM users WHERE id = $1`,
-      [req.user.id]
-    );
+    const result = await pool.query(`
+      SELECT
+      id,
+      username,
+      email,
+      name,
+      surname,
+      phone,
+      country,
+      city,
+      postal_code AS "postalCode",
+      address,
+      default_payment_method AS "defaultPaymentMethod",
+      default_delivery_method AS "defaultDeliveryMethod",
+      role,
+      created_at AS "createdAt"
+      FROM users
+      WHERE id = $1
+    `,[req.user.id]);
 
     res.json(result.rows[0]);
   } catch (error) {
