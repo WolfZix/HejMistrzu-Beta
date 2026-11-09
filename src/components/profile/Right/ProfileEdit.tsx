@@ -232,7 +232,7 @@ export default function ProfileEdit() {
                       setIsDeliveryOpen(false);
                       setIsPaymentOpen((prev) => !prev);
                     }}
-                    className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-12 rounded-xl transition-colors"
+                    className="bg-background w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-12 rounded-xl transition-colors"
                   >
                     <span className={preferredPayment ? "" : "text-muted-foreground"}>
                       {paymentOptions.find(
@@ -293,7 +293,7 @@ export default function ProfileEdit() {
                       setIsPaymentOpen(false);
                       setIsDeliveryOpen((prev) => !prev);
                     }}
-                    className="bg-card w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-12 rounded-xl transition-colors"
+                    className="bg-background w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-12 rounded-xl transition-colors"
                   >
                     <span className={preferredDelivery ? "" : "text-muted-foreground"}>
                       {deliveryOptions.find(
