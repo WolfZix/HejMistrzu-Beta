@@ -85,8 +85,8 @@ export async function exportReservationsPdf() {
     doc.setDrawColor(...COLORS.border);
     doc.roundedRect(10, 10, pageWidth - 20, pageHeight - 20, 4, 4, "FD");
 
-    doc.setFillColor(16, 18, 22);
-    doc.roundedRect(14, 14, pageWidth - 28, 42, 3, 3, "F");
+    doc.setDrawColor(...COLORS.border);
+    doc.line(CONTENT_LEFT, 12, CONTENT_RIGHT, 12);
 
     doc.setFont("Arial", "bold");
     doc.setFontSize(22);
