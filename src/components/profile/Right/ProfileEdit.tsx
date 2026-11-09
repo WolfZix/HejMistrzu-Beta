@@ -342,6 +342,7 @@ export default function ProfileEdit() {
               </div>
             </div>
           </div>
+        </div>
 
         {/* Bezpieczeństwo */}
 
@@ -464,7 +465,6 @@ export default function ProfileEdit() {
             </button>
           </div>
         </div>
-
       </form>
     </section>
   );
