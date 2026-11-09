@@ -145,4 +145,108 @@ router.get("/me", verifyToken, async (req, res) => {
   }
 });
 
+router.put("/profile", verifyToken, async (req, res) => {
+  try {
+    const {
+      name,
+      surname,
+      phone,
+      country,
+      city,
+      postalCode,
+      address,
+      defaultPaymentMethod,
+      defaultDeliveryMethod,
+    } = req.body;
+
+    const fields = { name: 100, surname: 100, phone: 30, country: 100, city: 100, postalCode: 20, address: 255 };
+
+    for (const [field, maxLength] of Object.entries(fields)) {
+      const value = req.body[field];
+
+      if ( value !== undefined && (typeof value !== "string" || value.trim().length > maxLength)) {
+        return res.status(400).json({
+          message: `Nieprawidłowa wartość pola: ${field}`,
+        });
+      }
+    }
+
+    const paymentMethods = ["p24", "card", "google_pay", "blik", "cod"];
+    const deliveryMethods = ["inpost_locker", "inpost_courier", "local_pickup"];
+
+    if (
+      defaultPaymentMethod !== undefined &&
+      defaultPaymentMethod !== null &&
+      defaultPaymentMethod !== "" &&
+      !paymentMethods.includes(defaultPaymentMethod)
+    ) {
+      return res.status(400).json({
+        message: "Nieprawidłowa metoda płatności",
+      });
+    }
+
+    if (
+      defaultDeliveryMethod !== undefined &&
+      defaultDeliveryMethod !== null &&
+      defaultDeliveryMethod !== "" &&
+      !deliveryMethods.includes(defaultDeliveryMethod)
+    ) {
+      return res.status(400).json({
+        message: "Nieprawidłowa metoda dostawy",
+      });
+    }
+
+    const result = await pool.query(`
+      UPDATE users SET
+        name = COALESCE($1, name),
+        surname = COALESCE($2, surname),
+        phone = COALESCE($3, phone),
+        country = COALESCE($4, country),
+        city = COALESCE($5, city),
+        postal_code = COALESCE($6, postal_code),
+        address = COALESCE($7, address),
+        default_payment_method = $8,
+        default_delivery_method = $9
+      WHERE id = $10
+      RETURNING
+        id, username, email, name, surname, phone,
+        country, city, postal_code AS "postalCode",
+        address,
+        default_payment_method AS "defaultPaymentMethod",
+        default_delivery_method AS "defaultDeliveryMethod"`,
+      [
+        name ?? null,
+        surname ?? null,
+        phone ?? null,
+        country ?? null,
+        city ?? null,
+        postalCode ?? null,
+        address ?? null,
+        defaultPaymentMethod || null,
+        defaultDeliveryMethod || null,
+        req.user.id,
+      ]
+    );
+
+    if (!result.rows.length) {
+      return res.status(404).json({
+        message: "Nie znaleziono użytkownika",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Profil został zaktualizowany",
+      user: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Błąd aktualizacji profilu:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Nie udało się zaktualizować profilu",
+    });
+  }
+});
+
 module.exports = router;
