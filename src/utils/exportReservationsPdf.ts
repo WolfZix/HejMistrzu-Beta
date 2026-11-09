@@ -170,7 +170,7 @@ export async function exportReservationsPdf() {
     alternateRowStyles: {
       fillColor: [20, 23, 29],
     },
-    didDrawPage: () => {
+    willDrawPage: () => {
       drawPageHeader();
     },
     showHead: "everyPage",
