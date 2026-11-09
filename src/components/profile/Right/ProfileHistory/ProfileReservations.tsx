@@ -1,6 +1,7 @@
 import { Download, Ticket } from "lucide-react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { exportReservationsPdf } from "@/utils/exportReservationsPdf";
 
 type ProfileReservationsProps = {
   reservations: {
@@ -35,6 +36,12 @@ export default function ProfileReservations({
       top: rect.top - 8,
       left: rect.left + rect.width / 2,
     });
+  }
+
+  function handleExport() {
+    try {
+      exportReservationsPdf();
+    } catch (error) { console.error("Błąd podczas eksportowania rezerwacji do PDF:", error) }
   }
 
   return (
@@ -92,7 +99,7 @@ export default function ProfileReservations({
         </div>
       </div>
 
-      <button className={buttonClass}>
+      <button className={buttonClass} onClick={handleExport}>
         <Download size={16} className="text-primary shrink-0" />
         Pobierz pełną historię
       </button>

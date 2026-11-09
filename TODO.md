@@ -13,7 +13,7 @@ Dashboard:
 
 Profil użytkownika:
 
-- Zrobić zamówienia i rezerwacje + pobieranie pliku
+- Zrobić dynamiczne statystyki w lewej części profilu
 - Informacje o koncie: Dodać info do zamówienia dla autouzupełniania potem
 
 ---
