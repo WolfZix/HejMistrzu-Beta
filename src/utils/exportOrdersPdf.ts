@@ -192,7 +192,7 @@ export async function exportOrdersPdf() {
 
     currentY += 3;
     doc.setDrawColor(...COLORS.border);
-    doc.line(CONTENT_LEFT, currentY, CONTENT_RIGHT, currentY);
+    doc.line(CONTENT_LEFT + SUMMARY_INDENT, currentY, CONTENT_RIGHT - SUMMARY_INDENT, currentY);
     currentY += 7;
 
     doc.setFont("Arial", "bold");
