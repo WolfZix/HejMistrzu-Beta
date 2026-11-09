@@ -1,5 +1,5 @@
 import { MapPin, ShoppingBag } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { inputClasses, buttonClasses } from "@/data/order";
 import DeliveryData from "@/components/order/DeliveryData";
@@ -8,6 +8,7 @@ import PaymentMethod from "@/components/order/PaymentMethod";
 import type { OrderData } from "@/types/order";
 
 export default function Order() {
+  const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const { items, totalPrice } = useCart();
   const [validationErrors, setValidationErrors] = useState({
     name: "",
@@ -93,25 +94,57 @@ export default function Order() {
     return errors;
   };
 
-const handleSubmit = async () => {
-  const errors = validateFormData();
-  const hasErrors = Object.values(errors).some((error) => error !== "");
+  const handleSubmit = async () => {
+    const errors = validateFormData();
+    const hasErrors = Object.values(errors).some((error) => error !== "");
+    setValidationErrors(errors);
+    if (hasErrors) return;
+    try {    
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/order`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(({
+          ...formData,
+          items,
+        })),
+      });
+      const data = await response.json();
+    } catch (error) { console.error(error) }
+  };
 
-  setValidationErrors(errors);
-  if (hasErrors) return;
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsProfileLoaded(true);
+        return;
+      }
 
-  try {    
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/order`, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(({
-        ...formData,
-        items,
-      })),
-    });
-    const data = await response.json();
-  } catch (error) { console.error(error) }
-};
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Nie udało się pobrać danych profilu")
+
+        const data = await response.json();
+        setFormData((prev) => ({
+          ...prev,
+          name: data.name || "",
+          surname: data.surname || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          country: data.country || "",
+          address: data.address || "",
+          city: data.city || "",
+          postalCode: data.postalCode || "",
+        }));
+      } catch (error) { console.error("Błąd pobierania profilu:", error);
+      } finally { setIsProfileLoaded(true) }
+    };
+    fetchProfile();
+  }, []);
 
   return (
     <div className="pt-20 pb-24">
