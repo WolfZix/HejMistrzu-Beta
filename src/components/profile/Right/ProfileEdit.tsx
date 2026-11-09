@@ -17,8 +17,10 @@ export default function ProfileEdit() {
   ];
 
   const deliveryOptions = [
-    { value: "inpost_locker", label: "Paczkomat InPost" },
-    { value: "inpost_courier", label: "Kurier InPost" },
+    { value: "inpost_locker", label: "InPost Paczkomat" },
+    { value: "inpost_locker_pickup", label: "InPost Paczkomat Pobranie" },
+    { value: "inpost_courier", label: "InPost Kurier" },
+    { value: "inpost_courier_pickup", label: "InPost Kurier Pobranie" },
     { value: "local_pickup", label: "Odbiór osobisty" },
   ];
 
