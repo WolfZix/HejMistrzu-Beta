@@ -145,6 +145,12 @@ export default function Order() {
         if (!response.ok) throw new Error("Nie udało się pobrać danych profilu")
 
         const data = await response.json();
+        
+        //TEMP
+        console.log("Dane profilu:", data);
+        console.log("Domyślny paczkomat:", data.defaultInpostPoint);
+        //
+
         setFormData((prev) => ({
           ...prev,
           name: data.name || "",
