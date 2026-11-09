@@ -204,14 +204,16 @@ router.put("/profile", verifyToken, async (req, res) => {
       UPDATE users SET
         name = COALESCE($1, name),
         surname = COALESCE($2, surname),
-        phone = COALESCE($3, phone),
-        country = COALESCE($4, country),
-        city = COALESCE($5, city),
-        postal_code = COALESCE($6, postal_code),
-        address = COALESCE($7, address),
-        default_payment_method = $8,
-        default_delivery_method = $9
-      WHERE id = $10
+        company_name = COALESCE($3, company_name),
+        nip = COALESCE($4, nip),
+        phone = COALESCE($5, phone),
+        country = COALESCE($6, country),
+        city = COALESCE($7, city),
+        postal_code = COALESCE($8, postal_code),
+        address = COALESCE($9, address),
+        default_payment_method = $10,
+        default_delivery_method = $11
+      WHERE id = $12
       RETURNING
         id, username, email, name, surname, phone,
         country, city, postal_code AS "postalCode",
@@ -221,6 +223,8 @@ router.put("/profile", verifyToken, async (req, res) => {
       [
         name ?? null,
         surname ?? null,
+        companyName ?? null,
+        nip ?? null,
         phone ?? null,
         country ?? null,
         city ?? null,
