@@ -1,3 +1,5 @@
+import { ChevronDown } from "lucide-react";
+
 export default function ProfileEdit() {
   const inputClass = `
     w-full
@@ -180,8 +182,77 @@ export default function ProfileEdit() {
               />
             </div>
           </div>
-        </div>
+          {/* Preferencje zamówień */}
+          <div className="mt-6 border-t border-border pt-6">
+            <h4 className="font-heading text-xl mb-2">
+              Preferencje zamówień
+            </h4>
 
+            <p className="mb-5 text-sm text-muted-foreground">
+              Wybierz domyślne metody płatności i dostawy.
+              Możesz je zmienić podczas składania zamówienia.
+            </p>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {/* Metoda płatności */}
+              <div>
+                <label
+                  htmlFor="preferredPayment"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Preferowana metoda płatności
+                </label>
+
+                <div className="relative">
+                  <select
+                    id="preferredPayment"
+                    name="preferredPayment"
+                    defaultValue=""
+                    className={`${inputClass} appearance-none cursor-pointer pr-10`}
+                  >
+                    <option value="">Wybierz metodę płatności</option>
+                    <option value="p24">Przelewy24</option>
+                    <option value="cod">Płatność przy odbiorze</option>
+                  </select>
+
+                  <ChevronDown
+                    size={18}
+                    className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  />
+                </div>
+              </div>
+
+              {/* Metoda dostawy */}
+              <div>
+                <label
+                  htmlFor="preferredDelivery"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Preferowana metoda dostawy
+                </label>
+
+                <div className="relative">
+                  <select
+                    id="preferredDelivery"
+                    name="preferredDelivery"
+                    defaultValue=""
+                    className={`${inputClass} appearance-none cursor-pointer pr-10`}
+                  >
+                    <option value="">Wybierz metodę dostawy</option>
+                    <option value="inpost_locker">Paczkomat InPost</option>
+                    <option value="inpost_courier">Kurier InPost</option>
+                    <option value="local_pickup">Odbiór osobisty</option>
+                  </select>
+
+                  <ChevronDown
+                    size={18}
+                    className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Bezpieczeństwo */}
 
