@@ -5,7 +5,7 @@ import { inputClasses, buttonClasses } from "@/data/order";
 import DeliveryData from "@/components/order/DeliveryData";
 import DeliveryMethod from "@/components/order/DeliveryMethod";
 import PaymentMethod from "@/components/order/PaymentMethod";
-import type { OrderData } from "@/types/order";
+import type { DeliveryMethodType, OrderData, PaymentMethodType } from "@/types/order";
 
 export default function Order() {
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
@@ -112,6 +112,22 @@ export default function Order() {
     } catch (error) { console.error(error) }
   };
 
+  const paymentMethodMap: Record<string, PaymentMethodType> = {
+    p24: "Przelewy24",
+    card: "Karta Kredytowa",
+    google_pay: "Google Pay",
+    blik: "BLIK",
+    cod: "Płatność przy odbiorze",
+  };
+
+  const deliveryMethodMap: Record<string, DeliveryMethodType> = {
+    inpost_locker: "InPost Paczkomat 24/7",
+    inpost_locker_pickup: "InPost Paczkomat Pobranie",
+    inpost_courier: "InPost Kurier",
+    inpost_courier_pickup: "InPost Kurier Pobranie",
+    local_pickup: "Odbiór Osobisty",
+  };
+
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
@@ -141,6 +157,8 @@ export default function Order() {
           address: data.address || "",
           city: data.city || "",
           postalCode: data.postalCode || "",
+          deliveryMethod: deliveryMethodMap[data.defaultDeliveryMethod] || prev.deliveryMethod,
+          paymentMethod: paymentMethodMap[data.defaultPaymentMethod] || prev.paymentMethod,
         }));
       } catch (error) { console.error("Błąd pobierania profilu:", error);
       } finally { setIsProfileLoaded(true) }
