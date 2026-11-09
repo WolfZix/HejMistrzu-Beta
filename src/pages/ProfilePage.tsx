@@ -3,7 +3,7 @@ import ProfileHero from "@/components/profile/Left/ProfileHero";
 import ProfileStats from "@/components/profile/Left/ProfileStats";
 import BattlepassCard from "@/components/profile/Right/Battlepass/BattlepassCard";
 import ProfileHistory from "@/components/profile/Right/ProfileHistory";
-import ProfileEdit from "@/components/profile/Right/ProfileEdit";
+import ProfileEdit from "@/components/profile/Right/ProfileEdit/ProfileEdit";
 import { useAuth } from "@/context/AuthContext";
 
 export default function ProfilePage() {

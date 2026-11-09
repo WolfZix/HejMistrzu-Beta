@@ -4,7 +4,7 @@ const router = express.Router();
 const pool = require("../config/db");
 const verifyToken = require("../middleware/verifyToken");
 
-router.get("/me", verifyToken, async (req, res) => {
+router.get("/myBattlepass", verifyToken, async (req, res) => {
   try {
     const userId = req.user.id;
     const result = await pool.query(`

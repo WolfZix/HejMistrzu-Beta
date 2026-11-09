@@ -20,7 +20,7 @@ export default function BattlepassCard() {
   }
 
   async function fetchBattlepassPoints() {
-    const result = await fetch(`${import.meta.env.VITE_API_URL}/battlepass/me`, {
+    const result = await fetch(`${import.meta.env.VITE_API_URL}/battlepass/myBattlepass`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       }
