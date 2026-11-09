@@ -1,15 +1,17 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import type { ProfileData } from "@/types/user";
 
 type PreferencesSectionProps = {
   isDeliveryOpen: boolean;
   isPaymentOpen: boolean;
   setIsDeliveryOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPaymentOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  preferredPayment: string | null;
-  setPreferredPayment: (payment: string) => void;
-  preferredDelivery: string | null;
-  setPreferredDelivery: (delivery: string) => void;
+  profile: {
+    defaultPaymentMethod: string;
+    defaultDeliveryMethod: string;
+  };
+  setProfile: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export default function PreferencesSection({
@@ -17,10 +19,9 @@ export default function PreferencesSection({
   isPaymentOpen,
   isDeliveryOpen,
   setIsPaymentOpen,
-  preferredPayment,
-  setPreferredPayment,
-  preferredDelivery,
-  setPreferredDelivery }: PreferencesSectionProps) {
+  profile,
+  setProfile
+}: PreferencesSectionProps) {
     const paymentOptions = [
     { value: "p24", label: "Przelewy24" },
     { value: "card", label: "Karta kredytowa" },
@@ -63,9 +64,9 @@ export default function PreferencesSection({
                 }}
                 className="bg-background w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-12 rounded-xl transition-colors"
               >
-                <span className={preferredPayment ? "" : "text-muted-foreground"}>
+                <span className={profile.defaultPaymentMethod ? "" : "text-muted-foreground"}>
                   {paymentOptions.find(
-                    (option) => option.value === preferredPayment
+                    (option) => option.value === profile.defaultPaymentMethod
                   )?.label || "Wybierz metodę płatności"}
                 </span>
 
@@ -91,11 +92,14 @@ export default function PreferencesSection({
                         key={option.value}
                         type="button"
                         onClick={() => {
-                          setPreferredPayment(option.value);
+                          setProfile((prev: ProfileData) => ({
+                            ...prev,
+                            defaultPaymentMethod: option.value,
+                          }));
                           setIsPaymentOpen(false);
                         }}
                         className={`w-full text-left rounded-lg p-2.5 hover:bg-primary/10 hover:text-primary ${
-                          preferredPayment === option.value
+                          profile.defaultPaymentMethod === option.value
                             ? "bg-primary/10 text-primary"
                             : "text-foreground/80 bg-transparent"
                         }`}
@@ -124,9 +128,9 @@ export default function PreferencesSection({
                 }}
                 className="bg-background w-full text-left px-3 flex items-center justify-between border border-border text-sm focus:border-primary/50 h-12 rounded-xl transition-colors"
               >
-                <span className={preferredDelivery ? "" : "text-muted-foreground"}>
+                <span className={profile.defaultDeliveryMethod ? "" : "text-muted-foreground"}>
                   {deliveryOptions.find(
-                    (option) => option.value === preferredDelivery
+                    (option) => option.value === profile.defaultDeliveryMethod
                   )?.label || "Wybierz metodę dostawy"}
                 </span>
 
@@ -152,11 +156,14 @@ export default function PreferencesSection({
                         key={option.value}
                         type="button"
                         onClick={() => {
-                          setPreferredDelivery(option.value);
+                          setProfile((prev: ProfileData) => ({
+                            ...prev,
+                            defaultDeliveryMethod: option.value,
+                          }));
                           setIsDeliveryOpen(false);
                         }}
                         className={`w-full text-left rounded-lg p-2.5 hover:bg-primary/10 hover:text-primary ${
-                          preferredDelivery === option.value
+                          profile.defaultDeliveryMethod === option.value
                             ? "bg-primary/10 text-primary"
                             : "text-foreground/80 bg-transparent"
                         }`}

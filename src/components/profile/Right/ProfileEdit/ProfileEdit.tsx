@@ -1,14 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AccountSection from "./AccountSection";
 import OrderInfoSection from "./OrderInfoSection";
 import SafetySection from "./SafetySection";
 import PreferencesSection from "./PreferencesSection";
+import type { ProfileData } from "@/types/user";
 
 export default function ProfileEdit() {
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
-  const [preferredPayment, setPreferredPayment] = useState("");
-  const [preferredDelivery, setPreferredDelivery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [profile, setProfile] = useState<ProfileData>({
+    name: "",
+    surname: "",
+    phone: "",
+    country: "Polska",
+    city: "",
+    postalCode: "",
+    address: "",
+    defaultPaymentMethod: "",
+    defaultDeliveryMethod: "",
+  });
 
   const inputClass = `
     w-full
@@ -25,24 +39,92 @@ export default function ProfileEdit() {
     focus:ring-primary/20
   `;
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Nie udało się pobrać profilu")
+
+        setProfile({
+          name: data.name || "",
+          surname: data.surname || "",
+          phone: data.phone || "",
+          country: data.country || "Polska",
+          city: data.city || "",
+          postalCode: data.postalCode || "",
+          address: data.address || "",
+          defaultPaymentMethod: data.defaultPaymentMethod || "",
+          defaultDeliveryMethod: data.defaultDeliveryMethod || "",
+        })}
+      catch (error) { setError(error instanceof Error ? error.message : "Wystąpił nieoczekiwany błąd") }
+      finally { setIsLoading(false) }
+    };
+    fetchProfile();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(profile),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Nie udało się zaktualizować profilu")
+
+      setProfile((prev) => ({
+        ...prev,
+        ...data.user,
+      }));
+
+      setSuccess("Dane profilu zostały zapisane.");
+    } catch (error) { setError(error instanceof Error ? error.message : "Wystąpił nieoczekiwany błąd");
+    } finally { setIsSubmitting(false) }
+  };
+
   return (
     <section
       id="edit-profile"
       className="rounded-2xl border border-border glass p-6 shadow-sm"
     >
-      <form className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {error && (
+          <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-500">
+            {success}
+          </div>
+        )}
         <AccountSection inputClass={inputClass} />
         <div className="border-t border-border pt-8">
-          <OrderInfoSection inputClass={inputClass} />
+          <OrderInfoSection inputClass={inputClass} profile={profile} setProfile={setProfile} />
           <PreferencesSection 
             isDeliveryOpen={isDeliveryOpen}
             isPaymentOpen={isPaymentOpen}
-            preferredPayment={preferredPayment}
             setIsDeliveryOpen={setIsDeliveryOpen}
             setIsPaymentOpen={setIsPaymentOpen}
-            setPreferredPayment={setPreferredPayment}
-            preferredDelivery={preferredDelivery}
-            setPreferredDelivery={setPreferredDelivery}
+            profile={profile}
+            setProfile={setProfile}
           />
         </div>
         <SafetySection inputClass={inputClass} />
@@ -84,6 +166,7 @@ export default function ProfileEdit() {
             </button>
             <button
               type="submit"
+              disabled={isSubmitting || isLoading}
               className="
                 rounded-lg
                 bg-primary
@@ -93,9 +176,11 @@ export default function ProfileEdit() {
                 text-primary-foreground
                 transition-opacity
                 hover:opacity-90
+                disabled:opacity-50
+                disabled:cursor-not-allowed
               "
             >
-              Zapisz zmiany
+              {isSubmitting ? "Zapisywanie..." : "Zapisz zmiany"}
             </button>
           </div>
         </div>

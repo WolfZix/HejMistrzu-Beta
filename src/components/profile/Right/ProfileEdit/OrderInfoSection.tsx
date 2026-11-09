@@ -1,8 +1,18 @@
 type OrderInfoSectionProps = {
   inputClass: string;
-}
+  profile: {
+    name: string;
+    surname: string;
+    phone: string;
+    country: string;
+    city: string;
+    postalCode: string;
+    address: string;
+  };
+  setProfile: React.Dispatch<React.SetStateAction<any>>;
+};
 
-export default function OrderInfoSection({ inputClass }: OrderInfoSectionProps) {
+export default function OrderInfoSection({ inputClass, profile, setProfile }: OrderInfoSectionProps) {
   return (
     <>
       <h3 className="font-heading text-2xl mb-2">
@@ -24,6 +34,8 @@ export default function OrderInfoSection({ inputClass }: OrderInfoSectionProps) 
             name="firstName"
             type="text"
             autoComplete="given-name"
+            value={profile.name}
+            onChange={(e) => setProfile({ ...profile, name: e.target.value })}
             className={inputClass}
           />
         </div>
@@ -37,6 +49,8 @@ export default function OrderInfoSection({ inputClass }: OrderInfoSectionProps) 
             name="lastName"
             type="text"
             autoComplete="family-name"
+            value={profile.surname}
+            onChange={(e) => setProfile({ ...profile, surname: e.target.value })}
             className={inputClass}
           />
         </div>
@@ -50,6 +64,8 @@ export default function OrderInfoSection({ inputClass }: OrderInfoSectionProps) 
             name="phone"
             type="tel"
             autoComplete="tel"
+            value={profile.phone}
+            onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
             className={inputClass}
           />
         </div>
@@ -64,6 +80,8 @@ export default function OrderInfoSection({ inputClass }: OrderInfoSectionProps) 
             type="text"
             autoComplete="country-name"
             defaultValue="Polska"
+            value={profile.country}
+            onChange={(e) => setProfile({ ...profile, country: e.target.value })}
             className={inputClass}
           />
         </div>
@@ -77,6 +95,8 @@ export default function OrderInfoSection({ inputClass }: OrderInfoSectionProps) 
             name="city"
             type="text"
             autoComplete="address-level2"
+            value={profile.city}
+            onChange={(e) => setProfile({ ...profile, city: e.target.value })}
             className={inputClass}
           />
         </div>
@@ -90,6 +110,8 @@ export default function OrderInfoSection({ inputClass }: OrderInfoSectionProps) 
             name="postalCode"
             type="text"
             autoComplete="postal-code"
+            value={profile.postalCode}
+            onChange={(e) => setProfile({ ...profile, postalCode: e.target.value })}
             className={inputClass}
           />
         </div>
@@ -103,6 +125,8 @@ export default function OrderInfoSection({ inputClass }: OrderInfoSectionProps) 
             name="address"
             type="text"
             autoComplete="street-address"
+            value={profile.address}
+            onChange={(e) => setProfile({ ...profile, address: e.target.value })}
             className={inputClass}
           />
         </div>

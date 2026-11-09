@@ -8,4 +8,16 @@ export type User = {
   createdAt: string;
 };
 
+export type ProfileData = {
+  name: string;
+  surname: string;
+  phone: string;
+  country: string;
+  city: string;
+  postalCode: string;
+  address: string;
+  defaultPaymentMethod: string;
+  defaultDeliveryMethod: string;
+};
+
 export type UserFormData = Omit<User, "id" | "createdAt">;
