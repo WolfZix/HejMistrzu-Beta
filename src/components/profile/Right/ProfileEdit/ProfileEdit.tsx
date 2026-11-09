@@ -24,6 +24,7 @@ export default function ProfileEdit() {
     address: "",
     defaultPaymentMethod: "",
     defaultDeliveryMethod: "",
+    defaultInpostPoint: null,
   });
 
   const inputClass = `
@@ -66,6 +67,7 @@ export default function ProfileEdit() {
           address: data.address || "",
           defaultPaymentMethod: data.defaultPaymentMethod || "",
           defaultDeliveryMethod: data.defaultDeliveryMethod || "",
+          defaultInpostPoint: data.defaultInpostPoint || null,
         })}
       catch (error) { setError(error instanceof Error ? error.message : "Wystąpił nieoczekiwany błąd") }
       finally { setIsLoading(false) }

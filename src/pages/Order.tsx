@@ -159,6 +159,7 @@ export default function Order() {
           postalCode: data.postalCode || "",
           deliveryMethod: deliveryMethodMap[data.defaultDeliveryMethod] || prev.deliveryMethod,
           paymentMethod: paymentMethodMap[data.defaultPaymentMethod] || prev.paymentMethod,
+          inpostPoint: data.defaultInpostPoint || null,
         }));
       } catch (error) { console.error("Błąd pobierania profilu:", error);
       } finally { setIsProfileLoaded(true) }

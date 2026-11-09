@@ -1,3 +1,5 @@
+import { InPostPoint } from "./order";
+
 export type User = {
   id: number;
   username: string;
@@ -20,6 +22,7 @@ export type ProfileData = {
   address: string;
   defaultPaymentMethod: string;
   defaultDeliveryMethod: string;
+  defaultInpostPoint: InPostPoint | null;
 };
 
 export type UserFormData = Omit<User, "id" | "createdAt">;

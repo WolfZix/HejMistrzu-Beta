@@ -131,6 +131,7 @@ router.get("/me", verifyToken, async (req, res) => {
       address,
       default_payment_method AS "defaultPaymentMethod",
       default_delivery_method AS "defaultDeliveryMethod",
+      default_inpost_point AS "defaultInpostPoint",
       role,
       created_at AS "createdAt"
       FROM users
@@ -161,6 +162,7 @@ router.put("/profile", verifyToken, async (req, res) => {
       address,
       defaultPaymentMethod,
       defaultDeliveryMethod,
+      defaultInpostPoint,
     } = req.body;
 
     const fields = { name: 100, surname: 100, companyName: 100, nip: 20, phone: 30, country: 100, city: 100, postalCode: 20, address: 255 };
@@ -212,14 +214,16 @@ router.put("/profile", verifyToken, async (req, res) => {
         postal_code = COALESCE($8, postal_code),
         address = COALESCE($9, address),
         default_payment_method = $10,
-        default_delivery_method = $11
-      WHERE id = $12
+        default_delivery_method = $11,
+        default_inpost_point = $12
+      WHERE id = $13
       RETURNING
         id, username, email, name, surname, phone,
         country, city, postal_code AS "postalCode",
         address,
         default_payment_method AS "defaultPaymentMethod",
-        default_delivery_method AS "defaultDeliveryMethod"`,
+        default_delivery_method AS "defaultDeliveryMethod",
+        default_inpost_point AS "defaultInpostPoint"`,
       [
         name ?? null,
         surname ?? null,
@@ -232,6 +236,7 @@ router.put("/profile", verifyToken, async (req, res) => {
         address ?? null,
         defaultPaymentMethod || null,
         defaultDeliveryMethod || null,
+        defaultInpostPoint ?? null,
         req.user.id,
       ]
     );
