@@ -121,7 +121,7 @@ export async function exportOrdersPdf() {
 
     // Numer zamówienia
     doc.setFont("Arial", "bold");
-    doc.setFontSize(13);
+    doc.setFontSize(16);
     doc.setTextColor(...COLORS.gold);
     doc.text(`Zamówienie #${order.id}`, CONTENT_LEFT, currentY);
 
