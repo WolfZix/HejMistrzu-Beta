@@ -29,12 +29,7 @@ export default function ProfilePage() {
         >
           <ProfileHero username={username} role={role} createdAt={createdAt} />
           <ProfileButtons role={role} />
-          <ProfileStats
-            events={17}
-            reservations={2}
-            orders={3}
-            battlepassLevel={15}
-          />
+          <ProfileStats />
         </aside>
 
         {/* Prawa kolumna */}

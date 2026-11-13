@@ -1,32 +1,37 @@
 import { CalendarDays, ShoppingBag, StarIcon, Ticket } from "lucide-react";
+import { useState, useEffect } from 'react';
 
-type ProfileStatsProps = {
-  events: number;
-  reservations: number;
-  orders: number;
-  battlepassLevel: number;
-};
+useEffect(() => {
+  try {
+    const token = localStorage.getItem('token');
+    const stats = fetch(`${import.meta.env.VITE_API_URL}/profile/stats`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+  } catch (error) { console.error('Błąd przy pobieraniu statystyk profilu:', error) }
+}, [])
 
-export default function ProfileStats({events, reservations, orders, battlepassLevel}: ProfileStatsProps) {
+export default function ProfileStats() {
   const stats = [
     {
       label: "Odwiedzone wydarzenia",
-      value: events,
+      value: 17,
       icon: CalendarDays,
     },
     {
       label: "Zamówienia",
-      value: orders,
+      value: 3,
       icon: ShoppingBag,
     },
     {
       label: "Złożone rezerwacje",
-      value: reservations,
+      value: 2,
       icon: Ticket,
     },
     {
       label: "Poziom Battlepass",
-      value: battlepassLevel,
+      value: 15,
       icon: StarIcon,
     },
   ];

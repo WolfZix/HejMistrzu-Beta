@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require("../config/db");
 const { v4: uuidv4 } = require("uuid");
 const verifyToken = require("../middleware/verifyToken");
+const jwt = require("jsonwebtoken");
 
 const deliveryPrice = (deliveryMethod) => {
   return deliveryMethod === "InPost Paczkomat 24/7" ? 16.99
@@ -60,6 +61,24 @@ const validateOrder = (name, surname, email, phone, country, address, city, post
   };
 
 router.post("/", async (req, res) => {
+  let userId = null;
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const [scheme, token] = authHeader.split(" ");
+    if (scheme !== "Bearer" || !token) {
+      return res.status(401).json({
+        message: "Nieprawidłowy token",
+      });
+    }
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      userId = decoded.id;
+    } catch (error) {
+      return res.status(401).json({
+        message: "Nieprawidłowy token",
+      });
+    }
+  }
   const {
     name,
     surname,
@@ -178,6 +197,7 @@ router.post("/", async (req, res) => {
     const order = await pool.query(
       `
         INSERT INTO orders (
+          user_id,
           customer_name,
           customer_surname,
           email,
@@ -200,12 +220,12 @@ router.post("/", async (req, res) => {
         )
         VALUES (
           $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-          $11, $12, $13, $14, $15, $16, $17, $18, $19
+          $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
         )
         RETURNING id
       `,
       [
-        name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total, expiresAt, sessionId
+        userId, name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total, expiresAt, sessionId
       ]
     );
     for (const { item, product } of products) {
