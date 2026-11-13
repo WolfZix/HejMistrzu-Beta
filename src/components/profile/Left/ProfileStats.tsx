@@ -60,7 +60,7 @@ export default function ProfileStats() {
     },
     {
       label: "Punkty Battle Passa",
-      value: stats.battlepass_points,
+      value: Math.floor(stats.battlepass_points / 10),
       icon: StarIcon,
     },
   ];
