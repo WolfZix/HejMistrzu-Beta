@@ -151,6 +151,8 @@ router.get("/me", verifyToken, async (req, res) => {
 router.put("/profile", verifyToken, async (req, res) => {
   try {
     const {
+      username,
+      email,
       name,
       surname,
       companyName,
@@ -165,7 +167,19 @@ router.put("/profile", verifyToken, async (req, res) => {
       defaultInpostPoint,
     } = req.body;
 
-    const fields = { name: 100, surname: 100, companyName: 100, nip: 20, phone: 30, country: 100, city: 100, postalCode: 20, address: 255 };
+    const fields = {
+      username: 100,
+      email: 150,
+      name: 100,
+      surname: 100,
+      companyName: 100,
+      nip: 20,
+      phone: 30,
+      country: 100,
+      city: 100,
+      postalCode: 20,
+      address: 255
+    };
 
     for (const [field, maxLength] of Object.entries(fields)) {
       const value = req.body[field];
@@ -173,6 +187,44 @@ router.put("/profile", verifyToken, async (req, res) => {
       if ( value !== undefined && (typeof value !== "string" || value.trim().length > maxLength)) {
         return res.status(400).json({
           message: `Nieprawidłowa wartość pola: ${field}`,
+        });
+      }
+    }
+    
+    if (username !== undefined) {
+      if (typeof username !== "string" || !username.trim()) {
+        return res.status(400).json({
+          message: "Nazwa użytkownika nie może być pusta",
+        });
+      }
+
+      if (username.trim().length > 50) {
+        return res.status(400).json({
+          message: "Nazwa użytkownika jest za długa",
+        });
+      }
+    }
+
+    if (email !== undefined) {
+      if (
+        typeof email !== "string" ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+      ) {
+        return res.status(400).json({
+          message: "Nieprawidłowy adres email",
+        });
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+
+      const emailCheck = await pool.query(
+        "SELECT id FROM users WHERE LOWER(email) = LOWER($1) AND id <> $2",
+        [normalizedEmail, req.user.id]
+      );
+
+      if (emailCheck.rows.length > 0) {
+        return res.status(409).json({
+          message: "Użytkownik z takim adresem email już istnieje",
         });
       }
     }
@@ -204,48 +256,46 @@ router.put("/profile", verifyToken, async (req, res) => {
 
     const result = await pool.query(`
       UPDATE users SET
-        name = COALESCE($1, name),
-        surname = COALESCE($2, surname),
-        company_name = COALESCE($3, company_name),
-        nip = COALESCE($4, nip),
-        phone = COALESCE($5, phone),
-        country = COALESCE($6, country),
-        city = COALESCE($7, city),
-        postal_code = COALESCE($8, postal_code),
-        address = COALESCE($9, address),
-        default_payment_method = $10,
-        default_delivery_method = $11,
-        default_inpost_point = $12
-      WHERE id = $13
+        username = COALESCE($1, username),
+        email = COALESCE($2, email),
+        name = COALESCE($3, name),
+        surname = COALESCE($4, surname),
+        company_name = COALESCE($5, company_name),
+        nip = COALESCE($6, nip),
+        phone = COALESCE($7, phone),
+        country = COALESCE($8, country),
+        city = COALESCE($9, city),
+        postal_code = COALESCE($10, postal_code),
+        address = COALESCE($11, address),
+        default_payment_method = $12,
+        default_delivery_method = $13,
+        default_inpost_point = $14
+      WHERE id = $15
       RETURNING
-        id, username, email, name, surname, phone,
-        country, city, postal_code AS "postalCode",
-        address,
+        id, username, email, name, surname, company_name AS "companyName",
+        nip, phone, country, city, postal_code AS "postalCode", address,
         default_payment_method AS "defaultPaymentMethod",
         default_delivery_method AS "defaultDeliveryMethod",
-        default_inpost_point AS "defaultInpostPoint"`,
-      [
-        name ?? null,
-        surname ?? null,
-        companyName ?? null,
-        nip ?? null,
-        phone ?? null,
-        country ?? null,
-        city ?? null,
-        postalCode ?? null,
-        address ?? null,
-        defaultPaymentMethod || null,
-        defaultDeliveryMethod || null,
-        defaultInpostPoint ?? null,
-        req.user.id,
-      ]
-    );
+        default_inpost_point AS "defaultInpostPoint"
+    `, [
+      username?.trim() ?? null,
+      email?.trim().toLowerCase() ?? null,
+      name ?? null,
+      surname ?? null,
+      companyName ?? null,
+      nip ?? null,
+      phone ?? null,
+      country ?? null,
+      city ?? null,
+      postalCode ?? null,
+      address ?? null,
+      defaultPaymentMethod || null,
+      defaultDeliveryMethod || null,
+      defaultInpostPoint ?? null,
+      req.user.id,
+    ]);
 
-    if (!result.rows.length) {
-      return res.status(404).json({
-        message: "Nie znaleziono użytkownika",
-      });
-    }
+    if (!result.rows.length) return res.status(404).json({ message: "Nie znaleziono użytkownika" })
 
     res.json({
       success: true,
@@ -254,7 +304,6 @@ router.put("/profile", verifyToken, async (req, res) => {
     });
   } catch (error) {
     console.error("Błąd aktualizacji profilu:", error);
-
     res.status(500).json({
       success: false,
       message: "Nie udało się zaktualizować profilu",

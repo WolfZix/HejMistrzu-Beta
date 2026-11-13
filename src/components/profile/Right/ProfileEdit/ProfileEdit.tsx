@@ -13,6 +13,8 @@ export default function ProfileEdit() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [profile, setProfile] = useState<ProfileData>({
+    username: "",
+    email: "",
     name: "",
     surname: "",
     companyName: "",
@@ -56,6 +58,8 @@ export default function ProfileEdit() {
         if (!response.ok) throw new Error(data.message || "Nie udało się pobrać profilu")
 
         setProfile({
+          username: data.username || "",
+          email: data.email || "",
           name: data.name || "",
           surname: data.surname || "",
           companyName: data.companyName || "",
@@ -111,7 +115,7 @@ export default function ProfileEdit() {
       className="rounded-2xl border border-border glass p-6 shadow-sm"
     >
       <form onSubmit={handleSubmit} className="space-y-8">
-        <AccountSection inputClass={inputClass} />
+        <AccountSection inputClass={inputClass} profile={profile} setProfile={setProfile} />
         <div className="border-t border-border pt-8">
           <OrderInfoSection inputClass={inputClass} profile={profile} setProfile={setProfile} />
           <PreferencesSection 

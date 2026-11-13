@@ -11,6 +11,8 @@ export type User = {
 };
 
 export type ProfileData = {
+  username: string;
+  email: string;
   name: string;
   surname: string;
   companyName: string;
