@@ -11,13 +11,6 @@ Dashboard:
 
 ---
 
-Profil użytkownika:
-
-- Zrobić dynamiczne statystyki w lewej części profilu
-- Informacje o koncie: Dodać info do zamówienia dla autouzupełniania potem
-
----
-
 Rezerwacje na wydarzenia:
 
 - Zaprojektować lepszą architekturę

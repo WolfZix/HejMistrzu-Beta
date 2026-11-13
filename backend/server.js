@@ -16,6 +16,7 @@ const woocommerceWebhookRouter = require("./routes/webhooks/woocommerce");
 const orderRouter = require("./routes/order");
 const expireOrders = require("./jobs/expireOrders");
 const battlePassRouter = require("./routes/battlepass");
+const dashboardRouter = require("./routes/dashboard");
 
 app.use(cors());
 app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
@@ -34,6 +35,7 @@ app.use("/eventParticipants", eventParticipantsRouter);
 app.use("/webhooks/woocommerce", woocommerceWebhookRouter);
 app.use("/order", orderRouter);
 app.use("/battlepass", battlePassRouter);
+app.use("/dashbaord", dashboardRouter);
 
 app.listen(3000, () => {
   console.log("Server działa na porcie 3000");
