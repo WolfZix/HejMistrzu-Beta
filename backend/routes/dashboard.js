@@ -74,4 +74,36 @@ router.get("/battlepass", verifyToken, requireAdmin, async (_req, res) => {
   }
 });
 
+router.get("/reservations", verifyToken, requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        COUNT(*) FILTER (
+          WHERE reservation_date >= date_trunc('month', CURRENT_DATE)::DATE
+          AND reservation_date < (date_trunc('month', CURRENT_DATE) + INTERVAL '1 month')::DATE
+        ) AS reservations_this_month,
+
+        COUNT(*) FILTER (
+          WHERE reservation_date >= date_trunc('year', CURRENT_DATE)::DATE
+          AND reservation_date < (date_trunc('year', CURRENT_DATE) + INTERVAL '1 year')::DATE
+        ) AS reservations_this_year,
+
+        COUNT(*) FILTER (WHERE status = 'Oczekująca') AS active_reservations
+
+      FROM reservations
+    `);
+
+    res.json({
+      reservationsThisMonth: Number(result.rows[0].reservations_this_month),
+      reservationsThisYear: Number(result.rows[0].reservations_this_year),
+      activeReservations: Number(result.rows[0].active_reservations),
+    });
+  } catch (error) {
+    console.error("Błąd pobierania statystyk rezerwacji:", error);
+    res.status(500).json({
+      error: "Błąd pobierania statystyk rezerwacji",
+    });
+  }
+});
+
 module.exports = router;
