@@ -59,7 +59,7 @@ export default function ProfileStats() {
       icon: Ticket,
     },
     {
-      label: "Punkty Battle Passa",
+      label: "Punkty Battlepass",
       value: Math.floor(stats.battlepass_points / 10),
       icon: StarIcon,
     },

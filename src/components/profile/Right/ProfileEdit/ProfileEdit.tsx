@@ -111,16 +111,6 @@ export default function ProfileEdit() {
       className="rounded-2xl border border-border glass p-6 shadow-sm"
     >
       <form onSubmit={handleSubmit} className="space-y-8">
-        {error && (
-          <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
-            {error}
-          </div>
-        )}
-        {success && (
-          <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-500">
-            {success}
-          </div>
-        )}
         <AccountSection inputClass={inputClass} />
         <div className="border-t border-border pt-8">
           <OrderInfoSection inputClass={inputClass} profile={profile} setProfile={setProfile} />
@@ -135,6 +125,16 @@ export default function ProfileEdit() {
         </div>
         <SafetySection inputClass={inputClass} />
         <div className="flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
+          {error && (
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-500">
+              {success}
+            </div>
+          )}
           <button
             type="button"
             className="
