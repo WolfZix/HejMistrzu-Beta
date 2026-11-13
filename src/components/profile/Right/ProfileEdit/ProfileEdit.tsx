@@ -125,7 +125,7 @@ export default function ProfileEdit() {
         </div>
         <SafetySection inputClass={inputClass} />
         <div className="flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+          <div className="border border-blue-500">
             {error && (
               <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
                 {error}
@@ -137,7 +137,7 @@ export default function ProfileEdit() {
               </div>
             )}
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between border border-red-500">
             <button
             type="button"
             className="
