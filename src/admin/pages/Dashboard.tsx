@@ -10,6 +10,12 @@ export default function Dashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [products, setProducts] = useState<StoreProduct[]>([]);
   const [events, setEvents] = useState<EventType[]>([]);
+  const [shopStats, setShopStats] = useState({
+    ordersThisMonth: 0,
+    ordersThisYear: 0,
+    topProduct: "Brak danych",
+    ranking: [] as { name: string; quantity: number }[],
+  });
 
   const SECTION_USERS = "Użytkownicy";
   const SECTION_EVENTS = "Eventy";
@@ -47,6 +53,21 @@ export default function Dashboard() {
     .then((res) => res.json())
     .then((data: EventType[]) => setEvents(data))
     .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    fetch(`${import.meta.env.VITE_API_URL}/dashboard/shop`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      if (!res.ok) throw new Error("Nie udało się pobrać statystyk sklepu")
+      return res.json();
+    })
+    .then((data) => setShopStats(data))
+    .catch((error) => console.error("Błąd statystyk sklepu:", error));
   }, []);
 
   function toggleSection(section: string) {
@@ -218,39 +239,21 @@ export default function Dashboard() {
             stats={[
               {
                 label: "Zamówienia w tym miesiącu",
-                value: 43,
+                value: shopStats.ordersThisMonth,
               },
               {
                 label: "Zamówienia w tym roku",
-                value: 521,
+                value: shopStats.ordersThisYear,
               },
               {
                 label: "Top produkt",
-                value: "Pokemon ETB",
+                value: shopStats.topProduct,
               },
             ]}
-            ranking={[
-              {
-                name: "Pokemon ETB",
-                value: 87,
-              },
-              {
-                name: "Dragon Shield Sleeves",
-                value: 75,
-              },
-              {
-                name: "Commander Deck",
-                value: 68,
-              },
-              {
-                name: "Booster Box",
-                value: 54,
-              },
-              {
-                name: "Dice Set",
-                value: 43,
-              },
-            ]}
+            ranking={shopStats.ranking.map((product) => ({
+              name: product.name,
+              value: product.quantity,
+            }))}
           />
           <InventorySection
             isOpen={openSections.includes(SECTION_INVENTORY)}

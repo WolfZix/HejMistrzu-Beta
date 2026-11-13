@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
+const verifyToken = require("../middleware/verifyToken");
+const requireAdmin = require("../middleware/requireAdmin");
 
-router.get("/shop", async (req, res) => {
+router.get("/shop", verifyToken, requireAdmin, async (req, res) => {
   try {
     const orderStats = await pool.query(`
       SELECT 
