@@ -125,17 +125,20 @@ export default function ProfileEdit() {
         </div>
         <SafetySection inputClass={inputClass} />
         <div className="flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-          {error && (
-            <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-500">
-              {success}
-            </div>
-          )}
-          <button
+          <div>
+            {error && (
+              <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-500">
+                {success}
+              </div>
+            )}
+          </div>
+          <div>
+            <button
             type="button"
             className="
               w-full
@@ -155,39 +158,40 @@ export default function ProfileEdit() {
           >
             Usuń konto
           </button>
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-            <button
-              type="button"
-              className="
-                rounded-lg
-                border
-                border-border
-                px-5
-                py-2.5
-                transition-colors
-                hover:bg-muted
-              "
-            >
-              Anuluj
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting || isLoading}
-              className="
-                rounded-lg
-                bg-primary
-                px-5
-                py-2.5
-                font-medium
-                text-primary-foreground
-                transition-opacity
-                hover:opacity-90
-                disabled:opacity-50
-                disabled:cursor-not-allowed
-              "
-            >
-              {isSubmitting ? "Zapisywanie..." : "Zapisz zmiany"}
-            </button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                className="
+                  rounded-lg
+                  border
+                  border-border
+                  px-5
+                  py-2.5
+                  transition-colors
+                  hover:bg-muted
+                "
+              >
+                Anuluj
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting || isLoading}
+                className="
+                  rounded-lg
+                  bg-primary
+                  px-5
+                  py-2.5
+                  font-medium
+                  text-primary-foreground
+                  transition-opacity
+                  hover:opacity-90
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
+                "
+              >
+                {isSubmitting ? "Zapisywanie..." : "Zapisz zmiany"}
+              </button>
+            </div>
           </div>
         </div>
       </form>
