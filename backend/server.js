@@ -35,7 +35,7 @@ app.use("/eventParticipants", eventParticipantsRouter);
 app.use("/webhooks/woocommerce", woocommerceWebhookRouter);
 app.use("/order", orderRouter);
 app.use("/battlepass", battlePassRouter);
-app.use("/dashbaord", dashboardRouter);
+app.use("/dashboard", dashboardRouter);
 
 app.listen(3000, () => {
   console.log("Server działa na porcie 3000");
