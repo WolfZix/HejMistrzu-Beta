@@ -137,7 +137,7 @@ export default function ProfileEdit() {
               </div>
             )}
           </div>
-          <div>
+          <div className="flex justify-between">
             <button
             type="button"
             className="
