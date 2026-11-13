@@ -50,6 +50,26 @@ router.get("/", verifyToken, requireAdmin, async (req, res) => {
   }
 });
 
+router.get("/profile/stats", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const result = await pool.query(`
+      SELECT
+        (SELECT COUNT(*) FROM event_participants WHERE user_id = $1 AND attended = true) AS events,
+        (SELECT COUNT(*) FROM orders WHERE user_id = $1) AS orders,
+        (SELECT COUNT(*) FROM reservations WHERE user_id = $1) AS reservations,
+        (SELECT COALESCE(SUM(points), 0) FROM battlepass_points WHERE user_id = $1) AS battlepass_points
+    `, [userId]);
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Błąd przy pobieraniu statystyk profilu:", error);
+    res.status(500).json({
+      success: false,
+      message: "Nie udało się pobrać statystyk profilu",
+    });
+  }
+});
+
 router.post("/", verifyToken, requireAdmin, async (req, res) => {
   try {
     const { name, surname, username, email, password, role = "user" } =
