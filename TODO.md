@@ -7,7 +7,7 @@ Backend:
 
 Dashboard:
 
-- Podpiąć statystyki (Battlepass, Rezerwacje, Sklep) pod dynamiczne dane
+- Zrobić zakładke Zamówienia
 
 ---
 

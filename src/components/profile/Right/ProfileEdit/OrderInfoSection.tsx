@@ -5,7 +5,6 @@ type OrderInfoSectionProps = {
     surname: string;
     companyName: string;
     nip: string;
-    email: string;
     phone: string;
     country: string;
     city: string;
@@ -88,21 +87,6 @@ export default function OrderInfoSection({ inputClass, profile, setProfile }: Or
         </div>
 
         <div>
-          <label htmlFor="email" className="mb-2 block text-sm font-medium">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="text"
-            autoComplete="email"
-            value={profile.email}
-            onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-            className={inputClass}
-          />
-        </div>
-
-        <div>
           <label htmlFor="phone" className="mb-2 block text-sm font-medium">
             Numer telefonu
           </label>
@@ -163,7 +147,7 @@ export default function OrderInfoSection({ inputClass, profile, setProfile }: Or
           />
         </div>
 
-        <div>
+        <div className="md:col-span-2">
           <label htmlFor="address" className="mb-2 block text-sm font-medium">
             Ulica i numer budynku / lokalu
           </label>
