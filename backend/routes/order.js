@@ -289,18 +289,6 @@ router.post("/", async (req, res) => {
 
 router.get("/myOrders", verifyToken, async (req, res) => {
   try {
-    const userResult = await pool.query(
-      "SELECT email FROM users WHERE id = $1",
-      [req.user.id]
-    );
-
-    if (userResult.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Użytkownik nie istnieje",
-      });
-    }
-
     const result = await pool.query(`
       SELECT
         o.id,
@@ -319,12 +307,11 @@ router.get("/myOrders", verifyToken, async (req, res) => {
         ) AS items
       FROM orders o
       LEFT JOIN order_items oi ON oi.order_id = o.id
-      WHERE LOWER(o.email) = LOWER($1)
+      WHERE o.user_id = $1
       GROUP BY o.id
       ORDER BY o.created_at DESC
-      LIMIT 5`,
-      [userResult.rows[0].email]
-    );
+      LIMIT 5
+    `, [req.user.id]);
 
     res.status(200).json({
       success: true,

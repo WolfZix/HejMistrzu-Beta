@@ -1,17 +1,6 @@
 import { CalendarDays, ShoppingBag, StarIcon, Ticket } from "lucide-react";
 import { useState, useEffect } from 'react';
 
-useEffect(() => {
-  try {
-    const token = localStorage.getItem('token');
-    const stats = fetch(`${import.meta.env.VITE_API_URL}/profile/stats`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    })
-  } catch (error) { console.error('Błąd przy pobieraniu statystyk profilu:', error) }
-}, [])
-
 export default function ProfileStats() {
   const stats = [
     {
