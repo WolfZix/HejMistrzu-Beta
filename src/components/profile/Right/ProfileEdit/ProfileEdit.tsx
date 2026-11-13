@@ -124,8 +124,8 @@ export default function ProfileEdit() {
           />
         </div>
         <SafetySection inputClass={inputClass} />
-        <div className="flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="border border-blue-500">
+        <div className="flex flex-col gap-4 border-t border-border pt-6">
+          <div className="flex flex-col gap-2">
             {error && (
               <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
                 {error}
@@ -137,57 +137,24 @@ export default function ProfileEdit() {
               </div>
             )}
           </div>
-          <div className="flex justify-between border border-red-500">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <button
-            type="button"
-            className="
-              w-full
-              sm:w-auto
-              rounded-lg
-              border
-              border-red-500/30
-              text-red-500/50
-              px-5
-              py-2.5
-              transition-colors
-              hover:bg-red-500/10
-              hover:text-red-500
-              hover:border-red-500
-              duration-200
-            "
-          >
-            Usuń konto
-          </button>
+              type="button"
+              className="w-full sm:w-auto rounded-lg border border-red-500/30 text-red-500/50 px-5 py-2.5 transition-colors hover:bg-red-500/10 hover:text-red-500 hover:border-red-500 duration-200"
+            >
+              Usuń konto
+            </button>
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
               <button
                 type="button"
-                className="
-                  rounded-lg
-                  border
-                  border-border
-                  px-5
-                  py-2.5
-                  transition-colors
-                  hover:bg-muted
-                "
+                className="rounded-lg border border-border px-5 py-2.5 transition-colors hover:bg-muted"
               >
                 Anuluj
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting || isLoading}
-                className="
-                  rounded-lg
-                  bg-primary
-                  px-5
-                  py-2.5
-                  font-medium
-                  text-primary-foreground
-                  transition-opacity
-                  hover:opacity-90
-                  disabled:opacity-50
-                  disabled:cursor-not-allowed
-                "
+                className="rounded-lg bg-primary px-5 py-2.5 font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Zapisywanie..." : "Zapisz zmiany"}
               </button>
