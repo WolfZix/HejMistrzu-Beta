@@ -162,7 +162,7 @@ export default function OrderInfoSection({ inputClass, profile, setProfile }: Or
           />
         </div>
 
-        <div className="md:col-span-2">
+        <div>
           <label htmlFor="address" className="mb-2 block text-sm font-medium">
             Ulica i numer budynku / lokalu
           </label>
