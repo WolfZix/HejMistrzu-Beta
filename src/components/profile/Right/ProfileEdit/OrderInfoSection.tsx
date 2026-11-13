@@ -5,6 +5,7 @@ type OrderInfoSectionProps = {
     surname: string;
     companyName: string;
     nip: string;
+    email: string;
     phone: string;
     country: string;
     city: string;
@@ -87,16 +88,16 @@ export default function OrderInfoSection({ inputClass, profile, setProfile }: Or
         </div>
 
         <div>
-          <label htmlFor="lastName" className="mb-2 block text-sm font-medium">
-            Nazwisko
+          <label htmlFor="email" className="mb-2 block text-sm font-medium">
+            Email
           </label>
           <input
-            id="lastName"
-            name="lastName"
+            id="email"
+            name="email"
             type="text"
-            autoComplete="family-name"
-            value={profile.surname}
-            onChange={(e) => setProfile({ ...profile, surname: e.target.value })}
+            autoComplete="email"
+            value={profile.email}
+            onChange={(e) => setProfile({ ...profile, email: e.target.value })}
             className={inputClass}
           />
         </div>

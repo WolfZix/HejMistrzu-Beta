@@ -23,6 +23,12 @@ Rezerwacje na wydarzenia:
 
 ---
 
+Profil:
+
+- Sprawdzić czy email dodany został poprawnie czy trzeba zrobić coś więcej w bazie danych / walidacji
+
+---
+
 Sklep:
 
 - Powiedzieć im, żeby naprawili nazwy wariantów tak, aby nie zawierały nazwy produktu głównego

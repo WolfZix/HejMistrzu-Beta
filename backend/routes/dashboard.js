@@ -4,7 +4,7 @@ const pool = require("../config/db");
 const verifyToken = require("../middleware/verifyToken");
 const requireAdmin = require("../middleware/requireAdmin");
 
-router.get("/shop", verifyToken, requireAdmin, async (req, res) => {
+router.get("/shop", verifyToken, requireAdmin, async (_req, res) => {
   try {
     const orderStats = await pool.query(`
       SELECT 
@@ -34,6 +34,43 @@ router.get("/shop", verifyToken, requireAdmin, async (req, res) => {
   } catch (error) {
     console.error("Błąd pobierania statystyk sklepu:", error);
     res.status(500).json({ error: "Błąd pobierania statystyk sklepu" });
+  }
+});
+
+router.get("/battlepass", verifyToken, requireAdmin, async (_req, res) => {
+  try {
+    const stats = await pool.query(`
+      SELECT
+        COALESCE(MAX(FLOOR(total_points / 10)), 0) AS highest_level,
+        COALESCE(ROUND(AVG(FLOOR(total_points / 10))), 0) AS average_level
+      FROM (
+        SELECT user_id, SUM(points) AS total_points
+        FROM battlepass_points
+        GROUP BY user_id
+      ) user_points
+    `);
+
+    const ranking = await pool.query(`
+      SELECT
+        u.username AS name,
+        FLOOR(SUM(bp.points) / 10)::INTEGER AS level
+      FROM battlepass_points bp
+      JOIN users u ON u.id = bp.user_id
+      GROUP BY u.id, u.username
+      ORDER BY SUM(bp.points) DESC
+      LIMIT 5
+    `);
+
+    res.json({
+      highestLevel: Number(stats.rows[0].highest_level),
+      averageLevel: Number(stats.rows[0].average_level),
+      ranking: ranking.rows,
+    });
+  } catch (error) {
+    console.error("Błąd pobierania statystyk Battle Passa:", error);
+    res.status(500).json({
+      error: "Błąd pobierania statystyk Battle Passa",
+    });
   }
 });
 
