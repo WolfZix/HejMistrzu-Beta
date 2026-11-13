@@ -4,8 +4,10 @@ import OrderInfoSection from "./OrderInfoSection";
 import SafetySection from "./SafetySection";
 import PreferencesSection from "./PreferencesSection";
 import type { ProfileData } from "@/types/user";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProfileEdit() {
+  const { updateUser } = useAuth();
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -103,6 +105,7 @@ export default function ProfileEdit() {
         ...prev,
         ...data.user,
       }));
+      updateUser(data.user);
 
       setSuccess("Dane profilu zostały zapisane.");
     } catch (error) { setError(error instanceof Error ? error.message : "Wystąpił nieoczekiwany błąd");

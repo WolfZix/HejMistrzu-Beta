@@ -13,6 +13,7 @@ interface AuthContextType {
   loading: boolean;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   logout: () => void;
+  updateUser: (updatedUser: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,6 +30,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+  };
+
+  const updateUser = (updatedUser: Partial<User>) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const newUser = { ...prev, ...updatedUser };
+      localStorage.setItem("user", JSON.stringify(newUser));
+      return newUser;
+    });
   };
 
   React.useEffect(() => {
@@ -69,6 +79,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         user,
         loading,
         setUser,
+        updateUser,
         logout,
       }}
     >

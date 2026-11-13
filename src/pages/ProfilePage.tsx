@@ -5,12 +5,18 @@ import BattlepassCard from "@/components/profile/Right/Battlepass/BattlepassCard
 import ProfileHistory from "@/components/profile/Right/ProfileHistory";
 import ProfileEdit from "@/components/profile/Right/ProfileEdit/ProfileEdit";
 import { useAuth } from "@/context/AuthContext";
+import { useState, useEffect } from 'react';
 
 export default function ProfilePage() {
   const { user } = useAuth();
-  const role = user?.role ?? "user";
-  const username = user?.username ?? "User";
+  const [username, setUsername] = useState(user?.username || "User");
+  const [role, setRole] = useState(user?.role || "user");
   const createdAt = user?.createdAt;
+
+  useEffect(() => {
+    setUsername(user?.username || "User");
+    setRole(user?.role || "user");
+  }, [user]);
 
   return (
     <section className="container mx-auto max-w-7xl px-4 py-24 md:py-28">
