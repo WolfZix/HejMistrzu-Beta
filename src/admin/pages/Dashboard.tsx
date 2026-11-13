@@ -16,6 +16,11 @@ export default function Dashboard() {
     topProduct: "Brak danych",
     ranking: [] as { name: string; quantity: number }[],
   });
+  const [battlepassStats, setBattlepassStats] = useState({
+    highestLevel: 0,
+    averageLevel: 0,
+    ranking: [] as { name: string; level: number }[],
+  });
 
   const SECTION_USERS = "Użytkownicy";
   const SECTION_EVENTS = "Eventy";
@@ -68,6 +73,27 @@ export default function Dashboard() {
     })
     .then((data) => setShopStats(data))
     .catch((error) => console.error("Błąd statystyk sklepu:", error));
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    fetch(`${import.meta.env.VITE_API_URL}/dashboard/battlepass`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Nie udało się pobrać statystyk Battle Passa");
+        }
+
+        return res.json();
+      })
+      .then((data) => setBattlepassStats(data))
+      .catch((error) =>
+        console.error("Błąd statystyk Battle Passa:", error)
+      );
   }, []);
 
   function toggleSection(section: string) {
@@ -158,35 +184,17 @@ export default function Dashboard() {
             stats={[
               {
                 label: "Najwyższy poziom",
-                value: 32,
+                value: battlepassStats.highestLevel,
               },
               {
                 label: "Średni poziom",
-                value: 12,
+                value: battlepassStats.averageLevel,
               },
             ]}
-            ranking={[
-              {
-                name: "WolfZix",
-                value: 32,
-              },
-              {
-                name: "Jan Kowalski",
-                value: 28,
-              },
-              {
-                name: "Anna Nowak",
-                value: 24,
-              },
-              {
-                name: "Michał",
-                value: 22,
-              },
-              {
-                name: "Kacper",
-                value: 20,
-              },
-            ]}
+            ranking={battlepassStats.ranking.map((player) => ({
+              name: player.name,
+              value: player.level,
+            }))}
           />
         <DashboardSection
             title="Eventy"
