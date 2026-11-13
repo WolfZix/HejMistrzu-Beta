@@ -21,6 +21,11 @@ export default function Dashboard() {
     averageLevel: 0,
     ranking: [] as { name: string; level: number }[],
   });
+  const [reservationStats, setReservationStats] = useState({
+    reservationsThisMonth: 0,
+    reservationsThisYear: 0,
+    activeReservations: 0,
+  });
 
   const SECTION_USERS = "Użytkownicy";
   const SECTION_EVENTS = "Eventy";
@@ -77,23 +82,34 @@ export default function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     fetch(`${import.meta.env.VITE_API_URL}/dashboard/battlepass`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Nie udało się pobrać statystyk Battle Passa");
-        }
+    .then((res) => {
+      if (!res.ok) throw new Error("Nie udało się pobrać statystyk Battle Passa")
+      return res.json();
+    })
+    .then((data) => setBattlepassStats(data))
+    .catch((error) =>
+      console.error("Błąd statystyk Battle Passa:", error)
+    );
+  }, []);
 
-        return res.json();
-      })
-      .then((data) => setBattlepassStats(data))
-      .catch((error) =>
-        console.error("Błąd statystyk Battle Passa:", error)
-      );
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    fetch(`${import.meta.env.VITE_API_URL}/dashboard/reservations`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      if (!res.ok) throw new Error("Nie udało się pobrać statystyk rezerwacji")
+      return res.json();
+    })
+    .then((data) => setReservationStats(data))
+    .catch((error) => console.error("Błąd statystyk rezerwacji:", error));
   }, []);
 
   function toggleSection(section: string) {
@@ -226,15 +242,15 @@ export default function Dashboard() {
             stats={[
               {
                 label: "W tym miesiącu",
-                value: 31,
+                value: reservationStats.reservationsThisMonth,
               },
               {
                 label: "W tym roku",
-                value: 188,
+                value: reservationStats.reservationsThisYear,
               },
               {
                 label: "Aktywne",
-                value: 14,
+                value: reservationStats.activeReservations,
               },
             ]}
           />
