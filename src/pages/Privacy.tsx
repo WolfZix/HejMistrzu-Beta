@@ -383,7 +383,7 @@ export default function Privacy() {
             skontaktuj się z nami.
           </p>
           <a
-            href="mailto:biuro.hejmistrzu@gmail.com"
+            href="/kontakt"
             className="inline-flex items-center justify-center rounded-lg bg-[#c79b3b] px-5 py-3 text-sm font-semibold text-[#0f1115] transition hover:bg-[#d8ae50]"
           >
             Skontaktuj się z nami
