@@ -1,130 +1,400 @@
+const sections = [
+  {
+    title: "1. Administrator danych osobowych",
+    content: (
+      <>
+        <p>
+          Administratorem Twoich danych osobowych jest Tomasz Szachta,
+          przedsiębiorca prowadzący działalność gospodarczą pod firmą
+          Hej Mistrzu Tomasz Szachta, wpisany do Centralnej Ewidencji
+          i Informacji o Działalności Gospodarczej.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Info label="NIP" value="5882520393" />
+          <Info label="REGON" value="529933682" />
+          <Info
+            label="Adres"
+            value="Cegielniana 57B/1, 84-230 Rumia"
+          />
+          <Info
+            label="E-mail"
+            value="biuro.hejmistrzu@gmail.com"
+          />
+        </div>
+        <p>
+          W sprawach związanych z przetwarzaniem danych osobowych
+          możesz skontaktować się z nami pod wskazanym adresem e-mail.
+        </p>
+      </>
+    ),
+  },
+];
+
+const rights = [
+  ["Dostęp do danych", "Możesz uzyskać informację o przetwarzanych danych oraz ich kopię (art. 15 RODO)."],
+  ["Sprostowanie danych", "Możesz zażądać poprawienia nieprawidłowych lub niekompletnych danych (art. 16 RODO)."],
+  ["Usunięcie danych", "Możesz zażądać usunięcia swoich danych w przypadkach przewidzianych prawem (art. 17 RODO)."],
+  ["Ograniczenie przetwarzania", "Możesz zażądać ograniczenia przetwarzania danych (art. 18 RODO)."],
+  ["Przenoszenie danych", "Możesz otrzymać dane w ustrukturyzowanym formacie i przekazać je innemu administratorowi (art. 20 RODO)."],
+  ["Sprzeciw", "Możesz wnieść sprzeciw wobec przetwarzania danych opartego na prawnie uzasadnionym interesie (art. 21 RODO)."],
+];
+
+const processing = [
+  {
+    title: "Złożenie zamówienia w Sklepie",
+    purpose: "Realizacja Twojego zamówienia.",
+    basis: "Umowa sprzedaży lub umowa o dostarczenie treści cyfrowych (art. 6 ust. 1 lit. b RODO) oraz obowiązek prawny związany z rachunkowością (art. 6 ust. 1 lit. c RODO).",
+    duration: "Przez okres obowiązywania umowy oraz do momentu wygaśnięcia obowiązków prawnych związanych z rachunkowością. Dane mogą być również przechowywane do upływu okresu przedawnienia roszczeń.",
+    missing: "Nie będziesz mieć możliwości złożenia zamówienia.",
+  },
+  {
+    title: "Założenie konta w Sklepie",
+    purpose: "Prowadzenie konta użytkownika i umożliwienie korzystania z jego funkcji.",
+    basis: "Umowa o świadczenie usług (art. 6 ust. 1 lit. b RODO).",
+    duration: "Przez okres obowiązywania umowy oraz do upływu okresu przedawnienia ewentualnych roszczeń.",
+    missing: "Nie będziesz mieć możliwości założenia konta ani korzystania z jego funkcji, takich jak historia i status zamówień.",
+  },
+  {
+    title: "Kontakt z nami",
+    purpose: "Obsługa Twoich zapytań i zgłoszeń.",
+    basis: "Art. 6 ust. 1 lit. b RODO – jeśli kontakt dotyczy umowy lub jej zawarcia, albo art. 6 ust. 1 lit. f RODO – jeśli kontakt nie jest związany z umową i wynika z naszego prawnie uzasadnionego interesu.",
+    duration: "Przez czas trwania umowy lub do upływu okresu przedawnienia roszczeń. W przypadku kontaktu niezwiązanego z umową – do momentu uwzględnienia sprzeciwu lub ustania celu przetwarzania.",
+    missing: "Nie będziemy mogli odpowiedzieć na Twoje zapytanie lub zgłoszenie.",
+  },
+  {
+    title: "Ustalenie, dochodzenie lub obrona roszczeń",
+    purpose: "Ochrona naszych interesów prawnych związanych z zawartą umową lub świadczonymi usługami.",
+    basis: "Nasz prawnie uzasadniony interes (art. 6 ust. 1 lit. f RODO).",
+    duration: "Do upływu okresu przedawnienia roszczeń lub do momentu uwzględnienia sprzeciwu, zależnie od sytuacji.",
+    missing: "Brak możliwości ustalenia, dochodzenia lub obrony roszczeń.",
+  },
+];
+
+const recipients = [
+  ["Korzystanie ze Sklepu", "Dostawca usług hostingowych"],
+  ["Korzystanie ze Sklepu", "Podmiot zapewniający wsparcie techniczne i IT"],
+  ["Bieżąca działalność", "Osoby współpracujące z nami na podstawie umów cywilnoprawnych"],
+  ["Działania marketingowe", "Podmioty świadczące usługi marketingowe"],
+  ["Złożenie zamówienia", "Dostawca usług płatniczych"],
+  ["Dostawa zamówienia", "Podmiot realizujący dostawę produktu"],
+  ["Rozliczenia", "Biuro rachunkowe"],
+  ["Newsletter i wiadomości marketingowe", "Podmiot zapewniający wysyłkę wiadomości"],
+];
+
+function Info({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+      <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-[#c79b3b]">
+        {label}
+      </p>
+      <p className="text-sm text-white/80">{value}</p>
+    </div>
+  );
+}
+
+function Section({
+  number,
+  title,
+  children,
+}: {
+  number: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-5">
+      <div className="flex items-start gap-4">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#c79b3b]/10 text-sm font-bold text-[#c79b3b]">
+          {number}
+        </span>
+        <h2 className="pt-1 text-xl font-semibold text-white sm:text-2xl">
+          {title}
+        </h2>
+      </div>
+      <div className="space-y-4 pl-0 text-sm leading-7 text-white/65 sm:pl-[52px]">
+        {children}
+      </div>
+    </section>
+  );
+}
+
 export default function Privacy() {
   return (
-    <div className="flex text-center">
-      Polityka prywatności Sklepu Hej Mistrzu
-      https://www.hejmistrzu.pl
-      („Sklep”)
-      Drogi Użytkowniku!
-      Dbamy o Twoją prywatność i chcemy, abyś w czasie korzystania z naszych usług czuł się komfortowo. Dlatego też poniżej prezentujemy Ci najważniejsze informacje o zasadach przetwarzania przez nas Twoich danych osobowych oraz plikach cookies, które są wykorzystywane przez nasz Sklep. Informacje te zostały przygotowane z uwzględnieniem RODO, czyli ogólnego rozporządzenia o ochronie danych.
+    <main className="min-h-screen bg-[#0f1115] pb-20 pt-28 text-white">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
 
-      ADMINISTRATOR DANYCH OSOBOWYCH
-      Tomasz Szachta, przedsiębiorca prowadzący działalność gospodarczą pod firmą Hej Mistrzu Tomasz Szachta, wpisany do Centralnej Ewidencji i Informacji o Działalności Gospodarczej prowadzonej przez ministra właściwego do spraw gospodarki i prowadzenia Centralnej Ewidencji i Informacji o Działalności Gospodarczej, NIP 5882520393, nr REGON 529933682, Cegielniana 57B/1, 84-230 Rumia.
+        {/* Nagłówek */}
+        <header className="mb-16 max-w-3xl">
+          <span className="mb-4 inline-flex rounded-full border border-[#c79b3b]/30 bg-[#c79b3b]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#c79b3b]">
+            Dokumenty prawne
+          </span>
 
-      Jeśli chcesz skontaktować się z nami w związku z przetwarzaniem przez nas Twoich danych osobowych, napisz do nas na adres e-mail: biuro.hejmistrzu@gmail.com.
+          <h1 className="mb-5 text-4xl font-bold tracking-tight sm:text-5xl">
+            Polityka <span className="text-[#c79b3b]">prywatności</span>
+          </h1>
 
-      TWOJE UPRAWNIENIA
-      Przysługuje Ci prawo żądania:
+          <p className="text-base leading-7 text-white/55">
+            Dbamy o Twoją prywatność i bezpieczeństwo Twoich danych.
+            Poniżej znajdziesz informacje o zasadach ich przetwarzania
+            oraz wykorzystywaniu plików cookies w Sklepie HejMistrzu.
+          </p>
 
-      dostępu do Twoich danych osobowych, w tym uzyskania kopii Twoich danych (art. 15 RODO lub – jeśli ma to zastosowanie – art. 13 ust. 1 lit. f RODO),
-      ich sprostowania (art. 16 RODO),
-      usunięcia (art. 17 RODO),
-      ograniczenia przetwarzania (art. 18 RODO),
-      przeniesienia danych do innego administratora (art. 20 RODO).
-      A także prawo:
+          <div className="mt-6 flex flex-wrap gap-3 text-xs text-white/40">
+            <span>HejMistrzu</span>
+            <span>•</span>
+            <span>Ochrona danych osobowych</span>
+            <span>•</span>
+            <span>RODO</span>
+          </div>
+        </header>
 
-      wniesienia w dowolnym momencie sprzeciwu wobec przetwarzania Twoich danych:
-      z przyczyn związanych z Twoją szczególną sytuacją – wobec przetwarzania dotyczących Ciebie danych osobowych, opartego na art. 6 ust. 1 lit. f RODO (tj. na realizowanych przez nas prawnie uzasadnionych interesach) (art. 21 ust. 1 RODO);
-      Skontaktuj się z nami, jeśli chcesz skorzystać ze swoich praw. Sprzeciw w odniesieniu do wykorzystywania przez nas plików cookies (o których przeczytasz poniżej) możesz wyrazić zwłaszcza za pomocą odpowiednich ustawień przeglądarki.
+        {/* Treść */}
+        <div className="space-y-14">
 
-      Jeśli uznasz, że Twoje dane są przetwarzane niezgodnie z prawem, możesz złożyć skargę do Prezesa Urzędu Ochrony Danych Osobowych.
+          <Section number="01" title="Administrator danych osobowych">
+            <p>
+              Administratorem Twoich danych osobowych jest Tomasz Szachta,
+              przedsiębiorca prowadzący działalność gospodarczą pod firmą
+              Hej Mistrzu Tomasz Szachta, wpisany do Centralnej Ewidencji
+              i Informacji o Działalności Gospodarczej.
+            </p>
 
-      DANE OSOBOWE I PRYWATNOŚĆ
-      Poniżej znajdziesz szczegółowe informacje na temat przetwarzania Twoich danych w zależności od podejmowanych przez Ciebie działań.
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Info label="NIP" value="5882520393" />
+              <Info label="REGON" value="529933682" />
+              <Info label="Adres" value="Cegielniana 57B/1, 84-230 Rumia" />
+              <Info label="Kontakt" value="biuro.hejmistrzu@gmail.com" />
+            </div>
 
-      1. Złożenie zamówienia w Sklepie
-      W jakim celu?
-      realizacja Twojego zamówienia
-      Na jakiej podstawie?
-      umowa sprzedaży lub umowa o dostarczenie treści cyfrowych (art. 6 ust. 1 lit. b RODO)	obowiązek prawny, związany z rachunkowością, zobowiązujący nas do przetwarzania Twoich danych osobowych (art. 6 ust. 1 lit. c RODO)
-      Jak długo?
-      przez okres obowiązywania wyżej wymienionej umowy	do momentu wygaśnięcia ciążącego na nas obowiązku prawnego, związanego z rachunkowością
-      ponadto, Twoje dane będą przetwarzane do upływu okresu, w którym możliwe jest dochodzenie roszczeń – przez Ciebie lub przez nas
-      (więcej informacji na ten temat znajdziesz w ostatniej tabeli tej sekcji)
-      Co się stanie, jeśli nie podasz danych?
-      nie będziesz mieć możliwości złożenia zamówienia
+            <p>
+              Jeśli chcesz skontaktować się z nami w związku
+              z przetwarzaniem Twoich danych osobowych, napisz
+              na adres:{" "}
+              <a
+                href="mailto:biuro.hejmistrzu@gmail.com"
+                className="text-[#c79b3b] hover:underline"
+              >
+                biuro.hejmistrzu@gmail.com
+              </a>.
+            </p>
+          </Section>
 
-      2. Założenie konta w Sklepie
-      W jakim celu?
-      realizacja umowy o świadczenie usługi prowadzenia konta w Sklepie
-      Na jakiej podstawie?
-      umowa o świadczenie usług (art. 6 ust. 1 lit. b RODO)
-      Jak długo?
-      przez okres obowiązywania wyżej wymienionej umowy
-      ponadto, Twoje dane będą przetwarzane do upływu okresu, w którym możliwe jest dochodzenie roszczeń – przez Ciebie lub przez nas
-      (więcej informacji na ten temat znajdziesz w ostatniej tabeli tej sekcji)
-      Co się stanie, jeśli nie podasz danych?
-      nie będziesz mieć możliwości założenia konta i korzystania z jego funkcji, takich jak przeglądanie historii zamówień czy sprawdzenie statusu zamówienia
+          <Section number="02" title="Twoje prawa">
+            <p>
+              W związku z przetwarzaniem Twoich danych osobowych
+              przysługują Ci następujące prawa:
+            </p>
 
-      3. Nawiązanie z nami kontaktu (np. w celu zadania pytania)
-      W jakim celu?
-      obsługa Twoich zapytań lub zgłoszeń
-      Na jakiej podstawie?
-      umowa lub działania podejmowane na Twoje żądanie, zmierzające do jej zawarcia (art. 6 ust. 1 lit. b RODO) – w przypadku gdy Twoje zapytanie lub zgłoszenie dotyczy umowy, której jesteśmy lub możemy być stroną	nasz prawnie uzasadniony interes, polegający na przetwarzaniu Twoich danych w celu prowadzenia z Tobą komunikacji (art. 6 ust. 1 lit. f RODO) – jeżeli Twoje zapytanie lub zgłoszenie nie ma związku z umową
-      Jak długo?
-      przez czas trwania wiążącej nas umowy lub – jeśli umowa nie zostanie zawarta – do upływu okresu dochodzenia roszczeń – zobacz ostatnią tabelę tej sekcji*	do upływu okresu dochodzenia roszczeń – zobacz ostatnią tabelę tej sekcji – lub do momentu, w którym uwzględnimy Twój sprzeciw wobec przetwarzania*
-      ponadto, Twoje dane będą przetwarzane do upływu okresu, w którym możliwe jest dochodzenie roszczeń – przez Ciebie lub przez nas
-      (więcej informacji na ten temat znajdziesz w ostatniej tabeli tej sekcji)
-      Co się stanie, jeśli nie podasz danych?
-      nie będziemy mieli możliwości udzielenia odpowiedzi na Twoje zapytanie lub zgłoszenie
-      * w zależności od tego, które ma zastosowanie w danym przypadku
+            <div className="grid gap-3 sm:grid-cols-2">
+              {rights.map(([title, description]) => (
+                <div
+                  key={title}
+                  className="rounded-xl border border-white/10 bg-[#181b22] p-4"
+                >
+                  <h3 className="mb-2 font-semibold text-white">{title}</h3>
+                  <p className="text-sm leading-6 text-white/55">
+                    {description}
+                  </p>
+                </div>
+              ))}
+            </div>
 
-      4. Podjęcie działania lub zaniechanie mogące powodować powstanie roszczeń związanych ze Sklepem lub naszymi usługami
-      W jakim celu?
-      ustalenie, dochodzenie lub obrona ewentualnych roszczeń, związanych z zawartą umową lub świadczonymi usługami
-      Na jakiej podstawie?
-      nasz prawnie uzasadniony interes, polegający na przetwarzaniu danych osobowych we wskazanym powyżej celu (art. 6 ust. 1 lit. f RODO)
-      Jak długo?
-      do upływu okresu przedawnienia roszczeń lub do momentu, w którym uwzględnimy Twój sprzeciw wobec przetwarzania*
-      Co się stanie, jeśli nie podasz danych?
-      brak możliwości ustalenia, dochodzenia lub obrony roszczeń
-      * w zależności od tego, które ma zastosowanie w danym przypadku
+            <p>
+              Aby skorzystać ze swoich praw, skontaktuj się z nami.
+              Sprzeciw wobec wykorzystywania plików cookies możesz
+              wyrazić również poprzez odpowiednie ustawienia przeglądarki.
+            </p>
 
-      BEZPIECZEŃSTWO DANYCH
-      Przetwarzając Twoje dane osobowe stosujemy środki organizacyjne i techniczne zgodne z właściwymi przepisami prawa, w tym stosujemy szyfrowanie połączenia za pomocą certyfikatu SSL/TLS.
+            <div className="rounded-xl border border-[#c79b3b]/20 bg-[#c79b3b]/[0.06] p-5">
+              <p className="font-medium text-white">
+                Masz prawo złożyć skargę.
+              </p>
+              <p className="mt-2">
+                Jeśli uznasz, że Twoje dane są przetwarzane niezgodnie
+                z prawem, możesz złożyć skargę do Prezesa Urzędu
+                Ochrony Danych Osobowych (UODO).
+              </p>
+            </div>
+          </Section>
 
-      PLIKI COOKIES
-      Nasz Sklep, jak większość witryn internetowych, korzysta z tzw. plików cookies (ciasteczek). Pliki te:
+          <Section number="03" title="Dane osobowe i prywatność">
+            <p>
+              Poniżej przedstawiamy szczegółowe informacje dotyczące
+              przetwarzania Twoich danych w zależności od podejmowanych
+              przez Ciebie działań.
+            </p>
 
-      są zapisywane w pamięci Twojego urządzenia (komputera, telefonu, itd.);
-      nie powodują zmian w ustawieniach Twojego urządzenia.
-      W tym Sklepie ciasteczka wykorzystywane są w celach:
+            <div className="space-y-4">
+              {processing.map((item, index) => (
+                <article
+                  key={item.title}
+                  className="overflow-hidden rounded-xl border border-white/10 bg-[#181b22]"
+                >
+                  <div className="border-b border-white/10 px-5 py-4">
+                    <h3 className="font-semibold text-white">
+                      {index + 1}. {item.title}
+                    </h3>
+                  </div>
 
-      zapamiętywania Twojej sesji
-      statystycznych
-      udostępniania funkcji Sklepu
-      Aby dowiedzieć się, jak zarządzać plikami cookies, w tym jak wyłączyć ich obsługę w Twojej przeglądarce, możesz skorzystać z pliku pomocy Twojej przeglądarki. Z informacjami na ten temat możesz zapoznać się wciskając klawisz F1 w przeglądarce. Ponadto odpowiednie wskazówki znajdziesz na następujących podstronach, w zależności od przeglądarki, której używasz:
+                  <div className="space-y-4 p-5">
+                    <div>
+                      <p className="mb-1 text-xs font-bold uppercase tracking-wider text-[#c79b3b]">
+                        Cel przetwarzania
+                      </p>
+                      <p>{item.purpose}</p>
+                    </div>
 
-      Google Chrome
-      Opera
-      Safari
-      Mozilla Firefox
-      Microsoft Edge
-      Pliki cookies nie będą przetwarzane przez nas dłużej niż 5 dni od ostatniej wizyty w Sklepie.
+                    <div>
+                      <p className="mb-1 text-xs font-bold uppercase tracking-wider text-[#c79b3b]">
+                        Podstawa prawna
+                      </p>
+                      <p>{item.basis}</p>
+                    </div>
 
-      Korzystając z odpowiednich opcji Twojej przeglądarki, w każdej chwili możesz:
+                    <div>
+                      <p className="mb-1 text-xs font-bold uppercase tracking-wider text-[#c79b3b]">
+                        Okres przechowywania
+                      </p>
+                      <p>{item.duration}</p>
+                    </div>
 
-      usunąć pliki cookies,
-      blokować wykorzystanie plików cookies w przyszłości.
-      W takich przypadkach nie będziemy ich już dłużej przetwarzać.
+                    <div className="rounded-lg bg-white/[0.03] p-3">
+                      <p className="mb-1 text-xs font-bold uppercase tracking-wider text-white/40">
+                        Co się stanie, jeśli nie podasz danych?
+                      </p>
+                      <p>{item.missing}</p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </Section>
 
-      USŁUGI ZEWNĘTRZNE / ODBIORCY DANYCH
-      Korzystamy z usług podmiotów zewnętrznych, które wspierają nas w prowadzeniu działalności. Powierzamy im do przetwarzania Twoje dane – podmioty te przetwarzają dane wyłącznie na nasze udokumentowane polecenie.
+          <Section number="04" title="Bezpieczeństwo danych">
+            <p>
+              Przetwarzając Twoje dane osobowe, stosujemy środki
+              organizacyjne i techniczne zgodne z obowiązującymi
+              przepisami prawa. W szczególności korzystamy
+              z szyfrowania połączenia za pomocą certyfikatu SSL/TLS,
+              aby chronić dane przesyłane pomiędzy Twoim urządzeniem
+              a naszym Sklepem.
+            </p>
+          </Section>
 
-      Poniżej znajdziesz listę odbiorców Twoich danych:
+          <Section number="05" title="Pliki cookies">
+            <p>
+              Nasz Sklep, podobnie jak większość witryn internetowych,
+              korzysta z plików cookies (tzw. ciasteczek). Są to
+              niewielkie pliki zapisywane w pamięci Twojego urządzenia,
+              np. komputera lub telefonu.
+            </p>
 
-      DZIAŁANIE	ODBIORCY DANYCH	PRZEKAZANIE DANYCH POZA UNIĘ EUROPEJSKĄ
-      każde działanie w związku ze Sklepem	hostingodawca	nie ma miejsca
-      podmiot zapewniający nam wsparcie techniczne/IT	nie ma miejsca
-      osoby współpracujące z nami na podstawie umów cywilnoprawnych, wspierające naszą bieżącą działalność	nie ma miejsca
-      przebywanie na stronie Sklepu z ustawieniami zezwalającymi na prowadzenie działań marketingowych	podmiot zapewniający usługi marketingowe	nie ma miejsca
-      złożenie zamówienia w Sklepie	dostawca płatności	nie ma miejsca
-      podmiot dostarczający do Ciebie produkt	nie ma miejsca
-      biuro rachunkowe	nie ma miejsca
-      zapis na newsletter lub wyrażenie zgody na przesyłanie wiadomości marketingowych	podmiot zapewniający wysyłkę newslettera lub wiadomości marketingowych	nie ma miejsca
+            <p>
+              Pliki cookies nie powodują zmian w konfiguracji
+              Twojego urządzenia. W naszym Sklepie są wykorzystywane
+              w następujących celach:
+            </p>
 
-      A ponadto:
+            <ul className="list-disc space-y-2 pl-5 marker:text-[#c79b3b]">
+              <li>Zapamiętywanie Twojej sesji.</li>
+              <li>Prowadzenie statystyk.</li>
+              <li>Udostępnianie funkcji Sklepu.</li>
+            </ul>
 
-      odpowiednie organy publiczne w zakresie, w jakim jesteśmy zobowiązani do udostępnienia im danych.
-    </div>
-  )
+            <div className="rounded-xl border border-white/10 bg-[#181b22] p-5">
+              <h3 className="mb-3 font-semibold text-white">
+                Zarządzanie plikami cookies
+              </h3>
+              <p>
+                Możesz w dowolnym momencie zarządzać plikami cookies
+                za pomocą ustawień swojej przeglądarki internetowej.
+                Możesz między innymi:
+              </p>
+              <ul className="mt-3 list-disc space-y-2 pl-5 marker:text-[#c79b3b]">
+                <li>Usunąć zapisane pliki cookies.</li>
+                <li>Zablokować zapisywanie plików cookies w przyszłości.</li>
+              </ul>
+              <p className="mt-3">
+                Szczegółowe instrukcje znajdziesz w pomocy swojej
+                przeglądarki, np. Google Chrome, Opera, Safari,
+                Mozilla Firefox lub Microsoft Edge.
+              </p>
+            </div>
+
+            <p>
+              Zgodnie z informacjami udostępnionymi na dotychczasowej
+              stronie Sklepu, pliki cookies nie są przechowywane
+              dłużej niż 5 dni od ostatniej wizyty.
+            </p>
+          </Section>
+
+          <Section number="06" title="Odbiorcy danych i usługi zewnętrzne">
+            <p>
+              Korzystamy z usług podmiotów zewnętrznych, które wspierają
+              nas w prowadzeniu działalności. Podmiotom tym możemy
+              powierzać przetwarzanie Twoich danych osobowych.
+              Przetwarzają one dane zgodnie z naszymi udokumentowanymi
+              poleceniami oraz w zakresie niezbędnym do świadczenia usług.
+            </p>
+
+            <div className="overflow-x-auto rounded-xl border border-white/10">
+              <table className="w-full min-w-[520px] text-left text-sm">
+                <thead className="bg-[#c79b3b]/10 text-[#c79b3b]">
+                  <tr>
+                    <th className="px-5 py-4 font-semibold">Działanie</th>
+                    <th className="px-5 py-4 font-semibold">Odbiorca danych</th>
+                    <th className="px-5 py-4 font-semibold">Transfer poza UE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recipients.map(([action, recipient], index) => (
+                    <tr
+                      key={index}
+                      className="border-t border-white/10 text-white/65"
+                    >
+                      <td className="px-5 py-4">{action}</td>
+                      <td className="px-5 py-4">{recipient}</td>
+                      <td className="px-5 py-4 text-white/45">
+                        Nie ma miejsca
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              Ponadto Twoje dane mogą zostać udostępnione odpowiednim
+              organom publicznym, jeżeli będziemy zobowiązani do tego
+              na podstawie obowiązujących przepisów prawa.
+            </p>
+          </Section>
+
+        </div>
+
+        {/* Zakończenie */}
+        <div className="mt-16 rounded-2xl border border-[#c79b3b]/20 bg-[#181b22] p-6 sm:p-8">
+          <h2 className="mb-3 text-xl font-semibold text-white">
+            Masz pytania dotyczące prywatności?
+          </h2>
+          <p className="mb-5 text-sm leading-6 text-white/55">
+            Jeśli masz pytania dotyczące przetwarzania Twoich danych
+            osobowych lub chcesz skorzystać ze swoich praw,
+            skontaktuj się z nami.
+          </p>
+          <a
+            href="mailto:biuro.hejmistrzu@gmail.com"
+            className="inline-flex items-center justify-center rounded-lg bg-[#c79b3b] px-5 py-3 text-sm font-semibold text-[#0f1115] transition hover:bg-[#d8ae50]"
+          >
+            Skontaktuj się z nami
+          </a>
+        </div>
+
+        <p className="mt-8 text-center text-xs text-white/30">
+          HejMistrzu © {new Date().getFullYear()} · Wszelkie prawa zastrzeżone
+        </p>
+
+      </div>
+    </main>
+  );
 }
