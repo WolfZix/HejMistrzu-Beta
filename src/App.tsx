@@ -20,6 +20,8 @@ const Reservations = lazy(() => import("@/pages/Reservations"));
 const About = lazy(() => import("@/pages/About"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const PrivacyPage = lazy(() => import("@/pages/Privacy"));
+const TermsPage = lazy(() => import("@/pages/Terms"));
 
 // Admin panel
 const AdminLayout = lazy(() => import("@/admin/components/AdminLayout"));
@@ -58,6 +60,8 @@ function App() {
                       <ProfilePage />
                     </ProtectedRoute>
                   } />
+                  <Route path="/polityka-prywatnosci" element={<PrivacyPage />} />
+                  <Route path="/regulamin" element={<TermsPage />} />
                 </Route>
                 <Route path="/admin" element={
                   <AdminRoute>

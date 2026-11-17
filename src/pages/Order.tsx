@@ -71,6 +71,8 @@ export default function Order() {
       deliveryMethod: "",
       paymentMethod: "",
       inPostPoint: "",
+      terms: "",
+      privacy: "",
     };
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const postalCodeRegex = /^\d{2}-\d{3}$/;
@@ -94,6 +96,8 @@ export default function Order() {
     if (formData.country.trim().length > 100) errors.country = "Nazwa kraju jest za długa";
     if (formData.address.trim().length > 150) errors.address = "Adres jest za długi";
     if (formData.city.trim().length > 100) errors.city = "Nazwa miasta jest za długa";
+    if (!acceptedTerms) errors.terms = "Zaakceptuj regulamin";
+    if (!acceptedPrivacy) errors.privacy = "Zaakceptuj politykę prywatności";
     return errors;
   };
 
