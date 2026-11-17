@@ -1,90 +1,132 @@
 import { sections, content } from "@/data/terms";
 
-
 export default function Terms() {
+  const groupedSections = sections.map(([label, id]) => {
+    const startIndex = content.findIndex(
+      (item) => item.type === "heading" && item.id === id
+    );
+
+    const nextHeading = content.findIndex(
+      (item, index) => index > startIndex && item.type === "heading"
+    );
+
+    return {
+      label,
+      id,
+      heading: content[startIndex],
+      items: content.slice(
+        startIndex + 1,
+        nextHeading === -1 ? undefined : nextHeading
+      ),
+    };
+  });
+
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border bg-muted/30">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            HejMistrzu · Dokumenty
+    <main className="min-h-screen bg-[#0f1115] pb-20 pt-28 text-white">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        {/* Nagłówek */}
+        <header className="mb-16 max-w-3xl">
+          <span className="mb-4 inline-flex rounded-full border border-[#c79b3b]/30 bg-[#c79b3b]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#c79b3b]">
+            Dokumenty prawne
           </span>
-          <h1 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-            Regulamin sklepu internetowego Hej Mistrzu
+
+          <h1 className="mb-5 text-4xl font-bold tracking-tight sm:text-5xl">
+            Regulamin <span className="text-[#c79b3b]">sklepu</span>
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground">
-            Zasady zawierania umów poprzez Sklep oraz najważniejsze informacje o Sprzedawcy,
-            Sklepie i prawach Kupującego.
+
+          <p className="text-base leading-7 text-white/55">
+            Zasady dokonywania zakupów w sklepie internetowym HejMistrzu.
+            Poniżej znajdziesz informacje dotyczące zamówień, płatności,
+            dostawy oraz praw kupujących.
           </p>
+
+          <div className="mt-6 flex flex-wrap gap-3 text-xs text-white/40">
+            <span>HejMistrzu</span>
+            <span>•</span>
+            <span>Regulamin sklepu</span>
+            <span>•</span>
+            <span>Prawa konsumenta</span>
+          </div>
+        </header>
+
+        {/* Treść regulaminu */}
+        <div className="space-y-14">
+          {groupedSections.map((section, index) => (
+            <section
+              key={section.id}
+              id={section.id}
+              className="scroll-mt-28"
+            >
+              <div className="mb-5 flex items-start gap-4">
+                <span className="pt-1 text-sm font-bold tracking-wider text-[#c79b3b]">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <h2 className="text-xl font-bold tracking-tight text-white sm:text-2xl">
+                  {section.heading.text}
+                </h2>
+              </div>
+
+              <div className="space-y-3 pl-9 text-[15px] leading-7 text-white/55">
+                {section.items.map((item, itemIndex) => {
+                  if (item.type === "subheading") {
+                    return (
+                      <h3
+                        key={itemIndex}
+                        className="pt-5 font-semibold text-white"
+                      >
+                        {item.text}
+                      </h3>
+                    );
+                  }
+
+                  const isUrl = /^https?:/.test(item.text);
+                  const url = item.text.replace(/\\/g, "");
+
+                  if (item.type === "link" || isUrl) {
+                    return (
+                      <p key={itemIndex} className="break-all">
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[#c79b3b] hover:underline"
+                        >
+                          {url}
+                        </a>
+                      </p>
+                    );
+                  }
+
+                  return <p key={itemIndex}>{item.text}</p>;
+                })}
+              </div>
+            </section>
+          ))}
         </div>
-      </header>
 
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12 lg:py-14">
-        <aside className="h-fit rounded-2xl border border-border bg-card p-5 lg:sticky lg:top-24">
-          <h2 className="mb-4 text-xs font-bold uppercase tracking-wider text-foreground">
-            Spis treści
+        {/* Zakończenie */}
+        <div className="mt-16 rounded-2xl border border-[#c79b3b]/20 bg-[#181b22] p-6 sm:p-8">
+          <h2 className="mb-3 text-xl font-semibold text-white">
+            Masz pytania dotyczące regulaminu?
           </h2>
-          <nav aria-label="Spis treści regulaminu" className="grid gap-1">
-            {sections.map(([label, id]) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                className="rounded-lg px-3 py-2 text-sm leading-5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-        </aside>
 
-        <article className="min-w-0 rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-8 lg:p-10">
-          <div className="mb-8 border-b border-border pb-6">
-            <p className="text-sm leading-6 text-muted-foreground">
-              Poniżej znajduje się treść regulaminu sklepu internetowego Hej Mistrzu.
-              Poszczególne paragrafy możesz otworzyć bezpośrednio ze spisu treści.
-            </p>
-          </div>
+          <p className="mb-5 text-sm leading-6 text-white/55">
+            Jeśli potrzebujesz dodatkowych informacji dotyczących zakupów,
+            płatności lub reklamacji, skontaktuj się z nami.
+          </p>
 
-          <div className="space-y-3 text-[15px] leading-7 text-muted-foreground [&_strong]:font-semibold [&_strong]:text-foreground">
-            {content.map((item, index) => {
-              if (item.type === "heading") {
-                return (
-                  <h2
-                    key={index}
-                    id={item.id}
-                    className="scroll-mt-28 border-b border-border pb-3 pt-10 text-xl font-bold tracking-tight text-foreground first:pt-0 sm:text-2xl"
-                  >
-                    {item.text}
-                  </h2>
-                );
-              }
-              if (item.type === "subheading") {
-                return (
-                  <h3 key={index} className="pt-6 text-base font-bold text-foreground sm:text-lg">
-                    {item.text}
-                  </h3>
-                );
-              }
-              if (item.type === "link") {
-                return (
-                  <p key={index} className="break-all">
-                    <a href={item.text} target="_blank" rel="noreferrer" className="text-primary underline underline-offset-4">
-                      {item.text}
-                    </a>
-                  </p>
-                );
-              }
-              return <p key={index}>{item.text}</p>;
-            })}
-          </div>
+          <a
+            href="/kontakt"
+            className="inline-flex items-center justify-center rounded-lg bg-[#c79b3b] px-5 py-3 text-sm font-semibold text-[#0f1115] transition hover:bg-[#d8ae50]"
+          >
+            Skontaktuj się z nami
+          </a>
+        </div>
 
-          <div className="mt-12 rounded-xl bg-muted/50 p-5">
-            <p className="text-sm leading-6 text-muted-foreground">
-              W razie pytań dotyczących regulaminu skontaktuj się ze Sprzedawcą,
-              korzystając z danych kontaktowych wskazanych w § 2.
-            </p>
-          </div>
-        </article>
+        <p className="mt-8 text-center text-xs text-white/30">
+          HejMistrzu © {new Date().getFullYear()} · Wszelkie prawa zastrzeżone
+        </p>
       </div>
     </main>
   );
