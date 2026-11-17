@@ -756,14 +756,6 @@ router.put(
         { params }
       );
 
-      //TEMP
-      console.log(
-        "InPost meta after PUT:",
-        response.data.meta_data?.filter(
-          (meta) => meta.key === "woo_inpost_shipping_methods_allowed"
-        )
-      );
-      //
       const rawVariationImageIndexes = req.body.variationImageIndexes;
       const variationImageIndexes = 
         rawVariationImageIndexes == null ? []

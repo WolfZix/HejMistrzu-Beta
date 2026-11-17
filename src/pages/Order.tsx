@@ -6,9 +6,12 @@ import DeliveryData from "@/components/order/DeliveryData";
 import DeliveryMethod from "@/components/order/DeliveryMethod";
 import PaymentMethod from "@/components/order/PaymentMethod";
 import type { DeliveryMethodType, OrderData, PaymentMethodType } from "@/types/order";
+import Checkbox from "@/components/ui/Checkbox";
 
 export default function Order() {
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
+  const [isPolicyChecked, setIsPolicyChecked] = useState(false);
+  const [isTermsChecked, setIsTermsChecked] = useState(false);
   const { items, totalPrice } = useCart();
   const [validationErrors, setValidationErrors] = useState({
     name: "",
@@ -271,6 +274,17 @@ export default function Order() {
                 <div className="border-t border-border pt-4 mt-4 flex items-center justify-between">
                   <span className="font-heading font-semibold"> Razem </span>
                   <span className="font-bold text-lg"> {totalWithDelivery.toFixed(2)} zł </span>
+                </div>
+              </div>
+              {/* Zgody na polityki prywatności i regulamin */}
+              <div className="flex gap-2">
+                <div>
+                  <Checkbox checked={isPolicyChecked} onChange={() => {setIsPolicyChecked((prev) => !prev)}}/>
+                  <p>Akceptuję <a href="#" className="text-primary">regulamin HejMistrzu</a></p>
+                </div>
+                <div>
+                  <Checkbox checked={isTermsChecked} onChange={() => {setIsTermsChecked((prev) => !prev)}}/>
+                    <p>Przeczytałem/am  <a href="#" className="text-primary">politykę prywatności</a></p>
                 </div>
               </div>
 
