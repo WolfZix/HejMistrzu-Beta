@@ -10,8 +10,8 @@ import Checkbox from "@/components/ui/Checkbox";
 
 export default function Order() {
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
-  const [isPolicyChecked, setIsPolicyChecked] = useState(false);
-  const [isTermsChecked, setIsTermsChecked] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
   const { items, totalPrice } = useCart();
   const [validationErrors, setValidationErrors] = useState({
     name: "",
@@ -276,16 +276,30 @@ export default function Order() {
                   <span className="font-bold text-lg"> {totalWithDelivery.toFixed(2)} zł </span>
                 </div>
               </div>
-              {/* Zgody na polityki prywatności i regulamin */}
-              <div className="flex flex-col gap-2 mt-4 text-sm">
-                <div className="flex gap-2">
-                  <Checkbox checked={isPolicyChecked} onChange={() => {setIsPolicyChecked((prev) => !prev)}}/>
-                  <p>Akceptuję <a href="#" className="text-primary"><u>regulamin HejMistrzu</u></a></p>
-                </div>
-                <div className="flex flex-row gap-2">
-                  <Checkbox checked={isTermsChecked} onChange={() => {setIsTermsChecked((prev) => !prev)}}/>
-                    <p>Przeczytałem/am  <a href="#" className="text-primary"><u>politykę prywatności</u></a></p>
-                </div>
+              {/* Zgody na politykę prywatności i regulamin */}
+              <div className="flex flex-col gap-3 mt-4 text-sm">
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="mt-1 accent-primary"
+                  />
+                  <span>
+                    Akceptuję{" "}<a href="/regulamin" className="text-primary underline">regulamin HejMistrzu</a>
+                  </span>
+                </label>
+                <label className="flex items-start gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={acceptedPrivacy}
+                    onChange={(e) => setAcceptedPrivacy(e.target.checked)}
+                    className="mt-1 accent-primary"
+                  />
+                  <span>
+                    Potwierdzam zapoznanie się z{" "}<a href="/polityka-prywatnosci" className="text-primary underline">polityką prywatności</a>
+                  </span>
+                </label>
               </div>
 
               {/* Przycisk */}
