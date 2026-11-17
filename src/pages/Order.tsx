@@ -277,14 +277,14 @@ export default function Order() {
                 </div>
               </div>
               {/* Zgody na polityki prywatności i regulamin */}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 mt-4 text-sm">
                 <div className="flex gap-2">
                   <Checkbox checked={isPolicyChecked} onChange={() => {setIsPolicyChecked((prev) => !prev)}}/>
-                  <p>Akceptuję <a href="#" className="text-primary">regulamin HejMistrzu</a></p>
+                  <p>Akceptuję <a href="#" className="text-primary"><u>regulamin HejMistrzu</u></a></p>
                 </div>
                 <div className="flex flex-row gap-2">
                   <Checkbox checked={isTermsChecked} onChange={() => {setIsTermsChecked((prev) => !prev)}}/>
-                    <p>Przeczytałem/am  <a href="#" className="text-primary">politykę prywatności</a></p>
+                    <p>Przeczytałem/am  <a href="#" className="text-primary"><u>politykę prywatności</u></a></p>
                 </div>
               </div>
 
