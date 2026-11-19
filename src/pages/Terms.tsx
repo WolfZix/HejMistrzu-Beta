@@ -2,22 +2,13 @@ import { sections, content } from "@/data/terms";
 
 export default function Terms() {
   const groupedSections = sections.map(([label, id]) => {
-    const startIndex = content.findIndex(
-      (item) => item.type === "heading" && item.id === id
-    );
-
-    const nextHeading = content.findIndex(
-      (item, index) => index > startIndex && item.type === "heading"
-    );
-
+    const startIndex = content.findIndex((item) => item.type === "heading" && item.id === id);
+    const nextHeading = content.findIndex((item, index) => index > startIndex && item.type === "heading");
     return {
       label,
       id,
       heading: content[startIndex],
-      items: content.slice(
-        startIndex + 1,
-        nextHeading === -1 ? undefined : nextHeading
-      ),
+      items: content.slice(startIndex + 1, nextHeading === -1 ? undefined : nextHeading),
     };
   });
 

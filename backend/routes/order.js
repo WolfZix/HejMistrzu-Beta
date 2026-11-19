@@ -63,13 +63,16 @@ const validateOrder = (name, surname, email, phone, country, address, city, post
 router.post("/", async (req, res) => {
   let userId = null;
   const authHeader = req.headers.authorization;
+
   if (authHeader) {
     const [scheme, token] = authHeader.split(" ");
+
     if (scheme !== "Bearer" || !token) {
       return res.status(401).json({
         message: "Nieprawidłowy token",
       });
     }
+
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       userId = decoded.id;
@@ -79,6 +82,7 @@ router.post("/", async (req, res) => {
       });
     }
   }
+
   const {
     name,
     surname,
@@ -93,7 +97,7 @@ router.post("/", async (req, res) => {
     inPostPoint,
     items,
   } = req.body;
-  
+
   const isValid = validateOrder(
     name,
     surname,
@@ -108,13 +112,13 @@ router.post("/", async (req, res) => {
     inPostPoint,
     items
   );
-  
+
   if (!isValid) {
     return res.status(400).json({
-      message: "Nieprawidłowe dane zamówienia"
+      message: "Nieprawidłowe dane zamówienia",
     });
   }
-  
+
   const shippingPrice = deliveryPrice(deliveryMethod);
   let subtotal = 0;
   const products = [];
@@ -122,79 +126,89 @@ router.post("/", async (req, res) => {
   for (const item of items) {
     let product;
 
-  if (item.variationId) {
-    product = await pool.query(
-      `
-        SELECT
-          pv.id,
-          pv.woocommerce_id,
-          pv.product_id,
-          pv.name,
-          pv.price,
-          pv.stock_quantity,
-          pv.stock_status
-        FROM product_variations pv
-        WHERE pv.woocommerce_id = $1
-      `,
-      [item.variationId]
-    );
-  } else {
-    product = await pool.query(
-      `
-        SELECT
-          id,
-          woocommerce_id,
-          id AS product_id,
-          name,
-          price,
-          stock_quantity,
-          stock_status
-        FROM products
-        WHERE woocommerce_id = $1
-      `,
-      [item.id]
-    );
-  }
+    if (item.variationId) {
+      product = await pool.query(
+        `
+          SELECT
+            pv.id,
+            pv.woocommerce_id,
+            pv.product_id,
+            pv.name,
+            pv.price,
+            pv.stock_quantity,
+            pv.stock_status
+          FROM product_variations pv
+          WHERE pv.woocommerce_id = $1
+        `,
+        [item.variationId]
+      );
+    } else {
+      product = await pool.query(
+        `
+          SELECT
+            id,
+            woocommerce_id,
+            id AS product_id,
+            name,
+            price,
+            stock_quantity,
+            stock_status
+          FROM products
+          WHERE woocommerce_id = $1
+        `,
+        [item.id]
+      );
+    }
 
-  if (product.rows.length === 0) {
-    return res.status(400).json({
-      message: `${
-        item.variationId
-          ? `Wariant ${item.variationId}`
-          : `Produkt ${item.id}`
-      } nie istnieje w bazie danych`
-    });
-  }
+    if (product.rows.length === 0) {
+      return res.status(400).json({
+        message: `${
+          item.variationId
+            ? `Wariant ${item.variationId}`
+            : `Produkt ${item.id}`
+        } nie istnieje w bazie danych`,
+      });
+    }
+
     if (
       typeof item.quantity !== "number" ||
       !Number.isInteger(item.quantity) ||
       item.quantity <= 0
     ) {
       return res.status(400).json({
-        message: "Nieprawidłowa ilość produktu"
+        message: "Nieprawidłowa ilość produktu",
       });
     }
-    if (product.rows[0].stock_quantity < item.quantity) return res.status(400).json({
-      message: "Niewystarczająca ilość produktu na stanie magazynowym sklepu"
-    });
+
+    if (product.rows[0].stock_quantity < item.quantity) {
+      return res.status(400).json({
+        message:
+          "Niewystarczająca ilość produktu na stanie magazynowym sklepu",
+      });
+    }
+
     products.push({
       item,
-      product: product.rows[0]
+      product: product.rows[0],
     });
     subtotal += Number(product.rows[0].price) * item.quantity;
   }
   const total = subtotal + shippingPrice;
-  const expiresAt = paymentMethod === "Płatność przy odbiorze" ? null : new Date(Date.now() + 15 * 60 * 1000);
+  const expiresAt =
+    paymentMethod === "Płatność przy odbiorze"
+      ? null
+      : new Date(Date.now() + 15 * 60 * 1000);
   const sessionId = uuidv4();
-
   const inPostPointName = inPostPoint === null ? null : inPostPoint.name;
   const inPostPointAddress = inPostPoint === null ? null : inPostPoint.address;
   const inPostPointCity = inPostPoint === null ? null : inPostPoint.city;
   const inPostPointPostalCode = inPostPoint === null ? null : inPostPoint.postalCode;
 
+  let client;
   try {
-    await pool.query("BEGIN");
-    const order = await pool.query(
+    client = await pool.connect();
+    await client.query("BEGIN");
+    const order = await client.query(
       `
         INSERT INTO orders (
           user_id,
@@ -225,11 +239,31 @@ router.post("/", async (req, res) => {
         RETURNING id
       `,
       [
-        userId, name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPointName, inPostPointAddress, inPostPointCity, inPostPointPostalCode, subtotal, shippingPrice, total, expiresAt, sessionId
+        userId,
+        name,
+        surname,
+        email,
+        phone,
+        country,
+        address,
+        city,
+        postalCode,
+        deliveryMethod,
+        paymentMethod,
+        inPostPointName,
+        inPostPointAddress,
+        inPostPointCity,
+        inPostPointPostalCode,
+        subtotal,
+        shippingPrice,
+        total,
+        expiresAt,
+        sessionId,
       ]
     );
+
     for (const { item, product } of products) {
-      const orderItem = await pool.query(
+      await client.query(
         `
           INSERT INTO order_items (
             order_id,
@@ -241,7 +275,6 @@ router.post("/", async (req, res) => {
             quantity
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7)
-          RETURNING id
         `,
         [
           order.rows[0].id,
@@ -250,40 +283,55 @@ router.post("/", async (req, res) => {
           product.woocommerce_id,
           product.name,
           product.price,
-          item.quantity
+          item.quantity,
         ]
       );
+
+      let stockUpdate;
       if (item.variationId) {
-        await pool.query(
+        stockUpdate = await client.query(
           `
             UPDATE product_variations
             SET stock_quantity = stock_quantity - $1
             WHERE id = $2
+              AND stock_quantity >= $1
+            RETURNING id
           `,
           [item.quantity, product.id]
         );
       } else {
-        await pool.query(
+        stockUpdate = await client.query(
           `
             UPDATE products
             SET stock_quantity = stock_quantity - $1
             WHERE id = $2
+              AND stock_quantity >= $1
+            RETURNING id
           `,
           [item.quantity, product.id]
         );
       }
+
+      if (stockUpdate.rowCount === 0) throw new Error(`Brak wystarczającego stanu magazynowego: ${product.name}`);
     }
-    await pool.query("COMMIT");
-    res.status(201).json({
+
+    await client.query("COMMIT");
+    return res.status(201).json({
       message: `Zamówienie #${order.rows[0].id} otrzymane`,
       sessionId,
     });
   } catch (error) {
-    await pool.query("ROLLBACK");
-    console.error("Bład podczas tworzenia zamówienia:", error);
-    res.status(500).json({
-      message: "Wystąpił bład podczas tworzenia zamówienia",
+    if (client) {
+      try {
+        await client.query("ROLLBACK");
+      } catch (rollbackError) { console.error("Błąd ROLLBACK:", rollbackError) }
+    }
+    console.error("Błąd podczas tworzenia zamówienia:", error);
+    return res.status(500).json({
+      message: "Wystąpił błąd podczas tworzenia zamówienia",
     });
+  } finally {
+    if (client) client.release()
   }
 });
 

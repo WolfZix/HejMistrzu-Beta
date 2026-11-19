@@ -785,7 +785,7 @@ export const content: { type: string; id?: string; text: string }[] = [
   },
   {
     "type": "paragraph",
-    "text": "https\\://konsument.gov.pl/eck-w-europie/"
+    "text": "https://konsument.gov.pl/eck-w-europie/"
   },
   {
     "type": "paragraph",
@@ -793,7 +793,7 @@ export const content: { type: string; id?: string; text: string }[] = [
   },
   {
     "type": "paragraph",
-    "text": "https\\://ec.europa.eu/consumers/odr"
+    "text": "https://ec.europa.eu/consumers/odr"
   },
   {
     "type": "paragraph",
@@ -805,7 +805,7 @@ export const content: { type: string; id?: string; text: string }[] = [
   },
   {
     "type": "paragraph",
-    "text": "https\\://uokik.gov.pl/wojewodzkie_inspektoraty_inspekcji_handlowej.php"
+    "text": "https://uokik.gov.pl/wojewodzkie_inspektoraty_inspekcji_handlowej.php"
   },
   {
     "type": "paragraph",
@@ -813,7 +813,7 @@ export const content: { type: string; id?: string; text: string }[] = [
   },
   {
     "type": "paragraph",
-    "text": "https\\://uokik.gov.pl/stale_sady_polubowne.php"
+    "text": "https://uokik.gov.pl/stale_sady_polubowne.php"
   },
   {
     "type": "paragraph",
@@ -1084,15 +1084,11 @@ export const content: { type: string; id?: string; text: string }[] = [
   },
   {
     "type": "paragraph",
-    "text": "– Ja/My(\\) …………………………………………………………… niniejszym informuję/informujemy(\\)"
+    "text": "– Ja/My(*) …………………………………………………………… niniejszym informuję/informujemy(*)"
   },
   {
     "type": "paragraph",
-    "text": "o moim/naszym odstąpieniu od umowy sprzedaży następujących towarów(\\) / o świadczenie następującej usługi(\\) / o dostarczenie treści cyfrowych w postaci(\\*):"
-  },
-  {
-    "type": "paragraph",
-    "text": "…………………………………………………………………………………………………………………………………………………………"
+    "text": "o moim/naszym odstąpieniu od umowy sprzedaży następujących towarów(*) / o świadczenie następującej usługi(*) / o dostarczenie treści cyfrowych w postaci(*):"
   },
   {
     "type": "paragraph",
@@ -1104,7 +1100,11 @@ export const content: { type: string; id?: string; text: string }[] = [
   },
   {
     "type": "paragraph",
-    "text": "– Data zawarcia umowy(\\)/odbioru(\\)"
+    "text": "…………………………………………………………………………………………………………………………………………………………"
+  },
+  {
+    "type": "paragraph",
+    "text": "– Data zawarcia umowy odbioru"
   },
   {
     "type": "paragraph",
@@ -1148,6 +1148,6 @@ export const content: { type: string; id?: string; text: string }[] = [
   },
   {
     "type": "paragraph",
-    "text": "(\\*) Niepotrzebne skreślić."
+    "text": "(*) Niepotrzebne skreślić."
   }
 ];
