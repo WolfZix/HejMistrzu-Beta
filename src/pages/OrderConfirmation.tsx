@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
@@ -8,28 +7,35 @@ import {
   ShoppingBag,
   ArrowRight,
 } from "lucide-react";
-
-type PaymentStatus = "pending" | "success" | "failed";
+import type { PaymentStatus } from "@/types/order";
 
 export default function OrderConfirmation() {
   const [searchParams] = useSearchParams();
-  const [status, setStatus] = useState<PaymentStatus>("pending");
+  const [status, setStatus] = useState<PaymentStatus>("PENDING");
 
   const orderId = searchParams.get("orderId");
   const paymentStatus = searchParams.get("status");
+  const sessionId = searchParams.get("sessionId");
 
   useEffect(() => {
-    if (paymentStatus === "success") {
-      setStatus("success");
-    } else if (paymentStatus === "failed") {
-      setStatus("failed");
-    } else {
-      setStatus("pending");
-    }
-  }, [paymentStatus]);
+    if (!sessionId) return;
+    const fetchOrderStatus = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/order/${sessionId}/status`);
+        if (!response.ok) return;
+        const data = await response.json();
+        const paymentStatus: PaymentStatus = data.order.payment_status;
+        setStatus(paymentStatus);
+        if (paymentStatus !== "PENDING") clearInterval(interval);
+      } catch (error) { console.error("Błąd pobierania statusu zamówienia:", error) }
+    };
+    fetchOrderStatus();
+    const interval = setInterval(fetchOrderStatus, 5000);
+    return () => clearInterval(interval);
+  }, [sessionId]);
 
   const statusConfig = {
-    pending: {
+    PENDING: {
       icon: Clock,
       title: "Oczekujemy na potwierdzenie płatności",
       description:
@@ -38,7 +44,7 @@ export default function OrderConfirmation() {
       background: "bg-secondary/10 border-secondary/20",
       label: "Płatność oczekuje na potwierdzenie",
     },
-    success: {
+    PAID: {
       icon: CheckCircle2,
       title: "Dziękujemy za zamówienie!",
       description:
@@ -47,7 +53,7 @@ export default function OrderConfirmation() {
       background: "bg-green-400/10 border-green-400/20",
       label: "Płatność zakończona pomyślnie",
     },
-    failed: {
+    FAILED: {
       icon: XCircle,
       title: "Płatność nie została zrealizowana",
       description:
@@ -125,7 +131,7 @@ export default function OrderConfirmation() {
             </div>
 
             {/* Informacja dodatkowa */}
-            {status === "pending" && (
+            {status === "PENDING" && (
               <p className="text-sm text-muted-foreground max-w-md mx-auto mt-6 leading-relaxed">
                 Nie musisz odświeżać strony. Nasz system automatycznie
                 zweryfikuje status płatności.
@@ -136,14 +142,14 @@ export default function OrderConfirmation() {
             <div className="flex flex-col sm:flex-row justify-center gap-3 mt-10">
 
               <Link
-                to="/"
+                to="/sklep"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold hover:brightness-110 transition-all duration-200"
               >
                 <ShoppingBag size={18} />
                 Wróć do sklepu
               </Link>
 
-              {status === "success" && (
+              {status === "PAID" && (
                 <Link
                   to="/account/orders"
                   className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl border border-border text-foreground hover:bg-muted transition-all duration-200"

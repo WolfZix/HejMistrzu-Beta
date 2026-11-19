@@ -98,15 +98,12 @@ export default function DeliveryData({ formData, setFormData, validationErrors, 
         <input
           type="text"
           name="phone"
-          placeholder="_ _ _  _ _ _  _ _ _"
           className={inputClasses + " w-full"}
           value={formData.phone}
           onChange={(e) => {
-            const value = e.target.value.replace(/\D/g, "").slice(0, 9);
-            const formattedValue = value.replace(/(\d{3})(?=\d)/g, "$1 ").trim();
             setFormData({
               ...formData,
-              phone: formattedValue,
+              phone: e.target.value,
             });
             setValidationErrors({
               ...validationErrors,

@@ -5,6 +5,11 @@ export type OrderStatus =
   | "COMPLETED"
   | "CANCELED";
 
+export type PaymentStatus =
+  | "PENDING"
+  | "PAID"
+  | "FAILED";
+  
 export interface OrderItem {
   productId: number;
   productName: string;

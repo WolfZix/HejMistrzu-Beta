@@ -77,7 +77,7 @@ export default function Order() {
     };
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const postalCodeRegex = /^\d{2}-\d{3}$/;
-    const phoneRegex = /^\d{3} \d{3} \d{3}$/;
+    const phoneRegex = /^(?:(?:\+48)?\d{9}|\+48 \d{3} \d{3} \d{3}|\d{3} \d{3} \d{3})$/;
 
     if (!formData.name.trim()) errors.name = "Imię jest wymagane";
     if (!formData.surname.trim()) errors.surname = "Nazwisko jest wymagane";
@@ -108,17 +108,22 @@ export default function Order() {
     setValidationErrors(errors);
     if (hasErrors) return;
     try {    
+      const token = localStorage.getItem("token");
       const response = await fetch(`${import.meta.env.VITE_API_URL}/order`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(({
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify({
           ...formData,
           items,
-        })),
+        }),
       });
       const data = await response.json();
       if (response.ok) {
-        navigate(`/potwierdzenie-zamowienia`)
+        if (data.paymentUrl) window.location.href = data.paymentUrl;
+        else navigate(`/potwierdzenie-zamowienia?sessionId=${data.sessionId}`);
       }
     } catch (error) { console.error(error) }
   };

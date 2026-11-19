@@ -17,7 +17,7 @@ const deliveryPrice = (deliveryMethod) => {
 const validateOrder = (name, surname, email, phone, country, address, city, postalCode, deliveryMethod, paymentMethod, inPostPoint, items) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const postalCodeRegex = /^\d{2}-\d{3}$/;
-    const phoneRegex = /^\d{3} \d{3} \d{3}$/;
+    const phoneRegex = /^(?:(?:\+48)?\d{9}|\+48 \d{3} \d{3} \d{3}|\d{3} \d{3} \d{3})$/;
 
     if (!name || !surname || !email || !phone || !country || !address || !city || !postalCode) return false;
     if (!deliveryMethod || !paymentMethod) return false;
@@ -35,7 +35,7 @@ const validateOrder = (name, surname, email, phone, country, address, city, post
       paymentMethod === "Płatność przy odbiorze"
     ) return false;
     if (!emailRegex.test(email)) return false;
-    if (!phoneRegex.test(phone))  return false;
+    if (!phoneRegex.test(phone.trim()))  return false;
     if (!postalCodeRegex.test(postalCode)) return false;
     if (
       deliveryMethod !== "InPost Paczkomat 24/7" &&
@@ -344,6 +344,36 @@ router.post("/", async (req, res) => {
     sessionId,
     paymentUrl: null,
   });
+});
+
+router.get("/:sessionId/status", async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const result = await pool.query(`
+      SELECT id, status, payment_status
+      FROM orders
+      WHERE payment_session_id = $1`,
+      [sessionId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Nie znaleziono zamówienia",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      order: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Błąd pobierania statusu zamówienia:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Nie udało się pobrać statusu zamówienia",
+    });
+  }
 });
 
 router.get("/myOrders", verifyToken, async (req, res) => {

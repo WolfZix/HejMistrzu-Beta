@@ -80,6 +80,7 @@ export default function OrderInfoSection({ inputClass, profile, setProfile }: Or
             id="nip"
             name="nip"
             type="text"
+            autoComplete="nip"
             value={profile.nip}
             onChange={(e) => setProfile({ ...profile, nip: e.target.value })}
             className={inputClass}
@@ -110,7 +111,6 @@ export default function OrderInfoSection({ inputClass, profile, setProfile }: Or
             name="country"
             type="text"
             autoComplete="country-name"
-            defaultValue="Polska"
             value={profile.country}
             onChange={(e) => setProfile({ ...profile, country: e.target.value })}
             className={inputClass}
