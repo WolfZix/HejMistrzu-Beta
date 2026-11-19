@@ -46,7 +46,7 @@ export default function OrderConfirmation() {
   const StatusIcon = currentStatus.icon;
 
   return (
-    <main className="min-h-[65vh] flex items-center justify-center px-4 py-20">
+    <main className="min-h-[65vh] flex items-center justify-center px-4 py-28">
       <div className="w-full max-w-2xl text-center">
 
         <div className="flex justify-center mb-8">
