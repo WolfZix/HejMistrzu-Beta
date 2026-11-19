@@ -6,9 +6,10 @@ import DeliveryData from "@/components/order/DeliveryData";
 import DeliveryMethod from "@/components/order/DeliveryMethod";
 import PaymentMethod from "@/components/order/PaymentMethod";
 import type { DeliveryMethodType, OrderData, PaymentMethodType } from "@/types/order";
-import Checkbox from "@/components/ui/Checkbox";
+import { useNavigate } from "react-router-dom"
 
 export default function Order() {
+  const navigate = useNavigate();
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
@@ -116,6 +117,9 @@ export default function Order() {
         })),
       });
       const data = await response.json();
+      if (response.ok) {
+        navigate(`/potwierdzenie-zamowienia`)
+      }
     } catch (error) { console.error(error) }
   };
 

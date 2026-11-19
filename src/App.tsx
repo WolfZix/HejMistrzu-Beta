@@ -14,6 +14,7 @@ const Home = lazy(() => import("@/pages/Home"));
 const Events = lazy(() => import("@/pages/Events"));
 const Store = lazy(() => import("@/pages/Store"));
 const Order = lazy(() => import("@/pages/Order"));
+const OrderConfirmation = lazy(() => import("@/pages/OrderConfirmation"));
 const PlayArea = lazy(() => import("@/pages/PlayArea"));
 const Pricing = lazy(() => import("@/pages/Pricing"));
 const Reservations = lazy(() => import("@/pages/Reservations"));
@@ -50,6 +51,7 @@ function App() {
                   <Route path="/wydarzenia" element={<Events />} />
                   <Route path="/sklep" element={<Store />} />
                   <Route path="/zamowienie" element={<Order />} />
+                  <Route path="/potwierdzenie-zamowienia" element={<OrderConfirmation />} />
                   <Route path="/strefa-gier" element={<PlayArea />} />
                   <Route path="/cennik" element={<Pricing />} />
                   <Route path="/rezerwacje" element={<Reservations />} />
