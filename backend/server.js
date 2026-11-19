@@ -17,9 +17,10 @@ const orderRouter = require("./routes/order");
 const expireOrders = require("./jobs/expireOrders");
 const battlePassRouter = require("./routes/battlepass");
 const dashboardRouter = require("./routes/dashboard");
+const p24WebhookRouter = require("./routes/webhooks/p24");
 
 app.use(cors());
-app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
+app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf } }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 setInterval(expireOrders, 60*1000);
 
@@ -36,6 +37,7 @@ app.use("/webhooks/woocommerce", woocommerceWebhookRouter);
 app.use("/order", orderRouter);
 app.use("/battlepass", battlePassRouter);
 app.use("/dashboard", dashboardRouter);
+app.use("/webhooks/p24", p24WebhookRouter);
 
 app.listen(3000, () => {
   console.log("Server działa na porcie 3000");

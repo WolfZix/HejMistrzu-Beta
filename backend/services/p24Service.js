@@ -24,6 +24,33 @@ const registerTransaction = async ({ sessionId, amount, email, description, urlR
   return { token, paymentUrl: `${paymentBaseUrl}/trnRequest/${token}` };
 };
 
+const verifyTransaction = async ({ sessionId, orderId, amount, currency = "PLN" }) => {
+  const merchantId = Number(process.env.P24_POS_ID);
+  const posId = merchantId;
+  if (!merchantId || !process.env.P24_API_KEY || !process.env.P24_CRC) throw new Error("Brak konfiguracji Przelewy24 w .env");
+
+  const sign = generateP24Sign({
+    sessionId,
+    orderId,
+    amount,
+    currency,
+  });
+  const payload = {
+    merchantId,
+    posId,
+    sessionId,
+    amount,
+    currency,
+    orderId,
+    sign,
+  };
+
+  const response = await p24.put("/transaction/verify", payload);
+  if (response.data?.data?.status !== "success") throw new Error("Przelewy24 nie potwierdziło transakcji");
+  return response.data;
+};
+
 module.exports = {
   registerTransaction,
+  verifyTransaction,
 };

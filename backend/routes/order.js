@@ -4,6 +4,7 @@ const pool = require("../config/db");
 const { v4: uuidv4 } = require("uuid");
 const verifyToken = require("../middleware/verifyToken");
 const jwt = require("jsonwebtoken");
+const { registerTransaction } = require("../services/p24Service");
 
 const deliveryPrice = (deliveryMethod) => {
   return deliveryMethod === "InPost Paczkomat 24/7" ? 16.99
@@ -119,43 +120,39 @@ router.post("/", async (req, res) => {
     });
   }
 
+  const requiresP24 = paymentMethod !== "Płatność przy odbiorze";
   const shippingPrice = deliveryPrice(deliveryMethod);
   let subtotal = 0;
   const products = [];
 
   for (const item of items) {
     let product;
-
     if (item.variationId) {
-      product = await pool.query(
-        `
-          SELECT
-            pv.id,
-            pv.woocommerce_id,
-            pv.product_id,
-            pv.name,
-            pv.price,
-            pv.stock_quantity,
-            pv.stock_status
-          FROM product_variations pv
-          WHERE pv.woocommerce_id = $1
-        `,
+      product = await pool.query(`
+        SELECT
+          pv.id,
+          pv.woocommerce_id,
+          pv.product_id,
+          pv.name,
+          pv.price,
+          pv.stock_quantity,
+          pv.stock_status
+        FROM product_variations pv
+        WHERE pv.woocommerce_id = $1`,
         [item.variationId]
       );
     } else {
-      product = await pool.query(
-        `
-          SELECT
-            id,
-            woocommerce_id,
-            id AS product_id,
-            name,
-            price,
-            stock_quantity,
-            stock_status
-          FROM products
-          WHERE woocommerce_id = $1
-        `,
+      product = await pool.query(`
+        SELECT
+          id,
+          woocommerce_id,
+          id AS product_id,
+          name,
+          price,
+          stock_quantity,
+          stock_status
+        FROM products
+        WHERE woocommerce_id = $1`,
         [item.id]
       );
     }
@@ -163,9 +160,7 @@ router.post("/", async (req, res) => {
     if (product.rows.length === 0) {
       return res.status(400).json({
         message: `${
-          item.variationId
-            ? `Wariant ${item.variationId}`
-            : `Produkt ${item.id}`
+          item.variationId ? `Wariant ${item.variationId}` : `Produkt ${item.id}`
         } nie istnieje w bazie danych`,
       });
     }
@@ -175,69 +170,59 @@ router.post("/", async (req, res) => {
       !Number.isInteger(item.quantity) ||
       item.quantity <= 0
     ) {
-      return res.status(400).json({
-        message: "Nieprawidłowa ilość produktu",
-      });
+      return res.status(400).json({ message: "Nieprawidłowa ilość produktu" });
     }
 
     if (product.rows[0].stock_quantity < item.quantity) {
-      return res.status(400).json({
-        message:
-          "Niewystarczająca ilość produktu na stanie magazynowym sklepu",
-      });
+      return res.status(400).json({ message: "Niewystarczająca ilość produktu na stanie magazynowym sklepu" });
     }
 
-    products.push({
-      item,
-      product: product.rows[0],
-    });
+    products.push({ item, product: product.rows[0] });
     subtotal += Number(product.rows[0].price) * item.quantity;
   }
-  const total = subtotal + shippingPrice;
-  const expiresAt =
-    paymentMethod === "Płatność przy odbiorze"
-      ? null
-      : new Date(Date.now() + 15 * 60 * 1000);
+
+  const total = Number((subtotal + shippingPrice).toFixed(2));
+  const expiresAt = requiresP24 ? new Date(Date.now() + 15 * 60 * 1000) : null;
   const sessionId = uuidv4();
   const inPostPointName = inPostPoint === null ? null : inPostPoint.name;
   const inPostPointAddress = inPostPoint === null ? null : inPostPoint.address;
   const inPostPointCity = inPostPoint === null ? null : inPostPoint.city;
   const inPostPointPostalCode = inPostPoint === null ? null : inPostPoint.postalCode;
-
   let client;
+  let orderId;
+
+  // 1. Utworzenie zamówienia i rezerwacja produktów
   try {
     client = await pool.connect();
     await client.query("BEGIN");
-    const order = await client.query(
-      `
-        INSERT INTO orders (
-          user_id,
-          customer_name,
-          customer_surname,
-          email,
-          phone,
-          country,
-          address,
-          city,
-          postal_code,
-          delivery_method,
-          payment_method,
-          inpost_point_name,
-          inpost_point_address,
-          inpost_point_city,
-          inpost_point_postal_code,
-          subtotal,
-          shipping_price,
-          total,
-          expires_at,
-          payment_session_id
-        )
-        VALUES (
-          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-          $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
-        )
-        RETURNING id
-      `,
+    const order = await client.query(`
+      INSERT INTO orders (
+        user_id,
+        customer_name,
+        customer_surname,
+        email,
+        phone,
+        country,
+        address,
+        city,
+        postal_code,
+        delivery_method,
+        payment_method,
+        inpost_point_name,
+        inpost_point_address,
+        inpost_point_city,
+        inpost_point_postal_code,
+        subtotal,
+        shipping_price,
+        total,
+        expires_at,
+        payment_session_id
+      )
+      VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
+      )
+      RETURNING id`,
       [
         userId,
         name,
@@ -262,22 +247,21 @@ router.post("/", async (req, res) => {
       ]
     );
 
+    orderId = order.rows[0].id;
     for (const { item, product } of products) {
-      await client.query(
-        `
-          INSERT INTO order_items (
-            order_id,
-            product_id,
-            variation_id,
-            woocommerce_id,
-            product_name,
-            price,
-            quantity
-          )
-          VALUES ($1, $2, $3, $4, $5, $6, $7)
-        `,
+      await client.query(`
+        INSERT INTO order_items (
+          order_id,
+          product_id,
+          variation_id,
+          woocommerce_id,
+          product_name,
+          price,
+          quantity
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
         [
-          order.rows[0].id,
+          orderId,
           item.variationId ? product.product_id : product.id,
           item.variationId ? product.id : null,
           product.woocommerce_id,
@@ -289,50 +273,77 @@ router.post("/", async (req, res) => {
 
       let stockUpdate;
       if (item.variationId) {
-        stockUpdate = await client.query(
-          `
-            UPDATE product_variations
-            SET stock_quantity = stock_quantity - $1
-            WHERE id = $2
-              AND stock_quantity >= $1
-            RETURNING id
-          `,
+        stockUpdate = await client.query(`
+          UPDATE product_variations
+          SET stock_quantity = stock_quantity - $1
+          WHERE id = $2
+            AND stock_quantity >= $1
+          RETURNING id`,
           [item.quantity, product.id]
         );
       } else {
-        stockUpdate = await client.query(
-          `
-            UPDATE products
-            SET stock_quantity = stock_quantity - $1
-            WHERE id = $2
-              AND stock_quantity >= $1
-            RETURNING id
-          `,
+        stockUpdate = await client.query(`
+          UPDATE products
+          SET stock_quantity = stock_quantity - $1
+          WHERE id = $2
+            AND stock_quantity >= $1
+          RETURNING id`,
           [item.quantity, product.id]
         );
       }
-
       if (stockUpdate.rowCount === 0) throw new Error(`Brak wystarczającego stanu magazynowego: ${product.name}`);
     }
-
     await client.query("COMMIT");
-    return res.status(201).json({
-      message: `Zamówienie #${order.rows[0].id} otrzymane`,
-      sessionId,
-    });
   } catch (error) {
     if (client) {
-      try {
-        await client.query("ROLLBACK");
-      } catch (rollbackError) { console.error("Błąd ROLLBACK:", rollbackError) }
+      try { await client.query("ROLLBACK")}
+      catch (rollbackError) { console.error("Błąd ROLLBACK:", rollbackError) }
     }
     console.error("Błąd podczas tworzenia zamówienia:", error);
-    return res.status(500).json({
-      message: "Wystąpił błąd podczas tworzenia zamówienia",
-    });
-  } finally {
-    if (client) client.release()
+    return res.status(500).json({ message: "Wystąpił błąd podczas tworzenia zamówienia" });
+  } finally { if (client) client.release() }
+
+  // 2. Rejestracja płatności w Przelewy24
+  if (requiresP24) {
+    try {
+      if (!process.env.P24_URL_RETURN || !process.env.P24_URL_STATUS) {
+        throw new Error("Brak adresów URL P24 w pliku .env");
+      }
+      const amount = Math.round(total * 100);
+      const { paymentUrl } = await registerTransaction({
+        sessionId,
+        amount,
+        email,
+        description: `Zamówienie HejMistrzu #${orderId}`,
+        urlReturn: process.env.P24_URL_RETURN,
+        urlStatus: process.env.P24_URL_STATUS,
+        client: req.ip,
+      });
+
+      return res.status(201).json({
+        message: `Zamówienie #${orderId} otrzymane`,
+        sessionId,
+        paymentUrl,
+      });
+    } catch (error) {
+      console.error(
+        "Błąd rejestracji płatności P24:",
+        error.response?.data || error.message
+      );
+
+      return res.status(502).json({
+        message: "Zamówienie zostało utworzone, ale nie udało się rozpocząć płatności. Skontaktuj się z obsługą sklepu.",
+        sessionId,
+      });
+    }
   }
+
+  // 3. Zamówienie z płatnością przy odbiorze
+  return res.status(201).json({
+    message: `Zamówienie #${orderId} otrzymane`,
+    sessionId,
+    paymentUrl: null,
+  });
 });
 
 router.get("/myOrders", verifyToken, async (req, res) => {
